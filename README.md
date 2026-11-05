@@ -1,44 +1,69 @@
 # ExamPlan Studio
 
-> **Universal Interactive Exam Planner Generator**
+> **Universal interactive exam planner generator**
 
-Generador y CLI ligero diseñado para transformar listas o esquemas de exámenes universitarios en plataformas visuales interactivas autocontenidas (`.html`).
+[![Deploy to GitHub Pages](https://github.com/MercuryDCD/ExamiPlanner/actions/workflows/pages.yml/badge.svg)](https://github.com/MercuryDCD/ExamiPlanner/actions/workflows/pages.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Características principales
+**[Live demo](https://mercurydcd.github.io/ExamiPlanner/)**
 
-* **Universal:** Compatible con sistemas de múltiples convocatorias (*appelli* como UNIBO) y sistemas clásicos (ordinaria/extraordinaria, parciales y finales).
-* **Cero dependencias en el entregable final (*zero-build*):** El archivo `.html` resultante es 100% autónomo (Tailwind CSS vía CDN + JavaScript nativo), operable en local con doble clic, incrustable en Obsidian o publicable en GitHub Pages.
-* **Motor de análisis y conflictos en vivo:** Detección reactiva de colisiones horarias exactas, sobrecarga diaria en la misma fecha, turnarounds críticos (< 24h), paracaídas de convocatorias múltiples y cálculo del colchón de estudio métrico entre pruebas.
-* **Vista de calendario y agenda cronológica:** Calendario mensual interactivo con cambio de estado al vuelo, contador en vivo de créditos ECTS/CFU y presets de estrategias de examen.
-* **Carga automática con IA y Drag & Drop:** Arrastra cualquier archivo `.json`, `.md` (README de IA) o `.txt` directamente sobre el navegador o usa el botón de carga rápida. Soporta extracción de bloques ```json generados por IA a partir de fotos de exámenes, portales universitarios y documentos PDF, con limpieza defensiva de comentarios y comas finales. Incluye plantilla lista para usar en [`TEMPLATE_EXAMS.md`](TEMPLATE_EXAMS.md) y botón "Prompt IA" en la interfaz.
+A lightweight generator and CLI that turns university exam lists or schedules into self-contained, interactive visual planners (a single `.html` file).
 
-## Estructura del proyecto
+## Features
 
-```text
-exam-plan-studio/
-├── templates/
-│   ├── standalone_planner.html    # Plantilla maestra de la interfaz reactiva
-│   └── partials/                  # Componentes reutilizables
-├── schemas/
-│   ├── schedule_schema.json       # JSON Schema para validación
-│   └── examples/                  # Casos de ejemplo (UNIBO, estándar)
-├── src/
-│   ├── core/
-│   │   ├── parser.js              # Ingesta (JSON, Markdown, README de IA)
-│   │   ├── analyzer.js            # Motor de detección de conflictos y métricas
-│   │   └── generator.js           # Inyector en plantilla estática
-│   └── cli.js                     # CLI de generación
-├── tests/                         # Suite de pruebas unitarias
-├── TEMPLATE_EXAMS.md              # Prompt y esquema para rellenar con IA
-├── GEMINI.md                      # Especificación arquitectónica y directivas
-└── package.json
+* **Universal:** supports multi-call systems (Italian *appelli*, e.g. UNIBO) and classic ones (ordinary/extraordinary sessions, midterms and finals), including subjects split into separately gradable modules.
+* **Zero dependencies in the final output (*zero-build*):** the generated `.html` is fully standalone (Tailwind CSS via CDN + vanilla JavaScript). It works by double-clicking locally, embedded in Obsidian, or hosted on GitHub Pages.
+* **Live conflict analysis:** exact time collisions, same-day congestion, critical turnarounds (< 24 h), backup (fallback) calls for the same module, and study-buffer metrics between exams.
+* **Optimizer:** *Maximize spacing* (max-min buffer) and *difficulty-weighted* modes (per-module sliders from 1 to 5), plus a *Safety net* toggle that keeps later calls free as fallbacks.
+* **Calendar and timeline:** 3-month interactive calendar, per-day planning (blocked / study day), chronological agenda, `.ics` export and Markdown summary.
+* **Multi-session and i18n:** independent sessions persisted in `localStorage`; Spanish / English / Italian UI; dark and light mode.
+* **AI-assisted import and drag & drop:** drop any `.json`, `.md` or `.txt` onto the browser. It extracts AI-generated ```` ```json ```` blocks (from exam photos, university portals or PDFs) and cleans comments and trailing commas. A ready-to-use prompt is in [`TEMPLATE_EXAMS.md`](TEMPLATE_EXAMS.md) and behind the "AI Prompt" button in the UI.
+
+## Quick start
+
+Requires Node.js ≥ 18 (uses `node:util` `parseArgs` and `node --test`). No `npm install` needed.
+
+```bash
+node src/cli.js -i schemas/examples/unibo_master_ai.json -o index.html
 ```
 
-## Licencia
+Then open `index.html` in any browser.
 
-MIT
+| Option | Description |
+|---|---|
+| `-i, --input <path>` | JSON or Markdown file with the exam calls (required) |
+| `-o, --output <path>` | Output HTML file (default: `index.html`) |
+| `-t, --template <path>` | Custom HTML template |
+| `-h, --help` / `-v, --version` | Help / version |
 
-## Despliegue en GitHub Pages
+Run the tests with `npm test`.
 
-El workflow `.github/workflows/pages.yml` ejecuta tests, regenera `index.html` y lo publica en cada push a `main`. Requiere **Settings → Pages → Source: GitHub Actions**.
+## Input format
 
+Input is a normalized JSON document (`meta`, `subjects` → `modules` → `calls`, optional `presets`), validated against [`schemas/schedule_schema.json`](schemas/schedule_schema.json). See [`schemas/examples/`](schemas/examples/) for complete examples. Modules of the same subject with calls on the same `date` and `time` are treated as a single joint exam.
+
+## Project structure
+
+```text
+├── templates/standalone_planner.html   # Master HTML template
+├── schemas/
+│   ├── schedule_schema.json            # JSON Schema
+│   └── examples/                       # Example inputs
+├── src/
+│   ├── core/                           # Node.js: parser, analyzer, optimizer, generator
+│   ├── client/                         # Browser modules inlined into the output
+│   └── cli.js                          # CLI entry point
+├── tests/                              # Unit and integration tests
+├── TEMPLATE_EXAMS.md                   # AI prompt + schema to fill in
+└── GEMINI.md                           # Architecture notes and assistant directives
+```
+
+Edit `src/` or `templates/`, then regenerate the deliverable with `npm run build:example`.
+
+## Deployment (GitHub Pages)
+
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) runs the tests, regenerates `index.html` and publishes it on every push to `main`. Requires **Settings → Pages → Source: GitHub Actions**.
+
+## License
+
+[MIT](LICENSE)
