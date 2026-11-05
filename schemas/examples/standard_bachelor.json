@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "title": "Grado Universitario",
+    "academicYear": "2026/2027",
+    "session": "Convocatoria de Exámenes",
+    "icon": "☀️",
+    "targetCredits": 30,
+    "creditUnit": "ECTS"
+  },
+  "subjects": [
+    {
+      "id": "so",
+      "name": "Sistemas Operativos",
+      "code": "GII-201",
+      "credits": 6,
+      "color": "sky",
+      "difficulty": "high",
+      "defaultWeight": 4,
+      "modules": [
+        {
+          "id": "so_final",
+          "name": "Examen Final Teórico-Práctico",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "so_ord",
+              "date": "2027-05-24",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-05-18",
+              "location": "Aulario 3 - Aula 3.01",
+              "notes": "Convocatoria Ordinaria (Procesos, memoria, concurrencia)"
+            },
+            {
+              "id": "so_ext",
+              "date": "2027-06-25",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-06-18",
+              "location": "Aulario 3 - Aula 3.01",
+              "notes": "Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bbdd",
+      "name": "Bases de Datos Relacionales y NoSQL",
+      "code": "GII-202",
+      "credits": 6,
+      "color": "emerald",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "bbdd_final",
+          "name": "Diseño Relacional y Consultas SQL/NoSQL",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "bbdd_ord",
+              "date": "2027-05-28",
+              "time": "15:30",
+              "durationHours": 2.5,
+              "deadline": "2027-05-22",
+              "location": "Laboratorio L2",
+              "notes": "Convocatoria Ordinaria"
+            },
+            {
+              "id": "bbdd_ext",
+              "date": "2027-06-29",
+              "time": "15:30",
+              "durationHours": 2.5,
+              "deadline": "2027-06-22",
+              "location": "Laboratorio L2",
+              "notes": "Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redes",
+      "name": "Redes de Computadores",
+      "code": "GII-203",
+      "credits": 6,
+      "color": "blue",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "redes_final",
+          "name": "Protocolos TCP/IP y Arquitectura de Red",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "redes_ord",
+              "date": "2027-06-03",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-05-28",
+              "location": "Aula 1.05",
+              "notes": "Convocatoria Ordinaria"
+            },
+            {
+              "id": "redes_ext",
+              "date": "2027-07-02",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-06-26",
+              "location": "Aula 1.05",
+              "notes": "Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aeda",
+      "name": "Algoritmos y Estructuras de Datos Avanzadas",
+      "code": "GII-204",
+      "credits": 6,
+      "color": "purple",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "aeda_final",
+          "name": "Grafos, Programación Dinámica y Complejidad",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "aeda_ord",
+              "date": "2027-06-09",
+              "time": "09:00",
+              "durationHours": 3.5,
+              "deadline": "2027-06-03",
+              "location": "Aulario Central - Aula Magna",
+              "notes": "Convocatoria Ordinaria"
+            },
+            {
+              "id": "aeda_ext",
+              "date": "2027-07-07",
+              "time": "09:00",
+              "durationHours": 3.5,
+              "deadline": "2027-07-01",
+              "location": "Aulario Central - Aula Magna",
+              "notes": "Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "estadistica",
+      "name": "Estadística Aplicada e Inferencia",
+      "code": "GII-205",
+      "credits": 6,
+      "color": "amber",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "estad_final",
+          "name": "Inferencia, Regresión y Modelos Probabilísticos",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "estad_ord",
+              "date": "2027-06-15",
+              "time": "12:00",
+              "durationHours": 2.5,
+              "deadline": "2027-06-09",
+              "location": "Aula 2.08",
+              "notes": "Convocatoria Ordinaria"
+            },
+            {
+              "id": "estad_ext",
+              "date": "2027-07-12",
+              "time": "12:00",
+              "durationHours": 2.5,
+              "deadline": "2027-07-06",
+              "location": "Aula 2.08",
+              "notes": "Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Todo en Ordinaria (Mayo - Junio)",
+      "description": "Presentarse a todas las asignaturas en la convocatoria ordinaria con verano despejado.",
+      "selectedCallIds": [
+        "so_ord",
+        "bbdd_ord",
+        "redes_ord",
+        "aeda_ord",
+        "estad_ord"
+      ]
+    },
+    {
+      "name": "Estrategia con Paracaídas en Extraordinaria",
+      "description": "Dejar la más densa (Algoritmos) para julio con 4 semanas de estudio dedicado y hacer el resto en junio.",
+      "selectedCallIds": [
+        "so_ord",
+        "bbdd_ord",
+        "redes_ord",
+        "estad_ord",
+        "aeda_ext"
+      ]
+    }
+  ]
+}

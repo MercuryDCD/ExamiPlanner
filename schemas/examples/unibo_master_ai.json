@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "title": "Máster en Inteligencia Artificial",
+    "academicYear": "2026/2027",
+    "session": "Convocatoria Principal",
+    "icon": "🎓"
+  },
+  "subjects": [
+    {
+      "id": "ml",
+      "name": "Machine Learning",
+      "shortName": "ML",
+      "code": "GII-401",
+      "color": "indigo",
+      "difficulty": "high",
+      "defaultWeight": 4,
+      "modules": [
+        {
+          "id": "ml_mod",
+          "name": "Machine Learning (Teórico y Práctico)",
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "ml_appello_1",
+              "date": "2027-01-14",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-01-10",
+              "location": "Aula Magna - Edificio Central",
+              "notes": "1ª Convocatoria Ordinaria - Teoría y ejercicios prácticos"
+            },
+            {
+              "id": "ml_appello_2",
+              "date": "2027-02-04",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-01-31",
+              "location": "Aula 2.1 - Pabellón A",
+              "notes": "2ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "ml_appello_3",
+              "date": "2027-02-22",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-02-18",
+              "location": "Aula 1.05 - Pabellón B",
+              "notes": "Convocatoria de Recuperación"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dlcv",
+      "name": "Deep Learning & Visión por Computador",
+      "shortName": "DLCV",
+      "code": "GII-402",
+      "color": "violet",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "dlcv_mod",
+          "name": "Deep Learning & Visión (Teoría + Proyecto)",
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "dlcv_appello_1",
+              "date": "2027-01-19",
+              "time": "14:30",
+              "durationHours": 3,
+              "deadline": "2027-01-15",
+              "location": "Laboratorio L1",
+              "notes": "Entrega obligatoria del proyecto 5 días antes"
+            },
+            {
+              "id": "dlcv_appello_2",
+              "date": "2027-02-09",
+              "time": "14:30",
+              "durationHours": 3,
+              "deadline": "2027-02-05",
+              "location": "Laboratorio L1",
+              "notes": "2ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "dlcv_appello_3",
+              "date": "2027-02-25",
+              "time": "14:30",
+              "durationHours": 3,
+              "deadline": "2027-02-21",
+              "location": "Laboratorio L1",
+              "notes": "Convocatoria de Recuperación"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nlp",
+      "name": "Procesamiento del Lenguaje Natural",
+      "shortName": "PLN",
+      "code": "GII-403",
+      "color": "emerald",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "nlp_mod",
+          "name": "PLN y Modelos del Lenguaje",
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "nlp_appello_1",
+              "date": "2027-01-23",
+              "time": "10:00",
+              "durationHours": 2.5,
+              "deadline": "2027-01-19",
+              "location": "Aula 3.2",
+              "notes": "Examen escrito con preguntas teóricas y código"
+            },
+            {
+              "id": "nlp_appello_2",
+              "date": "2027-02-13",
+              "time": "10:00",
+              "durationHours": 2.5,
+              "deadline": "2027-02-09",
+              "location": "Aula 1.3",
+              "notes": "2ª Convocatoria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "krr",
+      "name": "Representación del Conocimiento y Razonamiento",
+      "shortName": "KRR",
+      "code": "GII-404",
+      "color": "amber",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "krr_mod",
+          "name": "Lógicas Descriptivas y Ontologías",
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "krr_appello_1",
+              "date": "2027-01-28",
+              "time": "15:00",
+              "durationHours": 2,
+              "deadline": "2027-01-24",
+              "location": "Auditorio",
+              "notes": "Resolución de problemas de razonamiento semántico"
+            },
+            {
+              "id": "krr_appello_2",
+              "date": "2027-02-17",
+              "time": "15:00",
+              "durationHours": 2,
+              "deadline": "2027-02-13",
+              "location": "Auditorio",
+              "notes": "2ª Convocatoria Ordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ethics",
+      "name": "Ética, Legislación y Deontología Profesional",
+      "shortName": "ETICA",
+      "code": "GII-405",
+      "color": "rose",
+      "difficulty": "low",
+      "defaultWeight": 1,
+      "modules": [
+        {
+          "id": "ethics_mod",
+          "name": "Regulación, Privacidad e Impacto Social",
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "ethics_appello_1",
+              "date": "2027-02-01",
+              "time": "11:00",
+              "durationHours": 2,
+              "deadline": "2027-01-28",
+              "location": "Aula 3",
+              "notes": "Ensayo argumentativo y análisis de casos"
+            },
+            {
+              "id": "ethics_appello_2",
+              "date": "2027-02-20",
+              "time": "11:00",
+              "durationHours": 2,
+              "deadline": "2027-02-16",
+              "location": "Aula 3",
+              "notes": "2ª Convocatoria Ordinaria"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

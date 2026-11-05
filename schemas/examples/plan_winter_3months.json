@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "title": "Grado en Ingeniería Informática — Convocatoria de Invierno",
+    "institution": "Universidad Politécnica",
+    "academicYear": "2026/2027",
+    "session": "Invierno (Enero - Marzo 2027)",
+    "icon": "❄️",
+    "targetCredits": 30,
+    "creditUnit": "ECTS"
+  },
+  "subjects": [
+    {
+      "id": "so",
+      "name": "Sistemas Operativos y Virtualización",
+      "code": "GII-201",
+      "credits": 6,
+      "color": "sky",
+      "difficulty": "high",
+      "defaultWeight": 4,
+      "modules": [
+        {
+          "id": "so_mod",
+          "name": "Administración de Memoria, Concurrencia y Procesos",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "so_call_1",
+              "date": "2027-01-15",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-01-10",
+              "location": "Aula Magna - Edificio Central",
+              "notes": "1ª Convocatoria Ordinaria (Enero)"
+            },
+            {
+              "id": "so_call_2",
+              "date": "2027-02-05",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-01-31",
+              "location": "Aula Magna - Edificio Central",
+              "notes": "2ª Convocatoria Ordinaria (Febrero)"
+            },
+            {
+              "id": "so_call_3",
+              "date": "2027-03-05",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-02-28",
+              "location": "Aula Magna - Edificio Central",
+              "notes": "3ª Convocatoria de Recuperación (Marzo)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redes",
+      "name": "Redes de Computadores y Protocolos",
+      "code": "GII-202",
+      "credits": 6,
+      "color": "indigo",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "redes_mod",
+          "name": "Arquitectura TCP/IP y Enrutamiento",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "redes_call_1",
+              "date": "2027-01-20",
+              "time": "15:30",
+              "durationHours": 2.5,
+              "deadline": "2027-01-15",
+              "location": "Aulario 2 - Aula 2.1",
+              "notes": "1ª Convocatoria Ordinaria (Enero)"
+            },
+            {
+              "id": "redes_call_2",
+              "date": "2027-02-10",
+              "time": "15:30",
+              "durationHours": 2.5,
+              "deadline": "2027-02-05",
+              "location": "Aulario 2 - Aula 2.1",
+              "notes": "2ª Convocatoria Ordinaria (Febrero)"
+            },
+            {
+              "id": "redes_call_3",
+              "date": "2027-03-10",
+              "time": "15:30",
+              "durationHours": 2.5,
+              "deadline": "2027-03-05",
+              "location": "Aulario 2 - Aula 2.1",
+              "notes": "3ª Convocatoria de Recuperación (Marzo)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aeda",
+      "name": "Algoritmos y Estructuras de Datos Avanzadas",
+      "code": "GII-203",
+      "credits": 6,
+      "color": "violet",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "aeda_teoria",
+          "name": "Complejidad Computacional y Grafos",
+          "credits": 3,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "aeda_teo_call_1",
+              "date": "2027-01-22",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-01-17",
+              "location": "Aulario Central - Aula 1.02",
+              "notes": "Módulo Teórico - 1ª Convocatoria"
+            },
+            {
+              "id": "aeda_teo_call_2",
+              "date": "2027-02-12",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-02-07",
+              "location": "Aulario Central - Aula 1.02",
+              "notes": "Módulo Teórico - 2ª Convocatoria"
+            },
+            {
+              "id": "aeda_teo_call_3",
+              "date": "2027-03-12",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-03-07",
+              "location": "Aulario Central - Aula 1.02",
+              "notes": "Módulo Teórico - 3ª Convocatoria"
+            }
+          ]
+        },
+        {
+          "id": "aeda_lab",
+          "name": "Programación Dinámica y Laboratorio",
+          "credits": 3,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "aeda_lab_call_1",
+              "date": "2027-01-27",
+              "time": "16:00",
+              "durationHours": 2,
+              "deadline": "2027-01-22",
+              "location": "Laboratorio Informático L4",
+              "notes": "Módulo Práctico - 1ª Convocatoria"
+            },
+            {
+              "id": "aeda_lab_call_2",
+              "date": "2027-02-17",
+              "time": "16:00",
+              "durationHours": 2,
+              "deadline": "2027-02-12",
+              "location": "Laboratorio Informático L4",
+              "notes": "Módulo Práctico - 2ª Convocatoria"
+            },
+            {
+              "id": "aeda_lab_call_3",
+              "date": "2027-03-17",
+              "time": "16:00",
+              "durationHours": 2,
+              "deadline": "2027-03-12",
+              "location": "Laboratorio Informático L4",
+              "notes": "Módulo Práctico - 3ª Convocatoria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd",
+      "name": "Diseño e Implementación de Bases de Datos",
+      "code": "GII-204",
+      "credits": 6,
+      "color": "emerald",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "bd_mod",
+          "name": "Modelado Relacional y NoSQL",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "bd_call_1",
+              "date": "2027-01-29",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-01-24",
+              "location": "Aulario 3 - Aula 3.01",
+              "notes": "1ª Convocatoria Ordinaria (Enero)"
+            },
+            {
+              "id": "bd_call_2",
+              "date": "2027-02-19",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-02-14",
+              "location": "Aulario 3 - Aula 3.01",
+              "notes": "2ª Convocatoria Ordinaria (Febrero)"
+            },
+            {
+              "id": "bd_call_3",
+              "date": "2027-03-19",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-03-14",
+              "location": "Aulario 3 - Aula 3.01",
+              "notes": "3ª Convocatoria de Recuperación (Marzo)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hci",
+      "name": "Interacción Persona-Ordenador",
+      "code": "GII-205",
+      "credits": 6,
+      "color": "amber",
+      "difficulty": "low",
+      "defaultWeight": 1,
+      "modules": [
+        {
+          "id": "hci_mod",
+          "name": "Diseño Centrado en el Usuario y Accesibilidad",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "hci_call_1",
+              "date": "2027-02-02",
+              "time": "11:30",
+              "durationHours": 2,
+              "deadline": "2027-01-28",
+              "location": "Aulario 2 - Aula 2.05",
+              "notes": "1ª Convocatoria Ordinaria (Febrero)"
+            },
+            {
+              "id": "hci_call_2",
+              "date": "2027-02-24",
+              "time": "11:30",
+              "durationHours": 2,
+              "deadline": "2027-02-19",
+              "location": "Aulario 2 - Aula 2.05",
+              "notes": "2ª Convocatoria Ordinaria (Febrero)"
+            },
+            {
+              "id": "hci_call_3",
+              "date": "2027-03-24",
+              "time": "11:30",
+              "durationHours": 2,
+              "deadline": "2027-03-19",
+              "location": "Aulario 2 - Aula 2.05",
+              "notes": "3ª Convocatoria de Recuperación (Marzo)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Estrategia Temprana (Enero/Febrero)",
+      "description": "Completar todas las materias en la primera ventana de exámenes para liberar marzo.",
+      "selectedCallIds": [
+        "so_call_1",
+        "redes_call_1",
+        "aeda_teo_call_1",
+        "aeda_lab_call_1",
+        "bd_call_1",
+        "hci_call_1"
+      ]
+    },
+    {
+      "name": "Distribución Homogénea en 3 Meses",
+      "description": "Espaciar exámenes a lo largo de enero, febrero y marzo para maximizar el colchón de estudio por prueba.",
+      "selectedCallIds": [
+        "so_call_1",
+        "redes_call_1",
+        "hci_call_1",
+        "bd_call_2",
+        "aeda_teo_call_3",
+        "aeda_lab_call_3"
+      ]
+    },
+    {
+      "name": "Paracaídas de Recuperación en Marzo",
+      "description": "Uso de la segunda ronda en febrero y reserva de la tercera convocatoria de marzo para el bloque más denso.",
+      "selectedCallIds": [
+        "so_call_2",
+        "redes_call_2",
+        "bd_call_2",
+        "hci_call_2",
+        "aeda_teo_call_3",
+        "aeda_lab_call_3"
+      ]
+    }
+  ]
+}

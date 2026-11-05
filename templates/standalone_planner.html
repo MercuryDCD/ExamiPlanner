@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExamPlanner — Planificador de Exámenes</title>
+  <link id="app-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234f46e5'/%3E%3Cstop offset='100%25' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14L10 25l22 11 18-9v13h4V25L32 14zm0 26L17 32.5V41c0 5 6.7 9 15 9s15-4 15-9v-8.5L32 40z' fill='%23ffffff'/%3E%3C/svg%3E">
+  
+  <!-- MANDATORY (modern-web-guidance): Declare light and dark color schemes to prevent FOUC -->
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Instant inline theme initialization to prevent flash of wrong scheme (modern-web-guidance: dark-mode-toggle) -->
+  <script>
+    (function() {
+      try {
+        const storedTheme = localStorage.getItem('examplan-theme');
+        if (storedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'dark');
+        } else if (storedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'light');
+        } else {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (prefersDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'light dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* modern-web-guidance (dark-mode-toggle & brand-consistent-forms) */
+    :root {
+      color-scheme: light dark;
+      --brand-color: #6366f1;
+      --scrollbar-track: #f1f5f9;
+      --scrollbar-thumb: #cbd5e1;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      scrollbar-width: thin;
+
+      &:has(> head > meta[name="color-scheme"][content="dark"]) {
+        color-scheme: dark;
+      }
+      &:has(> head > meta[name="color-scheme"][content="light"]) {
+        color-scheme: light;
+      }
+    }
+    body {
+      accent-color: var(--brand-color);
+    }
+    html.dark {
+      color-scheme: dark;
+      --scrollbar-track: #0f172a;
+      --scrollbar-thumb: #334155;
+    }
+
+    /* Focus visible keyboard rings */
+    *:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
+
+    /* Smooth transition for theme colors */
+    body {
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* modern-web-guidance: native dialog modal containment and backdrop styling */
+    dialog:modal {
+      overscroll-behavior: contain;
+    }
+    dialog::backdrop {
+      overflow: hidden;
+      overscroll-behavior: contain;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation & Institutional Header (Compact Single-Row Design) -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center flex-wrap gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 text-base font-bold select-none" id="header-brand-logo">
+          <span id="header-brand-icon">🎓</span>
+        </div>
+        <div>
+          <h1 id="header-title" class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+            ExamPlan Studio
+          </h1>
+          <p id="header-subtitle" data-i18n="brand_subtitle" class="text-[11px] text-slate-500 dark:text-slate-400">
+            Cargando sesión académica...
+          </p>
+        </div>
+
+        <!-- Session Switcher Dropdown (Accessible modern-web-guidance) -->
+        <div class="relative ml-1 sm:ml-2" id="session-switcher-container">
+          <button id="btn-session-dropdown" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/90 text-slate-900 dark:text-slate-100 font-bold text-xs border border-slate-300 dark:border-slate-700 shadow-sm transition active:scale-95 group" title="Cambiar de sesión o gestionar calendarios">
+            <span id="current-session-icon" class="text-sm leading-none">❄️</span>
+            <div class="text-left leading-none">
+              <span class="block text-[8px] uppercase font-bold text-indigo-600 dark:text-indigo-400 tracking-wider" data-i18n="session_label">Sesión</span>
+              <span id="current-session-name" class="block max-w-[110px] sm:max-w-[150px] md:max-w-[190px] truncate mt-0.5">Sesión</span>
+            </div>
+            <span id="current-session-count" class="hidden sm:inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">4 exám.</span>
+            <svg id="session-dropdown-arrow" class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="session-dropdown-menu" role="menu" aria-orientation="vertical" class="hidden absolute left-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 p-2.5 z-50 text-xs focus:outline-none">
+            <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <span data-i18n="my_sessions_title">Mis Calendarios y Sesiones</span>
+              <button type="button" id="btn-quick-new-session" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-bold flex items-center gap-1 active:scale-95 transition">
+                <span data-i18n="new_session_btn">+ Nueva Sesión</span>
+              </button>
+            </div>
+            <div id="session-dropdown-items" class="max-h-60 overflow-y-auto py-1.5 space-y-1">
+              <!-- Dynamically populated -->
+            </div>
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-2 px-1 flex items-center justify-between gap-1.5 text-[11px]">
+              <button type="button" id="btn-duplicate-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Duplicar para probar otra combinación de fechas">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="btn_duplicate">Duplicar</span>
+              </button>
+              <button type="button" id="btn-edit-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Renombrar o cambiar icono">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> <span data-i18n="btn_rename">Renombrar</span>
+              </button>
+              <button type="button" id="btn-delete-active-session" class="inline-flex items-center justify-center p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Eliminar sesión actual">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+            </div>
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-1.5 px-1">
+              <button type="button" id="btn-reset-to-template" data-i18n="btn_reset_all_sessions" class="w-full text-center py-1 text-[11px] text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 font-medium transition">
+                Restablecer a plantilla genérica
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Toolbar -->
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Language Switcher Toggle Button (ES / EN) -->
+        <button id="btn-lang-toggle" type="button" class="inline-flex items-center gap-1 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Switch Language / Cambiar Idioma">
+          <svg class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="lang-label">EN</span>
+        </button>
+
+        <!-- Manage Exams & Subjects Modal Trigger -->
+        <button id="btn-open-manage-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2.5 py-1.5 rounded-lg shadow-sm shadow-indigo-500/20 transition active:scale-95" title="Gestionar asignaturas, convocatorias o importar planes">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span data-i18n="btn_manage_subjects">Gestionar Asignaturas</span>
+        </button>
+
+        <!-- Load Plan Dropdown Menu -->
+        <div class="relative">
+          <input type="file" id="top-file-input" accept=".json,.md,.txt" class="hidden">
+          <button id="btn-load-plan-dropdown" type="button" aria-expanded="false" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar archivo, pegar texto, prompt IA o markdown">
+            <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <span data-i18n="btn_load_plan">Cargar Plan</span>
+            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="load-plan-dropdown-menu" class="hidden absolute right-0 mt-1 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 py-1.5 text-xs space-y-0.5">
+            <button id="btn-top-upload" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg> <span data-i18n="menu_upload_file">Subir archivo (.json, .md, .txt)</span>
+            </button>
+            <button id="btn-menu-paste-text" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="menu_paste_text">Pegar texto o JSON</span>
+            </button>
+            <button id="btn-top-copy-prompt" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-medium">
+              <svg class="w-3.5 h-3.5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="menu_copy_prompt">Prompt IA (Copiar plantilla)</span>
+            </button>
+            <button id="btn-copy-md" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> <span data-i18n="menu_copy_md">Copiar resumen en Markdown</span>
+            </button>
+            <button id="btn-menu-download-json" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="menu_download_json">Descargar copia JSON</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Help & Feature Guide Modal Trigger -->
+        <button id="btn-open-help-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Guía y explicación de funciones">
+          <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span data-i18n="btn_help">Ayuda</span>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" type="button" aria-label="Cambiar tema claro u oscuro" class="p-1.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+          <svg id="theme-icon-light" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+        </button>
+
+        <!-- Hidden Compatibility Placeholders -->
+        <select id="preset-select" class="hidden" aria-hidden="true"><option value=""></option></select>
+        <button id="btn-export-ics" class="hidden" aria-hidden="true"></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="flex-1 max-w-[1720px] 2xl:max-w-[1920px] w-full mx-auto px-3 sm:px-5 py-4 space-y-5">
+
+    <!-- KPI Metric Cards Bar -->
+    <section aria-label="Métricas de planificación" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <!-- Covered Exams / Modules KPI -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <span class="font-medium" data-i18n="kpi_exams_covered">Exámenes Cubiertos</span>
+          <span id="kpi-exams-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">0%</span>
+        </div>
+        <div class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-baseline gap-1">
+          <span id="kpi-exams-current">0</span>
+          <span class="text-xs font-normal text-slate-400">/ <span id="kpi-exams-total">0</span> <span data-i18n="kpi_exams_unit">obligatorios</span></span>
+        </div>
+        <!-- Progress bar -->
+        <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
+          <div id="kpi-exams-progress" class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <!-- Hidden elements for backward compatibility -->
+        <span id="kpi-credits-current" class="hidden" aria-hidden="true">0</span>
+        <span id="kpi-credits-target" class="hidden" aria-hidden="true">0</span>
+        <span id="kpi-credit-unit" class="hidden" aria-hidden="true">CFU</span>
+        <span id="kpi-credits-badge" class="hidden" aria-hidden="true">0%</span>
+        <div id="kpi-credits-progress" class="hidden" aria-hidden="true"></div>
+      </div>
+
+      <!-- Min Buffer Days KPI -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <span class="font-medium" data-i18n="kpi_bottleneck">Cuello de Botella (Mín. Días)</span>
+          <span id="kpi-minbuffer-icon" class="text-xs">⏱️</span>
+        </div>
+        <div class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-baseline gap-1">
+          <span id="kpi-min-buffer">-</span>
+          <span class="text-xs font-normal text-slate-400" data-i18n="kpi_free_days">días libres</span>
+        </div>
+        <p id="kpi-min-buffer-hint" class="text-[11px] text-slate-400 mt-1" data-i18n="kpi_bottleneck_hint">Margen mínimo entre 2 exámenes</p>
+      </div>
+
+      <!-- Average Buffer KPI -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <span class="font-medium" data-i18n="kpi_avg_buffer">Colchón Promedio</span>
+          <span class="text-slate-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        </div>
+        <div class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-baseline gap-1">
+          <span id="kpi-avg-buffer">-</span>
+          <span class="text-xs font-normal text-slate-400" data-i18n="kpi_avg_buffer_unit">días / examen</span>
+        </div>
+        <p id="kpi-variance-hint" class="text-[11px] text-slate-400 mt-1">Reparto equilibrado</p>
+      </div>
+
+      <!-- Conflicts & Warnings KPI -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <span class="font-medium" data-i18n="kpi_conflicts">Estado de Conflictos</span>
+          <span id="kpi-conflicts-icon" class="text-xs">✅</span>
+        </div>
+        <div class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-baseline gap-1">
+          <span id="kpi-conflicts-count">0</span>
+          <span class="text-xs font-normal text-slate-400" data-i18n="alerts_label">alertas</span>
+        </div>
+        <p id="kpi-conflicts-hint" class="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1" data-i18n="kpi_no_conflicts">Sin colisiones ni avisos</p>
+      </div>
+    </section>
+
+    <!-- Conflict Alerts Banner (Reactively displayed if issues exist) -->
+    <section id="alerts-container" class="hidden" aria-live="polite">
+      <div id="alerts-box" class="rounded-xl border p-4 space-y-2 transition-all">
+        <!-- Rendered reactively via JS -->
+      </div>
+    </section>
+
+    <!-- Interactive Grid: Optimization & Difficulty Sliders + Calendar View -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+      
+      <!-- Left Column: Optimization Controls & Subject Sliders (3 cols) -->
+      <aside class="xl:col-span-3 space-y-6">
+        
+        <!-- Optimization Engines Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold tracking-wide uppercase text-slate-600 dark:text-slate-300" data-i18n="opt_engine_title">
+              Motores de Optimización
+            </h2>
+            <span class="text-[10px] font-semibold uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded" data-i18n="opt_auto_badge">
+              Automático
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed" data-i18n="opt_engine_desc">
+            Encuentra la mejor combinación de fechas para maximizar tus días de estudio y evitar solapamientos.
+          </p>
+
+          <!-- Primary Mode: Max Spacing -->
+          <button id="btn-opt-max-spacing" type="button" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold text-xs py-3 px-4 rounded-xl shadow-md shadow-indigo-500/25 transition active:scale-[0.98]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <span data-i18n="btn_max_spacing">Maximizar Espaciado</span>
+          </button>
+
+          <!-- Secondary Mode: Weighted Priority by Sliders -->
+          <button id="btn-opt-weighted" type="button" class="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs py-2.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 transition active:scale-[0.98]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            <span data-i18n="btn_prioritize_difficulty">Optimizar con Sliders de Dificultad</span>
+          </button>
+
+          <!-- Parachute / Safety Backup Priority Toggle -->
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="toggle-prioritize-safety" class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                <span data-i18n="btn_safety_toggle">🛡️ Red de Seguridad (Convocatorias de reserva)</span>
+              </label>
+              <input 
+                type="checkbox" 
+                id="toggle-prioritize-safety" 
+                class="w-4 h-4 text-indigo-600 rounded border-slate-300 dark:border-slate-700 focus:ring-indigo-500 cursor-pointer"
+              >
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-snug" data-i18n="safety_toggle_desc">
+              Prioriza fechas tempranas para reservar convocatorias posteriores por si necesitas recuperar o subir nota.
+            </p>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <button id="btn-select-all" type="button" class="text-indigo-600 dark:text-indigo-400 hover:underline" data-i18n="btn_select_all">Seleccionar Todo</button>
+            <button id="btn-clear-selection" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-i18n="btn_clear_selection">Limpiar Todo</button>
+          </div>
+        </div>
+
+        <!-- Subject Weight / Difficulty Sliders Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold tracking-wide uppercase text-slate-600 dark:text-slate-300" data-i18n="subject_weights_title">
+              Ponderación por Asignatura
+            </h2>
+            <span class="text-xs text-slate-400" data-i18n="difficulty_range_label">Dificultad (1 a 5)</span>
+          </div>
+
+          <p class="text-[11px] text-slate-500 dark:text-slate-400" data-i18n="subject_weights_desc">
+            Aumenta la dificultad en las materias más exigentes para que el optimizador les reserve más días de preparación previa.
+          </p>
+
+          <div id="sliders-list" class="space-y-4 pt-1">
+            <!-- Dynamic Subject Sliders -->
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Right Column: Interactive Calendar & Timeline (9 cols) -->
+      <section class="xl:col-span-9 space-y-6">
+        
+        <!-- Interactive Monthly Calendar Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 sm:p-4 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span data-i18n="calendar_title">Calendario de la Sesión</span>
+                <span id="calendar-session-tag" class="text-xs font-normal px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"></span>
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="calendar_desc">
+                Haz clic en un día o examen para seleccionarlo. En días libres o pulsando ✏️ puedes bloquear días o asignar materias de estudio.
+              </p>
+            </div>
+
+            <!-- Calendar legend -->
+            <div class="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full ring-2 ring-indigo-500 bg-indigo-500"></span> <span data-i18n="legend_active">Activo</span></span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700"></span> <span data-i18n="legend_inactive">Desactivado</span></span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> <span data-i18n="legend_conflict">Conflicto</span></span>
+            </div>
+          </div>
+
+          <!-- Month View Switcher (Conmutador de Vistas Mensuales) -->
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+            <div id="calendar-month-tabs" class="flex items-center gap-1.5 overflow-x-auto text-xs" role="tablist" aria-label="Filtrar vista por mes">
+              <!-- Rendered by renderCalendar() -->
+            </div>
+          </div>
+
+          <!-- Dynamic Monthly Grids Container -->
+          <div id="calendar-months-container" class="space-y-6">
+            <!-- Rendered by renderCalendar() -->
+          </div>
+        </div>
+
+        <!-- Chronological Timeline & Rest Agenda Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 dark:text-white" data-i18n="timeline_title">
+                Agenda Cronológica &amp; Colchón de Estudio
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="timeline_desc">
+                Secuencia temporal con descansos intermedios y plazos de matrícula.
+              </p>
+            </div>
+            <span id="timeline-count-badge" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+              0 Exámenes
+            </span>
+          </div>
+
+          <div id="timeline-container" class="relative pt-2">
+            <!-- Rendered by renderTimeline() -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Full-Page Drag & Drop Overlay Indicator -->
+  <div id="drop-overlay" class="fixed inset-0 z-50 bg-indigo-950/75 backdrop-blur-md border-4 border-dashed border-indigo-400 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-200 opacity-0 hidden">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-md mx-4 border border-indigo-200 dark:border-indigo-800">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-3xl mb-4 shadow-inner">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1" data-i18n="drop_title">Suelta tu archivo aquí</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3" data-i18n="drop_subtitle">Carga automática de archivos .json, .md o .txt (README generado por IA)</p>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800" data-i18n="drop_badge">
+        ✨ Procesamiento y guardado instantáneo
+      </span>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+  <!-- Modal de Gestión Universal de Asignaturas y Appelli (<dialog> nativo según modern-web-guidance) -->
+  <dialog id="manage-modal" closedby="any" aria-labelledby="manage-modal-title" class="p-0 rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-2xl border border-slate-200 dark:border-slate-800 max-w-4xl w-[95vw] md:w-[860px] max-h-[90vh]">
+    <div class="flex flex-col h-full max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <div>
+            <h2 id="manage-modal-title" class="text-base font-bold text-slate-900 dark:text-white" data-i18n="manage_modal_title">
+              Gestión Universal de Asignaturas &amp; Convocatorias
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="manage_modal_subtitle">
+              Personaliza tus asignaturas, añade convocatorias o importa planes completos para cualquier titulación universitaria.
+            </p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-modal" aria-label="Cerrar modal" class="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Modal Tabs Bar -->
+      <div class="flex items-center gap-2 px-6 pt-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 text-xs">
+        <button type="button" id="tab-btn-subjects" class="px-4 py-2.5 border-b-2 border-indigo-600 font-bold text-indigo-600 dark:text-indigo-400 transition" data-i18n="tab_subjects">
+          <svg class="w-3.5 h-3.5 inline-block shrink-0 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Asignaturas &amp; Convocatorias
+        </button>
+        <button type="button" id="tab-btn-import" class="px-4 py-2.5 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition" data-i18n="tab_import">
+          <svg class="w-3.5 h-3.5 inline-block shrink-0 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Importar / Exportar
+        </button>
+        <button type="button" id="tab-btn-meta" class="px-4 py-2.5 border-b-2 border-transparent font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition" data-i18n="tab_meta">
+          <svg class="w-3.5 h-3.5 inline-block shrink-0 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg> Datos de la Titulación
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="overflow-y-auto p-6 space-y-6 flex-1 text-xs">
+        
+        <!-- Tab Panel 1: Subjects & Calls -->
+        <div id="tab-panel-subjects" class="space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div>
+              <span id="modal-subjects-count" class="font-bold text-slate-800 dark:text-slate-200">0 Asignaturas</span>
+              <span class="text-slate-400" data-i18n="manage_subjects_hint"> • Edita o añade los llamamientos de cada examen</span>
+            </div>
+            <button type="button" id="btn-show-add-subject" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition active:scale-95 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              <span data-i18n="btn_new_subject">Nueva Asignatura</span>
+            </button>
+          </div>
+
+          <!-- Subject Form (Add / Edit) -->
+          <div id="subject-form-box" class="hidden p-4 rounded-xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/40 dark:bg-indigo-950/20 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 id="subject-form-title" class="font-bold text-indigo-900 dark:text-indigo-200 uppercase tracking-wide">
+                Nueva Asignatura
+              </h3>
+              <button type="button" id="sub-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">✕ Cancelar</button>
+            </div>
+            <input type="hidden" id="sub-id-hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="sub-name-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_sub_name">Nombre de la Asignatura *</label>
+                <input type="text" id="sub-name-input" placeholder="ej: Sistemi Operativi" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="sub-shortname-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  Abreviatura / Acrónimo
+                  <span class="text-[10px] text-slate-400 font-normal">(ej. FAI, ML, SO, FP — visible en calendario y sliders)</span>
+                </label>
+                <input type="text" id="sub-shortname-input" maxlength="10" placeholder="ej: SO" class="w-full uppercase font-mono font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="sub-code-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_sub_code">Código (Opcional)</label>
+                <input type="text" id="sub-code-input" placeholder="ej: 91244" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div class="hidden" aria-hidden="true">
+                <input type="number" id="sub-credits-input" min="1" max="60" value="6">
+              </div>
+              <div>
+                <label for="sub-diff-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_sub_diff">Dificultad Previa</label>
+                <select id="sub-diff-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <option value="high">Alta (5/5)</option>
+                  <option value="medium" selected>Media (3/5)</option>
+                  <option value="low">Baja (1/5)</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label for="sub-color-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_sub_color">Color Identificativo</label>
+                <select id="sub-color-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <option value="indigo">Indigo (Azul Añil)</option>
+                  <option value="violet">Violet (Morado)</option>
+                  <option value="emerald">Emerald (Verde)</option>
+                  <option value="amber">Amber (Ámbar / Amarillo)</option>
+                  <option value="rose">Rose (Rosa / Rojo)</option>
+                  <option value="sky">Sky (Celeste)</option>
+                  <option value="cyan">Cyan (Turquesa)</option>
+                  <option value="teal">Teal (Verde azulado)</option>
+                  <option value="orange">Orange (Naranja)</option>
+                  <option value="purple">Purple (Púrpura)</option>
+                </select>
+              </div>
+
+              <!-- Modules Management Inside Subject -->
+              <div class="sm:col-span-2 pt-3 border-t border-indigo-200 dark:border-indigo-900/60">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h4 class="text-xs font-bold text-indigo-950 dark:text-indigo-200 uppercase tracking-wider" data-i18n="lbl_sub_modules">
+                      Módulos / Partes de la Asignatura
+                    </h4>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                      Asigna a cada módulo su nombre y abreviatura (ej. M1, M2, Teoría, Lab) para mostrarse en la UI.
+                    </p>
+                  </div>
+                  <button type="button" id="btn-add-module-row" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition" data-i18n="btn_add_module">
+                    + Añadir Módulo
+                  </button>
+                </div>
+                <div id="subject-modules-list" class="space-y-2">
+                  <!-- Dynamically populated module rows -->
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="button" id="sub-save-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition" data-i18n="btn_save_subject">
+                Guardar Asignatura
+              </button>
+            </div>
+          </div>
+
+          <!-- Call Form (Add / Edit Appello) -->
+          <div id="call-form-box" class="hidden p-4 rounded-xl border border-violet-200 dark:border-violet-900/60 bg-violet-50/40 dark:bg-violet-950/20 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 id="call-form-title" class="font-bold text-violet-900 dark:text-violet-200 uppercase tracking-wide">
+                  Nueva Convocatoria (Appello)
+                </h3>
+                <p id="call-subject-name-badge" class="text-[11px] text-violet-700 dark:text-violet-300 font-semibold mt-0.5"></p>
+              </div>
+              <button type="button" id="call-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">✕ Cancelar</button>
+            </div>
+            <input type="hidden" id="call-target-sub-id">
+            <input type="hidden" id="call-target-mod-id">
+            <input type="hidden" id="call-id-hidden">
+            <div id="call-module-select-wrapper" class="hidden mb-2">
+              <label for="call-module-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Módulo Evaluado en este Examen</label>
+              <select id="call-module-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </select>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label for="call-date-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_date">Fecha del Examen *</label>
+                <input type="date" id="call-date-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="call-time-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_time">Hora de Inicio</label>
+                <input type="time" id="call-time-input" value="09:00" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="call-duration-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_duration">Duración (Horas)</label>
+                <input type="number" id="call-duration-input" step="0.5" min="0.5" max="12" value="2.5" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="call-deadline-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_deadline">Límite Inscripción (Deadline)</label>
+                <input type="date" id="call-deadline-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none" title="Por defecto: 4 días antes del examen">
+              </div>
+              <div>
+                <label for="call-location-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_location">Aula / Ubicación</label>
+                <input type="text" id="call-location-input" placeholder="ej: Aula Magna" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="call-notes-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_notes">Notas / Modalidad</label>
+                <input type="text" id="call-notes-input" placeholder="ej: Oral + Escrito" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="button" id="call-save-btn" class="bg-violet-600 hover:bg-violet-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition" data-i18n="btn_save_call">
+                Guardar Convocatoria
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Subject List Container -->
+          <div id="modal-subjects-container" class="space-y-4">
+            <!-- Rendered reactively via JS -->
+          </div>
+        </div>
+
+        <!-- Tab Panel 2: Import / Export -->
+        <div id="tab-panel-import" class="hidden space-y-6">
+          <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white uppercase tracking-wide" data-i18n="import_sec_title">
+                Importar Datos Universitarios (JSON, README de IA o Markdown)
+              </h3>
+              <p class="text-slate-500 dark:text-slate-400 mt-1" data-i18n="import_sec_desc">
+                Arrastra tu archivo, pega el esquema JSON, o pega la respuesta completa generada por una IA (incluso con texto conversacional y formato ```json).
+              </p>
+            </div>
+
+            <!-- Drag & Drop Dropzone within Modal -->
+            <div id="modal-dropzone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 bg-white dark:bg-slate-900/60 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/30 rounded-xl p-5 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 group">
+              <input type="file" id="modal-file-input" accept=".json,.md,.txt" class="hidden">
+              <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800 dark:text-slate-200 text-xs">
+                  Arrastra aquí tu archivo <span class="text-indigo-600 dark:text-indigo-400 underline">.json, .md o .txt</span> o haz clic para seleccionarlo
+                </p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Detección automática de bloques JSON, sanitización de comentarios y tablas Markdown
+                </p>
+              </div>
+            </div>
+
+            <!-- Destino del plan importado -->
+            <div class="flex flex-wrap items-center justify-between gap-3 p-3 bg-indigo-50/70 dark:bg-indigo-950/40 rounded-xl border border-indigo-200/60 dark:border-indigo-900/50 text-xs">
+              <span class="font-bold text-slate-800 dark:text-slate-200" data-i18n="import_dest_label">Destino del plan importado:</span>
+              <div class="flex flex-wrap items-center gap-4">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="import-destination-mode" value="new" checked class="accent-indigo-600">
+                  <span class="font-semibold text-indigo-700 dark:text-indigo-300" data-i18n="import_dest_new">✨ Crear automáticamente una nueva sesión</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="import-destination-mode" value="current" class="accent-indigo-600">
+                  <span class="text-slate-600 dark:text-slate-400">Sobrescribir sesión activa (<span id="import-current-session-label">...</span>)</span>
+                </label>
+              </div>
+            </div>
+
+            <textarea 
+              id="import-text-input" 
+              rows="6" 
+              placeholder="O pega directamente aquí el JSON o el texto de la IA (incluyendo ```json ... ``` o tablas)..." 
+              class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 font-mono text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            ></textarea>
+
+            <div id="import-alert-box" class="hidden p-3 rounded-lg text-xs font-medium"></div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2.5">
+              <div class="flex items-center flex-wrap gap-2">
+                <button type="button" id="btn-modal-copy-prompt" class="px-2.5 py-1.5 rounded-lg border border-indigo-300 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300 font-semibold transition flex items-center gap-1.5 active:scale-95">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  <span data-i18n="btn_copy_ai_template">Copiar Plantilla para IA</span>
+                </button>
+                <button type="button" id="btn-sample-md" class="px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" data-i18n="btn_sample_md">
+                  <svg class="w-3.5 h-3.5 inline-block shrink-0 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Cargar Ejemplo Markdown
+                </button>
+                <input type="file" id="import-file-input" accept=".json,.md,.txt" class="hidden">
+                <button type="button" id="btn-trigger-file-import" class="px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" data-i18n="btn_select_file">
+                  <svg class="w-3.5 h-3.5 inline-block shrink-0 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg> Seleccionar Archivo
+                </button>
+              </div>
+              <button type="button" id="btn-run-import" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition active:scale-95" data-i18n="btn_run_import">
+                Procesar e Importar Plan
+              </button>
+            </div>
+          </div>
+
+          <!-- Export & Reset Area -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+              <h4 class="font-bold text-slate-900 dark:text-white" data-i18n="export_sec_title">Exportar Configuración</h4>
+              <p class="text-slate-500 dark:text-slate-400">Descarga el JSON actualizado para respaldar o usar en otros dispositivos.</p>
+              <div class="flex items-center gap-2 pt-1">
+                <button type="button" id="btn-download-json-config" class="bg-slate-800 hover:bg-slate-900 text-white dark:bg-slate-700 dark:hover:bg-slate-600 font-medium px-3 py-1.5 rounded-lg transition text-xs">
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar JSON
+                </button>
+                <button type="button" id="btn-copy-json-config" class="border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium px-3 py-1.5 rounded-lg transition text-xs">
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Copiar JSON
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+              <h4 class="font-bold text-red-600 dark:text-red-400" data-i18n="reset_sec_title">Restablecer Datos</h4>
+              <p class="text-slate-500 dark:text-slate-400">Borra las modificaciones guardadas en localStorage y restaura el plan original.</p>
+              <div class="pt-1">
+                <button type="button" id="btn-reset-storage" class="bg-red-600/10 hover:bg-red-600/20 text-red-700 dark:text-red-400 border border-red-500/20 font-medium px-3 py-1.5 rounded-lg transition text-xs">
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Restablecer a Datos de Fábrica
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Panel 3: Metadata -->
+        <div id="tab-panel-meta" class="hidden space-y-4">
+          <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <h3 class="font-bold text-slate-900 dark:text-white uppercase tracking-wide" data-i18n="meta_sec_title">
+              Información de la Titulación y Convocatoria
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="meta-title-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_meta_title">Título de la Titulación / Sesión</label>
+                <input type="text" id="meta-title-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="meta-inst-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_meta_inst">Universidad / Institución</label>
+                <input type="text" id="meta-inst-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="meta-year-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_meta_year">Año Académico</label>
+                <input type="text" id="meta-year-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="meta-session-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_meta_session">Nombre de la Sesión</label>
+                <input type="text" id="meta-session-input" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label for="meta-icon-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_meta_icon">Icono / Emoji de la Sesión</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="meta-icon-input" maxlength="4" class="w-14 text-center text-base bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                  <span class="text-[11px] text-slate-400">Ej: ❄️, ☀️, 🍂, 🎓, 🤖, 📚</span>
+                </div>
+              </div>
+              <div class="hidden" aria-hidden="true">
+                <input type="number" id="meta-target-credits-input" min="1" max="180" value="30">
+                <input type="text" id="meta-unit-input" value="ECTS">
+              </div>
+            </div>
+            <div class="flex justify-end pt-2">
+              <button type="button" id="meta-save-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition" data-i18n="btn_save_meta">
+                Guardar Datos de Titulación
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </dialog>
+
+  <!-- Modal de Gestión y Creación de Sesiones (<dialog> nativo según modern-web-guidance) -->
+  <dialog id="session-modal" closedby="any" aria-labelledby="session-modal-title" class="p-0 rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-2xl border border-slate-200 dark:border-slate-800 max-w-lg w-[95vw] md:w-[500px]">
+    <div class="flex flex-col">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xl select-none" id="session-modal-badge-icon">
+            ❄️
+          </div>
+          <div>
+            <h3 id="session-modal-title" class="text-base font-bold text-slate-900 dark:text-white">
+              Nueva Sesión de Exámenes
+            </h3>
+            <p id="session-modal-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+              Crea un calendario independiente para organizar otra convocatoria o titulación.
+            </p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-session-modal" aria-label="Cerrar modal" class="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="session-modal-form" class="p-6 space-y-4 text-xs">
+        <input type="hidden" id="session-modal-edit-id" value="">
+
+        <!-- Session Name Input -->
+        <div>
+          <label for="session-modal-name" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            Nombre de la Sesión / Calendario <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="session-modal-name" required placeholder="Ej: ❄️ Sesión de Invierno, ☀️ Verano, 🎓 Máster AI..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+        </div>
+
+        <!-- Session Icon Selector -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block font-semibold text-slate-700 dark:text-slate-300">
+              Icono de la Sesión
+            </label>
+            <span class="text-[11px] text-slate-400">Selecciona o escribe cualquier emoji</span>
+          </div>
+          
+          <!-- Visual Emoji Grid -->
+          <div class="grid grid-cols-8 gap-1.5 p-2 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-800 mb-2" id="session-emoji-grid">
+            <!-- Dynamically populated chips -->
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-xs">Emoji seleccionado:</span>
+            <input type="text" id="session-modal-icon-input" maxlength="4" value="❄️" class="w-14 text-center text-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-1 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <span class="text-[11px] text-slate-400">(personalizable a mano si lo prefieres)</span>
+          </div>
+        </div>
+
+        <!-- Initial Content Mode (Only visible for new session) -->
+        <div id="session-modal-initial-mode-wrapper" class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <label class="block font-semibold text-slate-700 dark:text-slate-300">
+            Contenido Inicial de Asignaturas:
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="session-init-mode" value="copy_current" checked class="mt-0.5 accent-indigo-600">
+              <div>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block">Duplicar asignaturas de la sesión actual</span>
+                <span class="text-[11px] text-slate-400 block" id="session-init-copy-hint">Copia las asignaturas y llamamientos para comparar estrategias.</span>
+              </div>
+            </label>
+            <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="session-init-mode" value="sample" class="mt-0.5 accent-indigo-600">
+              <div>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block">Cargar plantilla universitaria de ejemplo</span>
+                <span class="text-[11px] text-slate-400 block">Asignaturas de prueba con múltiples convocatorias para planificar.</span>
+              </div>
+            </label>
+            <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="session-init-mode" value="empty" class="mt-0.5 accent-indigo-600">
+              <div>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block">Calendario en blanco (vacío)</span>
+                <span class="text-[11px] text-slate-400 block">Empieza desde cero y añade o importa tus asignaturas.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" id="btn-cancel-session-modal" class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300 transition" data-i18n="btn_cancel">
+            Cancelar
+          </button>
+          <button type="submit" id="btn-save-session-modal" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md shadow-indigo-500/20 transition active:scale-95">
+            Guardar Sesión
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Modal de Edición de Día del Calendario (<dialog> nativo según modern-web-guidance) -->
+  <dialog id="day-dialog" closedby="any" aria-labelledby="day-dialog-title" class="p-0 rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-2xl border border-slate-200 dark:border-slate-800 max-w-md w-[95vw] md:w-[460px]">
+    <div class="flex flex-col">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
+        <div class="flex items-center gap-2.5">
+          <span class="text-indigo-600 dark:text-indigo-400" id="day-dialog-icon"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          <div>
+            <h3 id="day-dialog-title" class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="day_dialog_title">
+              Planificar Día
+            </h3>
+            <p id="day-dialog-subtitle" class="text-xs text-slate-500 dark:text-slate-400" data-i18n="day_dialog_subtitle">
+              Disponibilidad o materia de estudio para este día.
+            </p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-day-dialog" aria-label="Cerrar modal" class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form id="day-dialog-form" class="p-5 space-y-4 text-xs">
+        <input type="hidden" id="day-dialog-date" value="">
+
+        <!-- Day Status Choice -->
+        <div class="space-y-2">
+          <label class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="day_dialog_status_label">
+            Estado de Disponibilidad:
+          </label>
+          <div class="grid grid-cols-1 gap-2">
+            <!-- Normal / Free -->
+            <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="day-plan-type" value="normal" checked class="accent-indigo-600">
+              <div class="flex-1">
+                <span class="font-bold text-slate-800 dark:text-slate-200 block" data-i18n="day_status_normal">Día Normal / Libre</span>
+                <span class="text-[11px] text-slate-400 block" data-i18n="day_status_normal_hint">Sin bloqueo ni asignación fija.</span>
+              </div>
+              <span class="text-emerald-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+            </label>
+
+            <!-- Blocked / Unavailable -->
+            <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="day-plan-type" value="blocked" class="accent-indigo-600">
+              <div class="flex-1">
+                <span class="font-bold text-red-600 dark:text-red-400 block" data-i18n="day_status_blocked">Día No Disponible / Bloqueado</span>
+                <span class="text-[11px] text-slate-400 block" data-i18n="day_status_blocked_hint">No puedes estudiar. Se descuenta del colchón útil de estudio.</span>
+              </div>
+              <span class="text-rose-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span>
+            </label>
+
+            <!-- Dedicated Study Day -->
+            <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+              <input type="radio" name="day-plan-type" value="study" class="accent-indigo-600">
+              <div class="flex-1">
+                <span class="font-bold text-indigo-600 dark:text-indigo-400 block" data-i18n="day_status_study">Día Dedicado a Asignatura</span>
+                <span class="text-[11px] text-slate-400 block" data-i18n="day_status_study_hint">Pintar el día con el color de la asignatura elegida.</span>
+              </div>
+              <span class="text-indigo-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Subject Selector (visible when study is selected) -->
+        <div id="day-dialog-subject-group" class="space-y-1.5 hidden">
+          <label for="day-dialog-subject-select" class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="day_subject_label">
+            Asignatura a Preparar:
+          </label>
+          <select id="day-dialog-subject-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Quick Note -->
+        <div class="space-y-1.5">
+          <label for="day-dialog-note" class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="day_note_label">
+            Nota o Tarea (opcional):
+          </label>
+          <input type="text" id="day-dialog-note" maxlength="60" placeholder="Ej: Repasar temas 1-3, simulacro..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" id="btn-clear-day-plan" class="text-rose-600 hover:text-rose-700 dark:text-rose-400 font-semibold text-xs px-2 py-1" data-i18n="btn_clear">
+            Limpiar Día
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btn-cancel-day-dialog" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300 transition" data-i18n="btn_cancel">
+              Cancelar
+            </button>
+            <button type="submit" id="btn-save-day-dialog" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm transition active:scale-95" data-i18n="btn_save">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Modal de Ayuda y Explicación de Funciones (<dialog> nativo según modern-web-guidance) -->
+  <dialog id="help-modal" closedby="any" aria-labelledby="help-modal-title" class="p-0 rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-2xl border border-slate-200 dark:border-slate-800 max-w-2xl w-[95vw] md:w-[680px] max-h-[85vh]">
+    <div class="flex flex-col h-full max-h-[85vh]">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70 flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg select-none">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div>
+          <h2 id="help-modal-title" class="text-base font-bold text-slate-900 dark:text-white" data-i18n="help_modal_title">
+            Guía de Uso y Funciones
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="help_modal_subtitle">
+            Explicación clara de cada botón y panel del planificador.
+          </p>
+        </div>
+      </div>
+      <button type="button" id="btn-close-help-modal" aria-label="Cerrar modal de ayuda" class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <!-- Content (Scrollable) -->
+    <div id="help-modal-body" class="overflow-y-auto p-6 space-y-6 text-xs leading-relaxed flex-1">
+      <!-- Section 1: Sessions -->
+      <section class="space-y-2">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>📅</span> <span>Gestión de Sesiones y Calendarios</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Desplegable de Sesión:</strong> Muestra el nombre e icono del calendario activo. Al pulsar, abre la lista de calendarios disponibles.</p>
+          <p><strong>Conmutar Sesión:</strong> Haz clic en cualquier sesión de la lista para cambiar instantáneamente de calendario sin perder tus datos.</p>
+          <p><strong>+ Nueva Sesión:</strong> Crea un calendario nuevo desde cero, copiando las materias actuales o cargando una plantilla de ejemplo.</p>
+          <p><strong>Duplicar:</strong> Crea una copia idéntica del calendario activo con todas sus notas y llamamientos para probar estrategias alternativas.</p>
+          <p><strong>Renombrar:</strong> Modifica el nombre o elige un icono emoji temático para identificar fácilmente el calendario.</p>
+          <p><strong>Eliminar:</strong> Borra la sesión activa si ya no la necesitas (el sistema protege siempre al menos un calendario).</p>
+        </div>
+      </section>
+
+      <!-- Section 2: Quick Action Toolbar -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>⚡</span> <span>Barra de Herramientas Superior</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>🌐 Idioma (ES / EN):</strong> Cambia al instante todos los textos, paneles y avisos entre Español e Inglés.</p>
+          <p><strong>Gestionar Asignaturas:</strong> Abre la ventana para dar de alta materias, editar horas, aulas, dificultades o importar/exportar datos.</p>
+          <p><strong>Cargar Plan:</strong> Abre el selector de archivos para cargar un <code>.json</code>, <code>.md</code> o <code>.txt</code>. También puedes arrastrar el archivo directamente a la ventana.</p>
+          <p><strong>Prompt IA:</strong> Copia al portapapeles una plantilla de prompt con el esquema exacto para que una IA (ChatGPT, Claude, Gemini) extraiga tus exámenes desde capturas o fotos.</p>
+          <p><strong>Markdown:</strong> Copia un resumen estructurado de tus exámenes en formato Markdown para Obsidian, Notion o tus notas personales.</p>
+          <p><strong>❓ Ayuda:</strong> Abre esta guía explicativa con el detalle de cada función y botón.</p>
+          <p><strong>Modo Claro / Oscuro:</strong> Conmuta la apariencia entre tema claro y oscuro, recordando tu preferencia.</p>
+        </div>
+      </section>
+
+      <!-- Section 3: Optimization Engines -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>🎯</span> <span>Motores de Optimización y Selección</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Maximizar Espaciado:</strong> Encuentra automáticamente la combinación de fechas con mayor separación mínima entre exámenes, distribuyéndolos de forma equilibrada para evitar sobrecargas.</p>
+          <p><strong>Optimizar con Sliders de Dificultad:</strong> Calcula la mejor distribución otorgando más días de descanso y estudio previo a las asignaturas a las que hayas asignado mayor dificultad.</p>
+          <p><strong>🛡️ Red de Seguridad (Convocatorias de reserva):</strong> Prioriza elegir fechas tempranas para conservarse convocatorias posteriores de repetición por si necesitas recuperar o subir nota.</p>
+          <p><strong>Seleccionar Todo / Limpiar Todo:</strong> Activa o desactiva con un solo clic todas las convocatorias disponibles.</p>
+        </div>
+      </section>
+
+      <!-- Section 4: Sliders -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>🎚️</span> <span>Ponderación por Asignatura (Sliders de Dificultad)</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Deslizadores 1 a 5:</strong> Ajusta la dificultad o prioridad de cada materia. Mueve a la derecha (4-5) para asignaturas duras que requieran más días de estudio, y a la izquierda (1-2) para materias más llevaderas.</p>
+        </div>
+      </section>
+
+      <!-- Section 5: Calendar -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>🗓️</span> <span>Calendario Interactivo y Planificación de Días</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Clic en un examen (píldora):</strong> Activa o desactiva esa convocatoria concreta en tu plan de exámenes.</p>
+          <p><strong>Clic en una celda de día:</strong> Alterna la selección de los exámenes de ese día. Si el día no tiene exámenes programados, abre el diálogo para planificar el día.</p>
+          <p><strong>Icono ✏️ de día:</strong> Abre la ventana de planificación para cualquier día, permitiendo marcarlo como:</p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-500 dark:text-slate-400">
+            <li><strong>🟢 Día Normal / Libre:</strong> Día sin bloqueos ni asignaciones especiales.</li>
+            <li><strong>🚫 Día Bloqueado:</strong> Día en el que no podrás estudiar (viajes, compromisos personales). Se descuenta de tus días útiles de estudio.</li>
+            <li><strong>📖 Día Dedicado:</strong> Pinta el día con el color de una asignatura y una nota para organizar tu repaso intensivo.</li>
+          </ul>
+          <p><strong>Pestañas de Mes:</strong> Permiten alternar entre la vista global de todos los meses o filtrar un mes específico.</p>
+        </div>
+      </section>
+
+      <!-- Section 6: Timeline & KPIs -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>📊</span> <span>Métricas (KPIs), Avisos y Agenda Cronológica</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Exámenes Cubiertos:</strong> Indica cuántas asignaturas obligatorias tienen al menos un llamamiento elegido.</p>
+          <p><strong>Cuello de Botella:</strong> Indica el menor margen de días libres entre dos exámenes consecutivos de tu selección.</p>
+          <p><strong>Colchón Promedio:</strong> Media de días libres por examen entre pruebas consecutivas.</p>
+          <p><strong>Avisos y Conflictos:</strong> Detecta y avisa de colisiones horarias, sobrecarga en la misma fecha o descansos inferiores a 24 horas.</p>
+          <p><strong>Línea Temporal:</strong> Ordena cronológicamente tus exámenes con los días libres restantes, aula, notas y fechas de reserva disponibles.</p>
+        </div>
+      </section>
+
+      <!-- Section 7: Management -->
+      <section class="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>⚙️</span> <span>Panel de Gestión de Asignaturas</span>
+        </h3>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+          <p><strong>Pestaña Asignaturas:</strong> Da de alta nuevas materias, edita su color y dificultad, y añade convocatorias con fecha, hora, duración, aula y fecha límite de inscripción.</p>
+          <p><strong>Pestaña Importar / Exportar:</strong> Permite pegar texto o JSON, importar archivos, exportar a Google/Apple Calendar (.ics), descargar tu copia de seguridad en JSON o restablecer datos.</p>
+          <p><strong>Pestaña Datos de la Titulación:</strong> Personaliza el título de tu grado o máster, universidad (opcional), año académico y nombre de sesión.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70 flex items-center justify-end flex-shrink-0">
+      <button type="button" id="btn-footer-close-help" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-sm transition active:scale-95" data-i18n="btn_understand">
+        Entendido
+      </button>
+    </div>
+    </div>
+  </dialog>
+
+  <!-- Embedded or Injected Schedule Data -->
+  <script id="planner-schedule-data" type="application/json">
+/* __SCHEDULE_JSON__ */
+  </script>
+
+  <!-- Client Application Script (Parser, Analyzer, Optimizer, UI Logic) -->
+  <script>
+/* __CLIENT_SCRIPTS__ */
+  </script>
+</body>
+</html>

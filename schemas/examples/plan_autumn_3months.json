@@ -1,0 +1,305 @@
+{
+  "meta": {
+    "title": "Máster en Telecomunicaciones y Redes Ciberfísicas",
+    "institution": "Universidad Politécnica de Valencia",
+    "academicYear": "2026/2027",
+    "session": "Otoño (Octubre - Diciembre 2026)",
+    "icon": "🍂",
+    "targetCredits": 30,
+    "creditUnit": "ECTS"
+  },
+  "subjects": [
+    {
+      "id": "iot",
+      "name": "Internet de las Cosas y Redes Inalámbricas",
+      "code": "TEL-501",
+      "credits": 6,
+      "color": "orange",
+      "difficulty": "high",
+      "defaultWeight": 4,
+      "modules": [
+        {
+          "id": "iot_teo",
+          "name": "Protocolos IoT y Enrutamiento 6LoWPAN",
+          "credits": 3,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "iot_teo_call_1",
+              "date": "2026-10-21",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2026-10-16",
+              "location": "Aulario 4 - Aula 4.1",
+              "notes": "1ª Convocatoria Teórica (Octubre)"
+            },
+            {
+              "id": "iot_teo_call_2",
+              "date": "2026-11-18",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2026-11-13",
+              "location": "Aulario 4 - Aula 4.1",
+              "notes": "2ª Convocatoria Teórica (Noviembre)"
+            },
+            {
+              "id": "iot_teo_call_3",
+              "date": "2026-12-16",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2026-12-11",
+              "location": "Aulario 4 - Aula 4.1",
+              "notes": "3ª Convocatoria Teórica (Diciembre)"
+            }
+          ]
+        },
+        {
+          "id": "iot_lab",
+          "name": "Defensa de Prototipo Sensor y Firmware",
+          "credits": 3,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "iot_lab_call_1",
+              "date": "2026-10-28",
+              "time": "15:00",
+              "durationHours": 2,
+              "deadline": "2026-10-23",
+              "location": "Laboratorio de Comunicaciones Móviles",
+              "notes": "Defensa Práctica en Banco de Pruebas (Octubre)"
+            },
+            {
+              "id": "iot_lab_call_2",
+              "date": "2026-11-25",
+              "time": "15:00",
+              "durationHours": 2,
+              "deadline": "2026-11-20",
+              "location": "Laboratorio de Comunicaciones Móviles",
+              "notes": "Defensa Práctica en Banco de Pruebas (Noviembre)"
+            },
+            {
+              "id": "iot_lab_call_3",
+              "date": "2026-12-18",
+              "time": "15:00",
+              "durationHours": 2,
+              "deadline": "2026-12-13",
+              "location": "Laboratorio de Comunicaciones Móviles",
+              "notes": "Defensa Práctica en Banco de Pruebas (Diciembre)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cyber",
+      "name": "Ciberseguridad y Criptografía Aplicada",
+      "code": "TEL-502",
+      "credits": 8,
+      "color": "rose",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "cyber_audit",
+          "name": "Auditoría de Sistemas y Hacking Ético",
+          "credits": 4,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "cyber_audit_call_1",
+              "date": "2026-10-23",
+              "time": "10:00",
+              "durationHours": 3,
+              "deadline": "2026-10-18",
+              "location": "Laboratorio de Ciberseguridad",
+              "notes": "Examen Práctico CTF en Red Aislada (Octubre)"
+            },
+            {
+              "id": "cyber_audit_call_2",
+              "date": "2026-11-20",
+              "time": "10:00",
+              "durationHours": 3,
+              "deadline": "2026-11-15",
+              "location": "Laboratorio de Ciberseguridad",
+              "notes": "Examen Práctico CTF en Red Aislada (Noviembre)"
+            },
+            {
+              "id": "cyber_audit_call_3",
+              "date": "2026-12-14",
+              "time": "10:00",
+              "durationHours": 3,
+              "deadline": "2026-12-09",
+              "location": "Laboratorio de Ciberseguridad",
+              "notes": "Examen Práctico CTF en Red Aislada (Diciembre)"
+            }
+          ]
+        },
+        {
+          "id": "cyber_cripto",
+          "name": "Criptografía Post-Cuántica y Protocolos Seguros",
+          "credits": 4,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "cyber_cripto_call_1",
+              "date": "2026-10-23",
+              "time": "10:00",
+              "durationHours": 2.5,
+              "deadline": "2026-10-18",
+              "location": "Aula Magna - Edificio I+D",
+              "notes": "Teoría Criptográfica (Coincidencia exacta de horario con Auditoría)"
+            },
+            {
+              "id": "cyber_cripto_call_2",
+              "date": "2026-11-27",
+              "time": "10:00",
+              "durationHours": 2.5,
+              "deadline": "2026-11-22",
+              "location": "Aula Magna - Edificio I+D",
+              "notes": "Teoría Criptográfica (Noviembre)"
+            },
+            {
+              "id": "cyber_cripto_call_3",
+              "date": "2026-12-21",
+              "time": "10:00",
+              "durationHours": 2.5,
+              "deadline": "2026-12-16",
+              "location": "Aula Magna - Edificio I+D",
+              "notes": "Teoría Criptográfica (Diciembre)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsp",
+      "name": "Procesamiento de Señal en Tiempo Real y Edge Computing",
+      "code": "TEL-503",
+      "credits": 8,
+      "color": "blue",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "dsp_mod",
+          "name": "Filtros Digitales y Aceleración por Hardware",
+          "credits": 8,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "dsp_call_1",
+              "date": "2026-10-30",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2026-10-25",
+              "location": "Aulario 2 - Aula 2.2",
+              "notes": "1ª Convocatoria Oficial (Octubre)"
+            },
+            {
+              "id": "dsp_call_2",
+              "date": "2026-11-24",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2026-11-19",
+              "location": "Aulario 2 - Aula 2.2",
+              "notes": "2ª Convocatoria Oficial (Noviembre)"
+            },
+            {
+              "id": "dsp_call_3",
+              "date": "2026-12-10",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2026-12-05",
+              "location": "Aulario 2 - Aula 2.2",
+              "notes": "3ª Convocatoria Oficial (Diciembre)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quantum",
+      "name": "Comunicaciones Cuánticas y Fotónica Integrada",
+      "code": "TEL-504",
+      "credits": 8,
+      "color": "purple",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "quantum_mod",
+          "name": "Distribución Cuántica de Claves (QKD) y Guías Ópticas",
+          "credits": 8,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "quantum_call_1",
+              "date": "2026-11-06",
+              "time": "12:00",
+              "durationHours": 2.5,
+              "deadline": "2026-11-01",
+              "location": "Auditorio I+D",
+              "notes": "1ª Convocatoria Oficial (Noviembre)"
+            },
+            {
+              "id": "quantum_call_2",
+              "date": "2026-12-04",
+              "time": "12:00",
+              "durationHours": 2.5,
+              "deadline": "2026-11-29",
+              "location": "Auditorio I+D",
+              "notes": "2ª Convocatoria Oficial (Diciembre)"
+            },
+            {
+              "id": "quantum_call_3",
+              "date": "2026-12-22",
+              "time": "12:00",
+              "durationHours": 2.5,
+              "deadline": "2026-12-17",
+              "location": "Auditorio I+D",
+              "notes": "3ª Convocatoria de Recuperación (Diciembre)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Itinerario Óptimo Escalonado (Sin Conflictos)",
+      "description": "Distribución equilibrada entre módulos teóricos, defensas prácticas de laboratorio y exámenes finales.",
+      "selectedCallIds": [
+        "iot_teo_call_1",
+        "cyber_audit_call_1",
+        "iot_lab_call_1",
+        "dsp_call_1",
+        "quantum_call_1",
+        "cyber_cripto_call_2"
+      ]
+    },
+    {
+      "name": "Ronda Intensiva de Octubre-Noviembre",
+      "description": "Completar la mayor parte de créditos en otoño anticipado liberando el tramo final del cuatrimestre.",
+      "selectedCallIds": [
+        "iot_teo_call_1",
+        "cyber_audit_call_1",
+        "iot_lab_call_1",
+        "dsp_call_2",
+        "quantum_call_1",
+        "cyber_cripto_call_2"
+      ]
+    },
+    {
+      "name": "Convocatoria Conjunta de Ciberseguridad (Auditoría + Criptografía)",
+      "description": "Selecciona simultáneamente Auditoría y Criptografía el 23 de octubre a las 10:00 como examen conjunto unificado de ambos módulos.",
+      "selectedCallIds": [
+        "iot_teo_call_1",
+        "cyber_audit_call_1",
+        "cyber_cripto_call_1",
+        "iot_lab_call_1",
+        "dsp_call_1",
+        "quantum_call_1"
+      ]
+    }
+  ]
+}

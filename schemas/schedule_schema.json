@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExamPlanStudioSchedule",
+  "description": "Normalized schema for academic exam sessions and call planning",
+  "type": "object",
+  "required": ["meta", "subjects"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["title", "academicYear", "session"],
+      "properties": {
+        "title": { "type": "string" },
+        "institution": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "session": { "type": "string" },
+        "icon": { "type": "string", "description": "Emoji o icono representativo de la sesión (ej. ❄️, ☀️, 🍂, 🎓, 🤖)" },
+        "targetCredits": { "type": "number", "minimum": 0 },
+        "creditUnit": { "type": "string", "default": "CFU" }
+      },
+      "additionalProperties": true
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "modules"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "shortName": { "type": "string", "description": "Abreviatura o acrónimo conciso de la asignatura (ej. FAI, ML, SD)" },
+          "code": { "type": "string" },
+          "credits": { "type": "number", "minimum": 0 },
+          "color": { "type": "string" },
+          "difficulty": { "type": "string", "enum": ["high", "medium", "low"] },
+          "defaultWeight": { "type": "number", "minimum": 1, "maximum": 5 },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "calls"],
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "shortName": { "type": "string", "description": "Etiqueta breve del módulo (ej. M1, M2, M2+3)" },
+                "credits": { "type": "number", "minimum": 0 },
+                "difficulty": { "type": "string", "enum": ["high", "medium", "low"] },
+                "defaultWeight": { "type": "number", "minimum": 1, "maximum": 5 },
+                "alreadyPassed": { "type": "boolean", "default": false },
+                "calls": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "date"],
+                    "properties": {
+                      "id": { "type": "string" },
+                      "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                      "time": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+                      "durationHours": { "type": "number", "minimum": 0.5 },
+                      "deadline": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                      "location": { "type": "string" },
+                      "notes": { "type": "string" },
+                      "moduleIds": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "IDs de módulos que se evalúan conjuntamente en esta convocatoria"
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "selectedCallIds"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "selectedCallIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,25 @@
+{
+  "name": "examplan-studio",
+  "version": "1.0.0",
+  "description": "Universal Interactive Exam Planner Generator for university sessions",
+  "main": "src/core/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:analyzer": "node --test tests/analyzer.test.js",
+    "test:optimizer": "node --test tests/optimizer.test.js",
+    "test:parser": "node --test tests/parser.test.js",
+    "build:example": "node src/cli.js -i schemas/examples/unibo_master_ai.json -o index.html"
+  },
+  "keywords": [
+    "exam",
+    "planner",
+    "university",
+    "schedule",
+    "calendar",
+    "optimizer"
+  ],
+  "author": "MercuryDCD",
+  "license": "MIT",
+  "devDependencies": {}
+}

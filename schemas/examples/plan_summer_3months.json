@@ -1,0 +1,327 @@
+{
+  "meta": {
+    "title": "Grado en Biotecnología — Sesión de Verano",
+    "institution": "Universidad Complutense de Madrid",
+    "academicYear": "2026/2027",
+    "session": "Verano (Mayo - Julio 2027)",
+    "icon": "☀️",
+    "targetCredits": 36,
+    "creditUnit": "ECTS"
+  },
+  "subjects": [
+    {
+      "id": "bioq",
+      "name": "Bioquímica y Enzimología",
+      "code": "BIO-301",
+      "credits": 6,
+      "color": "rose",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "bioq_final",
+          "name": "Cinética y Vías Metabólicas",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "bioq_call_1",
+              "date": "2027-05-20",
+              "time": "15:30",
+              "durationHours": 3,
+              "deadline": "2027-05-15",
+              "location": "Facultad de Biología - Aula Magna",
+              "notes": "1ª Convocatoria Ordinaria (Tarde)"
+            },
+            {
+              "id": "bioq_call_2",
+              "date": "2027-06-15",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-06-10",
+              "location": "Facultad de Biología - Aula Magna",
+              "notes": "2ª Convocatoria Ordinaria (Junio)"
+            },
+            {
+              "id": "bioq_call_3",
+              "date": "2027-07-08",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-07-03",
+              "location": "Facultad de Biología - Aula Magna",
+              "notes": "3ª Convocatoria Extraordinaria (Julio)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "genom",
+      "name": "Genómica y Genética Molecular",
+      "code": "BIO-302",
+      "credits": 6,
+      "color": "violet",
+      "difficulty": "high",
+      "defaultWeight": 5,
+      "modules": [
+        {
+          "id": "genom_final",
+          "name": "Secuenciación y Genómica Funcional",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "genom_call_1",
+              "date": "2027-05-21",
+              "time": "09:00",
+              "durationHours": 3,
+              "deadline": "2027-05-16",
+              "location": "Aulario Central - Aula 1.05",
+              "notes": "1ª Convocatoria (Turnaround crítico: 14.5h tras el fin de Bioquímica)"
+            },
+            {
+              "id": "genom_call_2",
+              "date": "2027-06-18",
+              "time": "09:30",
+              "durationHours": 3,
+              "deadline": "2027-06-13",
+              "location": "Aulario Central - Aula 1.05",
+              "notes": "2ª Convocatoria Ordinaria (Junio)"
+            },
+            {
+              "id": "genom_call_3",
+              "date": "2027-07-12",
+              "time": "10:00",
+              "durationHours": 3,
+              "deadline": "2027-07-07",
+              "location": "Aulario Central - Aula 1.05",
+              "notes": "3ª Convocatoria Extraordinaria (Julio)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "micro",
+      "name": "Microbiología Industrial",
+      "code": "BIO-303",
+      "credits": 6,
+      "color": "emerald",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "micro_final",
+          "name": "Biorreactores y Procesos de Fermentación",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "micro_call_1",
+              "date": "2027-05-27",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-05-22",
+              "location": "Laboratorio de Bioprocesos L2",
+              "notes": "1ª Convocatoria (Sesión de mañana)"
+            },
+            {
+              "id": "micro_call_2",
+              "date": "2027-06-22",
+              "time": "15:00",
+              "durationHours": 2.5,
+              "deadline": "2027-06-17",
+              "location": "Laboratorio de Bioprocesos L2",
+              "notes": "2ª Convocatoria Ordinaria (Junio)"
+            },
+            {
+              "id": "micro_call_3",
+              "date": "2027-07-15",
+              "time": "09:30",
+              "durationHours": 2.5,
+              "deadline": "2027-07-10",
+              "location": "Laboratorio de Bioprocesos L2",
+              "notes": "3ª Convocatoria Extraordinaria (Julio)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bioinf",
+      "name": "Bioinformática Estructural",
+      "code": "BIO-304",
+      "credits": 6,
+      "color": "cyan",
+      "difficulty": "high",
+      "defaultWeight": 4,
+      "modules": [
+        {
+          "id": "bioinf_final",
+          "name": "Modelado Molecular y Análisis de Secuencias",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "bioinf_call_1",
+              "date": "2027-05-27",
+              "time": "16:00",
+              "durationHours": 2.5,
+              "deadline": "2027-05-22",
+              "location": "Aula de Informática 3",
+              "notes": "1ª Convocatoria (Misma fecha que Microbiología - Sobrecarga)"
+            },
+            {
+              "id": "bioinf_call_2",
+              "date": "2027-06-25",
+              "time": "09:00",
+              "durationHours": 2.5,
+              "deadline": "2027-06-20",
+              "location": "Aula de Informática 3",
+              "notes": "2ª Convocatoria Ordinaria (Junio)"
+            },
+            {
+              "id": "bioinf_call_3",
+              "date": "2027-07-19",
+              "time": "09:00",
+              "durationHours": 2.5,
+              "deadline": "2027-07-14",
+              "location": "Aula de Informática 3",
+              "notes": "3ª Convocatoria Extraordinaria (Julio)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inmuno",
+      "name": "Inmunología Celular y Tisular",
+      "code": "BIO-305",
+      "credits": 6,
+      "color": "amber",
+      "difficulty": "medium",
+      "defaultWeight": 3,
+      "modules": [
+        {
+          "id": "inmuno_final",
+          "name": "Respuesta Inmune y Diagnóstico Molecular",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "inmuno_call_1",
+              "date": "2027-06-02",
+              "time": "11:00",
+              "durationHours": 2,
+              "deadline": "2027-05-28",
+              "location": "Aulario Sur - Aula 2.03",
+              "notes": "1ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "inmuno_call_2",
+              "date": "2027-06-29",
+              "time": "11:00",
+              "durationHours": 2,
+              "deadline": "2027-06-24",
+              "location": "Aulario Sur - Aula 2.03",
+              "notes": "2ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "inmuno_call_3",
+              "date": "2027-07-22",
+              "time": "11:00",
+              "durationHours": 2,
+              "deadline": "2027-07-17",
+              "location": "Aulario Sur - Aula 2.03",
+              "notes": "3ª Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bioet",
+      "name": "Bioética y Regulación Farmacéutica",
+      "code": "BIO-306",
+      "credits": 6,
+      "color": "teal",
+      "difficulty": "low",
+      "defaultWeight": 1,
+      "modules": [
+        {
+          "id": "bioet_final",
+          "name": "Propiedad Intelectual y Normativa de Ensayos",
+          "credits": 6,
+          "alreadyPassed": false,
+          "calls": [
+            {
+              "id": "bioet_call_1",
+              "date": "2027-06-08",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-06-03",
+              "location": "Aulario Central - Aula 1.01",
+              "notes": "1ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "bioet_call_2",
+              "date": "2027-07-02",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-06-27",
+              "location": "Aulario Central - Aula 1.01",
+              "notes": "2ª Convocatoria Ordinaria"
+            },
+            {
+              "id": "bioet_call_3",
+              "date": "2027-07-26",
+              "time": "10:00",
+              "durationHours": 2,
+              "deadline": "2027-07-21",
+              "location": "Aulario Central - Aula 1.01",
+              "notes": "3ª Convocatoria Extraordinaria"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Simulación de Turnarounds (<24h) y Sobrecarga",
+      "description": "Configuración con exámenes consecutivos en <24h y doble examen el 27 de mayo para probar las alertas del analizador.",
+      "selectedCallIds": [
+        "bioq_call_1",
+        "genom_call_1",
+        "micro_call_1",
+        "bioinf_call_1",
+        "inmuno_call_1",
+        "bioet_call_1"
+      ]
+    },
+    {
+      "name": "Distribución Óptima de Verano (Sin Conflictos)",
+      "description": "Itinerario balanceado que resuelve el cuello de botella de mayo trasladando Genómica y Bioinformática a junio.",
+      "selectedCallIds": [
+        "bioq_call_1",
+        "genom_call_2",
+        "micro_call_1",
+        "bioinf_call_2",
+        "inmuno_call_1",
+        "bioet_call_2"
+      ]
+    },
+    {
+      "name": "Estrategia Escalonada Mayo-Julio",
+      "description": "Plan repartido en los 3 meses reservando julio para las materias de laboratorio y computación.",
+      "selectedCallIds": [
+        "bioq_call_1",
+        "genom_call_2",
+        "inmuno_call_1",
+        "bioet_call_1",
+        "micro_call_3",
+        "bioinf_call_3"
+      ]
+    }
+  ]
+}
