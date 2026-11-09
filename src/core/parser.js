@@ -108,6 +108,42 @@ function normalizeDifficulty(val) {
   return 'medium';
 }
 
+function normalizeEvaluationMode(val) {
+  const v = String(val || '').toLowerCase().trim();
+  if (['written_and_oral', 'scritto_orale', 'escrito_y_oral', 'oral', 'scritto_e_orale'].includes(v)) return 'written_and_oral';
+  if (['written_and_lab', 'scritto_lab', 'escrito_y_lab', 'lab', 'scritto_e_lab'].includes(v)) return 'written_and_lab';
+  return 'standard';
+}
+
+function normalizeOralBinding(val) {
+  const v = String(val || '').toLowerCase().trim();
+  if (['any_subsequent', 'flexible', 'cualquiera', 'subsequent', 'posterior'].includes(v)) return 'any_subsequent';
+  return 'same_appello';
+}
+
+function normalizeCallType(val, notes = '', modName = '') {
+  const v = String(val || '').toLowerCase().trim();
+  if (['written', 'scritto', 'escrito'].includes(v)) return 'written';
+  if (['oral', 'orale'].includes(v)) return 'oral';
+  if (['lab', 'laboratorio', 'practica', 'práctica'].includes(v)) return 'lab';
+  const combined = `${notes} ${modName}`.toLowerCase();
+  if (/\b(orale|oral)\b/.test(combined)) return 'oral';
+  if (/\b(scritto|escrito|teor[ií]a|parcial)\b/.test(combined)) return 'written';
+  if (/\b(lab|laboratorio|progetto|proyecto|pr[aá]ctica)\b/.test(combined)) return 'lab';
+  return 'standard';
+}
+
+function normalizeAppelloIndex(val, notes = '', cIdx = 0) {
+  if (typeof val === 'number' && val >= 1) return Math.round(val);
+  const parsed = parseInt(val, 10);
+  if (!isNaN(parsed) && parsed >= 1) return parsed;
+  const match = String(notes || '').match(/(\d+)\s*(?:[ºª°]|appello|convocatoria|llamamiento)/i);
+  if (match) return parseInt(match[1], 10);
+  const match2 = String(notes || '').match(/(?:appello|convocatoria|llamamiento)\s*(\d+)/i);
+  if (match2) return parseInt(match2[1], 10);
+  return cIdx + 1;
+}
+
 function detectSessionIcon(meta) {
   if (!meta) return '🎓';
   if (typeof meta.icon === 'string' && meta.icon.trim() && meta.icon.trim() !== '📅') {
@@ -273,7 +309,37 @@ function normalizeSchedule(schedule) {
           ? call.moduleIds.map(String)
           : [String(modId)];
 
-        return {
+        const isCallActive = (
+          call.status === 'active' ||
+          call.status === 'activo' ||
+          call.active === true ||
+          call.selected === true
+        );
+        const isCallExplicitlyInactive = (
+          call.status === 'inactive' ||
+          call.status === 'desactivado' ||
+          call.status === 'inactivo' ||
+          call.active === false ||
+          call.selected === false
+        );
+
+        let callStatus;
+        let callActive;
+        if (isCallActive) {
+          callStatus = 'active';
+          callActive = true;
+        } else if (isCallExplicitlyInactive) {
+          callStatus = 'inactive';
+          callActive = false;
+        } else if (typeof call.status === 'string' && call.status.trim()) {
+          callStatus = call.status.trim();
+          callActive = false;
+        }
+
+        const callType = normalizeCallType(call.type, call.notes, mod.name);
+        const appelloIndex = normalizeAppelloIndex(call.appelloIndex, call.notes, cIdx);
+
+        const normCall = {
           id: String(callId),
           date,
           time,
@@ -281,9 +347,20 @@ function normalizeSchedule(schedule) {
           deadline: deadline || date,
           location: call.location || 'Aula por determinar',
           notes: call.notes || '',
+          type: callType,
+          appelloIndex,
           moduleIds
         };
+        if (callStatus !== undefined) {
+          normCall.status = callStatus;
+          normCall.active = callActive;
+        }
+
+        return normCall;
       });
+
+      const evalMode = normalizeEvaluationMode(mod.evaluationMode);
+      const oralBinding = normalizeOralBinding(mod.oralBinding);
 
       return {
         id: String(modId),
@@ -293,6 +370,8 @@ function normalizeSchedule(schedule) {
         difficulty: modDiff,
         defaultWeight: modDefaultWeight,
         alreadyPassed,
+        evaluationMode: evalMode,
+        oralBinding,
         calls
       };
     });
@@ -318,11 +397,146 @@ function normalizeSchedule(schedule) {
       }))
     : [];
 
-  return {
+  const result = {
     meta,
     subjects,
     presets
   };
+
+  if (Array.isArray(schedule.selectedCallIds)) {
+    result.selectedCallIds = schedule.selectedCallIds.map(String);
+  }
+
+  return result;
+}
+
+/**
+ * Extracts selected call IDs from a schedule object.
+ * Priority:
+ * 1. Calls explicitly tagged with active/inactive status.
+ * 2. Root-level selectedCallIds array.
+ * 3. First preset selectedCallIds array.
+ * 4. Fallback: First call of each pending (non-passed) module.
+ * @param {object} sched Schedule object
+ * @returns {string[]} List of active call IDs
+ */
+function extractSelectedCallIds(sched) {
+  if (!sched || typeof sched !== 'object') return [];
+  const explicitActiveIds = [];
+  let hasExplicitCallStatus = false;
+
+  (sched.subjects || []).forEach(sub => {
+    (sub.modules || []).forEach(mod => {
+      (mod.calls || []).forEach(call => {
+        const isCallActive = (
+          call.status === 'active' ||
+          call.status === 'activo' ||
+          call.active === true ||
+          call.selected === true
+        );
+        const isCallInactive = (
+          call.status === 'inactive' ||
+          call.status === 'desactivado' ||
+          call.status === 'inactivo' ||
+          call.active === false ||
+          call.selected === false
+        );
+
+        if (isCallActive) {
+          explicitActiveIds.push(String(call.id));
+          hasExplicitCallStatus = true;
+        } else if (isCallInactive) {
+          hasExplicitCallStatus = true;
+        }
+      });
+    });
+  });
+
+  if (hasExplicitCallStatus) {
+    return explicitActiveIds;
+  }
+
+  if (Array.isArray(sched.selectedCallIds) && sched.selectedCallIds.length > 0) {
+    return sched.selectedCallIds.map(String);
+  }
+
+  if (Array.isArray(sched.presets) && sched.presets.length > 0 && Array.isArray(sched.presets[0].selectedCallIds) && sched.presets[0].selectedCallIds.length > 0) {
+    return sched.presets[0].selectedCallIds.map(String);
+  }
+
+  const fallback = [];
+  (sched.subjects || []).forEach(sub => {
+    (sub.modules || []).forEach(mod => {
+      if (!mod.alreadyPassed && Array.isArray(mod.calls) && mod.calls.length > 0) {
+        const evalMode = normalizeEvaluationMode(mod.evaluationMode);
+        if (evalMode === 'written_and_oral') {
+          const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+          const o = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'oral');
+          if (w) fallback.push(String(w.id));
+          if (o) fallback.push(String(o.id));
+          if (!w && !o) fallback.push(String(mod.calls[0].id));
+        } else if (evalMode === 'written_and_lab') {
+          const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+          const l = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'lab');
+          if (w) fallback.push(String(w.id));
+          if (l) fallback.push(String(l.id));
+          if (!w && !l) fallback.push(String(mod.calls[0].id));
+        } else {
+          fallback.push(String(mod.calls[0].id));
+        }
+      }
+    });
+  });
+  return fallback;
+}
+
+/**
+ * Generates an exportable JSON object of the schedule, tagging every call
+ * with active/inactive status matching the currently selected call IDs.
+ * Also synchronizes presets and root selectedCallIds for backward compatibility.
+ * @param {object} sched Schedule object
+ * @param {string[]|Set<string>} selectedCallIds Currently selected call IDs
+ * @returns {object} Exportable schedule object
+ */
+function getExportableSchedule(sched, selectedCallIds = []) {
+  const idsArray = Array.isArray(selectedCallIds)
+    ? selectedCallIds
+    : (selectedCallIds instanceof Set
+      ? Array.from(selectedCallIds)
+      : (typeof selectedCallIds === 'string' && selectedCallIds ? [selectedCallIds] : []));
+  const selSet = new Set(idsArray.map(String));
+
+  const clone = JSON.parse(JSON.stringify(sched || {}));
+
+  (clone.subjects || []).forEach(sub => {
+    (sub.modules || []).forEach(mod => {
+      (mod.calls || []).forEach(call => {
+        const isSelected = selSet.has(String(call.id));
+        call.status = isSelected ? 'active' : 'inactive';
+        call.active = isSelected;
+      });
+    });
+  });
+
+  const selectedList = Array.from(selSet);
+  if (!Array.isArray(clone.presets) || clone.presets.length === 0) {
+    clone.presets = [
+      {
+        name: 'Plan Seleccionado',
+        description: 'Convocatorias seleccionadas en el planificador',
+        selectedCallIds: selectedList
+      }
+    ];
+  } else {
+    clone.presets[0] = {
+      ...clone.presets[0],
+      selectedCallIds: selectedList
+    };
+  }
+
+  clone.selectedCallIds = selectedList;
+
+  return clone;
 }
 
 /**
@@ -832,11 +1046,17 @@ if (typeof module !== 'undefined' && module.exports) {
     parseInput,
     validateSchedule,
     normalizeSchedule,
+    extractSelectedCallIds,
+    getExportableSchedule,
     detectSessionIcon,
     parseMarkdownTable,
     normalizeDateStr,
     normalizeTimeStr,
     normalizeDifficulty,
+    normalizeEvaluationMode,
+    normalizeOralBinding,
+    normalizeCallType,
+    normalizeAppelloIndex,
     slugify,
     generateSubjectAcronym,
     generateModuleShortName,
@@ -853,11 +1073,17 @@ if (typeof window !== 'undefined') {
     parseInput,
     validateSchedule,
     normalizeSchedule,
+    extractSelectedCallIds,
+    getExportableSchedule,
     detectSessionIcon,
     parseMarkdownTable,
     normalizeDateStr,
     normalizeTimeStr,
     normalizeDifficulty,
+    normalizeEvaluationMode,
+    normalizeOralBinding,
+    normalizeCallType,
+    normalizeAppelloIndex,
     slugify,
     generateSubjectAcronym,
     generateModuleShortName,

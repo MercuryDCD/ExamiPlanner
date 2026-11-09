@@ -47,6 +47,10 @@
                 moduleShortName: modShort,
                 moduleCredits: mod.credits || sub.credits,
                 alreadyPassed: mod.alreadyPassed,
+                evaluationMode: mod.evaluationMode || 'standard',
+                oralBinding: mod.oralBinding || 'any_subsequent',
+                type: c.type || 'standard',
+                appelloIndex: c.appelloIndex != null ? c.appelloIndex : null,
                 hasMultipleModules: (sub.modules || []).length > 1,
                 moduleIds
               };
@@ -126,6 +130,9 @@
         let sameDateCongestionCount = 0;
         let turnaroundWarningCount = 0;
         let multipleCallsCount = 0;
+        let precedenceViolationCount = 0;
+        let bindingViolationCount = 0;
+        let missingWrittenPrerequisiteCount = 0;
 
         // Collision & Congestion
         for (let i = 0; i < active.length; i++) {
@@ -191,28 +198,118 @@
           }
         }
 
-        // Multiple calls for same module
-        const modMap = new Map();
+        // Multiple calls for same module and type
+        const modTypeMap = new Map();
         active.forEach(c => {
-          if (!modMap.has(c.moduleId)) modMap.set(c.moduleId, []);
-          modMap.get(c.moduleId).push(c);
+          const key = `${c.moduleId}__${c.type || 'standard'}`;
+          if (!modTypeMap.has(key)) modTypeMap.set(key, []);
+          modTypeMap.get(key).push(c);
         });
 
-        modMap.forEach((calls, modId) => {
+        modTypeMap.forEach((calls, key) => {
           const distinctDates = new Set(calls.map(c => `${c.date}_${c.time}`));
           if (distinctDates.size > 1) {
             multipleCallsCount++;
+            const typeLabel = calls[0].type === 'written' ? ' (Escrito)' : (calls[0].type === 'oral' ? ' (Oral)' : (calls[0].type === 'lab' ? ' (Lab)' : ''));
             conflicts.push({
-              id: `multi_${modId}`,
+              id: `multi_${key}`,
               type: 'multiple_calls',
               severity: 'info',
               icon: 'ℹ️',
-              title: t('conflict_multi_title', calls[0].moduleName),
+              title: t('conflict_multi_title', (calls[0].moduleName || '') + typeLabel),
               description: t('conflict_multi_desc', distinctDates.size),
-              callIds: calls.map(c => c.id)
+              callIds: calls.map(c => c.id),
+              moduleId: calls[0].moduleId
             });
           }
         });
+
+        // Precedence & Appello Binding Rules for Multi-part Exams
+        const activeCallsByModule = new Map();
+        active.forEach(c => {
+          if (!activeCallsByModule.has(c.moduleId)) activeCallsByModule.set(c.moduleId, []);
+          activeCallsByModule.get(c.moduleId).push(c);
+        });
+
+        if (sched && Array.isArray(sched.subjects)) {
+          sched.subjects.forEach(sub => {
+            (sub.modules || []).forEach(mod => {
+              if (mod.alreadyPassed) return;
+              const evalMode = mod.evaluationMode || 'standard';
+              if (evalMode === 'standard') return;
+
+              const callsInMod = activeCallsByModule.get(mod.id) || [];
+              const writtens = callsInMod.filter(c => c.type === 'written');
+              const secondaryType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+              const secondaries = callsInMod.filter(c => c.type === secondaryType);
+
+              if (secondaries.length > 0 && writtens.length === 0) {
+                missingWrittenPrerequisiteCount++;
+                conflicts.push({
+                  id: `missing_written_${mod.id}`,
+                  type: 'missing_written_prerequisite',
+                  severity: 'high',
+                  icon: '⚠️',
+                  title: t('conflict_missing_written_title', mod.name),
+                  description: t('conflict_missing_written_desc'),
+                  callIds: secondaries.map(c => c.id),
+                  moduleId: mod.id
+                });
+              }
+
+              for (const w of writtens) {
+                for (const s of secondaries) {
+                  if (s.startTimestamp <= w.startTimestamp) {
+                    precedenceViolationCount++;
+                    conflicts.push({
+                      id: `precedence_${mod.id}_${w.id}_${s.id}`,
+                      type: 'precedence_violation',
+                      severity: 'critical',
+                      icon: '⛔',
+                      title: t('conflict_precedence_title', mod.name),
+                      description: t('conflict_precedence_desc', s.date, w.date),
+                      callIds: [w.id, s.id],
+                      moduleId: mod.id,
+                      date: s.date
+                    });
+                  }
+
+                  if (mod.oralBinding === 'same_appello') {
+                    if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                      bindingViolationCount++;
+                      conflicts.push({
+                        id: `binding_${mod.id}_${w.id}_${s.id}`,
+                        type: 'binding_violation',
+                        severity: 'critical',
+                        icon: '⛔',
+                        title: t('conflict_binding_title', mod.name),
+                        description: t('conflict_binding_desc', w.appelloIndex, s.appelloIndex),
+                        callIds: [w.id, s.id],
+                        moduleId: mod.id,
+                        date: s.date
+                      });
+                    }
+                  } else if (mod.oralBinding === 'any_subsequent') {
+                    if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                      bindingViolationCount++;
+                      conflicts.push({
+                        id: `binding_${mod.id}_${w.id}_${s.id}`,
+                        type: 'binding_violation',
+                        severity: 'critical',
+                        icon: '⛔',
+                        title: t('conflict_binding_title', mod.name),
+                        description: t('conflict_binding_desc', w.appelloIndex, s.appelloIndex),
+                        callIds: [w.id, s.id],
+                        moduleId: mod.id,
+                        date: s.date
+                      });
+                    }
+                  }
+                }
+              }
+            });
+          });
+        }
 
         // Group simultaneous calls of the same subject into unified sessions for timeline
         const unifiedActiveSessions = [];
@@ -344,6 +441,8 @@
                 moduleId: mod.id,
                 moduleName: mod.name || sub.name,
                 moduleShortName: mod.shortName || '',
+                evaluationMode: mod.evaluationMode || 'standard',
+                oralBinding: mod.oralBinding || 'any_subsequent',
                 subjectId: sub.id,
                 subjectName: sub.name,
                 subjectShortName: sub.shortName || '',
@@ -403,12 +502,15 @@
         return {
           selectedCalls: active,
           conflicts,
-          hasCriticalErrors: exactCollisionCount > 0,
+          hasCriticalErrors: exactCollisionCount > 0 || precedenceViolationCount > 0 || bindingViolationCount > 0,
           counts: {
             exactCollisions: exactCollisionCount,
             sameDateCongestions: sameDateCongestionCount,
             turnaroundWarnings: turnaroundWarningCount,
             multipleCalls: multipleCallsCount,
+            precedenceViolations: precedenceViolationCount,
+            bindingViolations: bindingViolationCount,
+            missingWrittenPrerequisites: missingWrittenPrerequisiteCount,
             uncoveredModules: uncoveredModules.length,
             totalConflicts: conflicts.length
           },

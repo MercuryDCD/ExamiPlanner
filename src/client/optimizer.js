@@ -67,9 +67,64 @@
             valid.forEach(c => {
               if (c.startTimestamp < earliestTimestamp) earliestTimestamp = c.startTimestamp;
             });
-            const fixedCall = valid.find(c => fixedSet.has(c.id));
-            const candidates = fixedCall ? [fixedCall] : valid;
-            modulesToSchedule.push({ module: mod, subject: sub, weight: modWeight, calls: candidates });
+            const evalMode = mod.evaluationMode || 'standard';
+            const oralBinding = mod.oralBinding || 'any_subsequent';
+            let candidates = [];
+
+            if (evalMode === 'written_and_oral' || evalMode === 'written_and_lab') {
+              const secType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+              let writtens = valid.filter(c => c.type === 'written');
+              let secondaries = valid.filter(c => c.type === secType);
+
+              if (writtens.length === 0 || secondaries.length === 0) {
+                const fixedCall = valid.find(c => fixedSet.has(c.id));
+                candidates = (fixedCall ? [fixedCall] : valid).map(c => [c]);
+              } else {
+                if (fixedSet.size > 0) {
+                  const fixedW = writtens.filter(c => fixedSet.has(c.id));
+                  if (fixedW.length > 0) writtens = fixedW;
+                  const fixedS = secondaries.filter(c => fixedSet.has(c.id));
+                  if (fixedS.length > 0) secondaries = fixedS;
+                }
+
+                for (const w of writtens) {
+                  for (const s of secondaries) {
+                    if (w.startTimestamp >= s.startTimestamp) continue;
+                    if (w.endTimestamp > s.startTimestamp) continue;
+
+                    if (oralBinding === 'same_appello') {
+                      if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                        continue;
+                      }
+                    } else if (oralBinding === 'any_subsequent') {
+                      if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                        continue;
+                      }
+                    }
+
+                    candidates.push([w, s]);
+                  }
+                }
+
+                if (candidates.length === 0) {
+                  for (const w of writtens) {
+                    for (const s of secondaries) {
+                      if (w.startTimestamp < s.startTimestamp) {
+                        candidates.push([w, s]);
+                      }
+                    }
+                  }
+                  if (candidates.length === 0) {
+                    candidates = valid.map(c => [c]);
+                  }
+                }
+              }
+            } else {
+              const fixedCall = valid.find(c => fixedSet.has(c.id));
+              candidates = (fixedCall ? [fixedCall] : valid).map(c => [c]);
+            }
+
+            modulesToSchedule.push({ module: mod, subject: sub, weight: modWeight, candidates });
           });
         });
 
@@ -202,33 +257,37 @@
             return;
           }
 
-          const { calls } = modulesToSchedule[idx];
-          for (let i = 0; i < calls.length; i++) {
-            const candidate = calls[i];
+          const { candidates } = modulesToSchedule[idx];
+          for (let i = 0; i < candidates.length; i++) {
+            const callTuple = candidates[i];
             let collides = false;
-            for (let s = 0; s < current.length; s++) {
-              const existing = current[s];
-              const isSameSubjectJoint = candidate.subjectId === existing.subjectId && (
-                (candidate.jointExamKey && candidate.jointExamKey === existing.jointExamKey) ||
-                (candidate.date === existing.date && candidate.time === existing.time)
-              );
-              if (isSameSubjectJoint) {
-                continue;
+            for (let t = 0; t < callTuple.length; t++) {
+              const candidate = callTuple[t];
+              for (let s = 0; s < current.length; s++) {
+                const existing = current[s];
+                const isSameSubjectJoint = candidate.subjectId === existing.subjectId && (
+                  (candidate.jointExamKey && candidate.jointExamKey === existing.jointExamKey) ||
+                  (candidate.date === existing.date && candidate.time === existing.time)
+                );
+                if (isSameSubjectJoint) {
+                  continue;
+                }
+                if (candidate.startTimestamp < existing.endTimestamp && existing.startTimestamp < candidate.endTimestamp) {
+                  collides = true;
+                  break;
+                }
               }
-              if (candidate.startTimestamp < existing.endTimestamp && existing.startTimestamp < candidate.endTimestamp) {
-                collides = true;
-                break;
-              }
+              if (collides) break;
             }
             if (collides) continue;
-            current.push(candidate);
+            current.push(...callTuple);
             search(idx + 1, current);
-            current.pop();
+            current.splice(current.length - callTuple.length, callTuple.length);
           }
         }
 
         search(0, []);
-        const chosenIds = bestSelection || modulesToSchedule.map(m => m.calls[0].id);
+        const chosenIds = bestSelection || modulesToSchedule.flatMap(m => m.candidates[0] || []).map(c => c.id);
         return {
           selectedCallIds: chosenIds,
           mode,

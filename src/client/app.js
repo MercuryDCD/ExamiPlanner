@@ -40,18 +40,7 @@
               parsed.meta.icon = detectedIcon;
 
               const newSchedule = normalizeSchedule(parsed);
-              let newSelectedCallIds = [];
-              if (Array.isArray(newSchedule.presets) && newSchedule.presets.length > 0 && newSchedule.presets[0].selectedCallIds?.length > 0) {
-                newSelectedCallIds = [...newSchedule.presets[0].selectedCallIds];
-              } else {
-                (newSchedule.subjects || []).forEach(sub => {
-                  (sub.modules || []).forEach(mod => {
-                    if (!mod.alreadyPassed && mod.calls?.[0]) {
-                      newSelectedCallIds.push(mod.calls[0].id);
-                    }
-                  });
-                });
-              }
+              let newSelectedCallIds = extractSelectedCallIds(parsed);
 
               const newWeights = {};
               (newSchedule.subjects || []).forEach(sub => {
@@ -83,18 +72,9 @@
               }
             } else {
               const norm = normalizeSchedule(parsed);
+              const extractedIds = extractSelectedCallIds(parsed);
               state.selectedCallIds.clear();
-              if (Array.isArray(norm.presets) && norm.presets.length > 0 && norm.presets[0].selectedCallIds?.length > 0) {
-                norm.presets[0].selectedCallIds.forEach(id => state.selectedCallIds.add(id));
-              } else {
-                (norm.subjects || []).forEach(sub => {
-                  (sub.modules || []).forEach(mod => {
-                    if (!mod.alreadyPassed && mod.calls?.[0]) {
-                      state.selectedCallIds.add(mod.calls[0].id);
-                    }
-                  });
-                });
-              }
+              extractedIds.forEach(id => state.selectedCallIds.add(id));
               persistSchedule(norm);
               showToast(`¡Plan cargado en sesión activa! (${parsed.subjects.length} asignaturas, ${totalCalls} convocatorias).`, 'success');
 
@@ -194,6 +174,7 @@
         // Copy prompt buttons
         document.getElementById('btn-top-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
         document.getElementById('btn-modal-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
+        document.getElementById('btn-guide-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
 
         // Whole page Drag & Drop Overlay
         const overlay = document.getElementById('drop-overlay');
@@ -247,23 +228,26 @@
           processScheduleText(text, 'texto introducido');
         });
 
-        // Download JSON Config
+        // Download JSON Config (Preserves Active Calls Status and Presets)
         document.getElementById('btn-download-json-config')?.addEventListener('click', () => {
-          const blob = new Blob([JSON.stringify(schedule, null, 2)], { type: 'application/json' });
+          const exportData = getExportableSchedule(schedule, state.selectedCallIds);
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `plan_examenes_${schedule.meta?.title ? slugify(schedule.meta.title) : 'config'}.json`;
+          a.download = plan_examenes_.json;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
+          showToast(t('toast_json_downloaded'), 'success');
         });
 
-        // Copy JSON Config
+        // Copy JSON Config (Preserves Active Calls Status and Presets)
         document.getElementById('btn-copy-json-config')?.addEventListener('click', () => {
-          navigator.clipboard.writeText(JSON.stringify(schedule, null, 2)).then(() => {
-            alert('¡Configuración JSON copiada al portapapeles!');
+          const exportData = getExportableSchedule(schedule, state.selectedCallIds);
+          navigator.clipboard.writeText(JSON.stringify(exportData, null, 2)).then(() => {
+            showToast(t('toast_json_copied'), 'success');
           }).catch(() => {
             alert('No se pudo copiar al portapapeles.');
           });
@@ -438,20 +422,17 @@
           }
         });
 
-        // Load Plan Dropdown & Actions
+        // Load Plan Button: Opens directly the Import/Export tab
         const loadPlanBtn = document.getElementById('btn-load-plan-dropdown');
-        const loadPlanMenu = document.getElementById('load-plan-dropdown-menu');
-        if (loadPlanBtn && loadPlanMenu) {
+        if (loadPlanBtn) {
           loadPlanBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isHidden = loadPlanMenu.classList.contains('hidden');
-            loadPlanMenu.classList.toggle('hidden', !isHidden);
-            loadPlanBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-          });
-          document.addEventListener('click', (e) => {
-            if (!loadPlanBtn.contains(e.target) && !loadPlanMenu.contains(e.target)) {
-              loadPlanMenu.classList.add('hidden');
-              loadPlanBtn.setAttribute('aria-expanded', 'false');
+            renderModalSubjects();
+            populateMetaForm();
+            switchModalTab('import');
+            const modal = document.getElementById('manage-modal');
+            if (modal && typeof modal.showModal === 'function') {
+              modal.showModal();
             }
           });
         }

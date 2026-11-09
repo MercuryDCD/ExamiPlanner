@@ -46,6 +46,18 @@
                 "difficulty": { "type": "string", "enum": ["high", "medium", "low"] },
                 "defaultWeight": { "type": "number", "minimum": 1, "maximum": 5 },
                 "alreadyPassed": { "type": "boolean", "default": false },
+                "evaluationMode": {
+                  "type": "string",
+                  "enum": ["standard", "written_and_oral", "written_and_lab"],
+                  "default": "standard",
+                  "description": "Modalidad de evaluación requerida para superar el módulo"
+                },
+                "oralBinding": {
+                  "type": "string",
+                  "enum": ["same_appello", "any_subsequent"],
+                  "default": "same_appello",
+                  "description": "Vinculación del examen oral con respecto al escrito (mismo llamamiento o flexible)"
+                },
                 "calls": {
                   "type": "array",
                   "items": {
@@ -59,6 +71,30 @@
                       "deadline": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
                       "location": { "type": "string" },
                       "notes": { "type": "string" },
+                      "status": {
+                        "type": "string",
+                        "enum": ["active", "inactive", "activo", "desactivado", "inactivo"],
+                        "description": "Estado de selección del llamamiento en el plan (active/inactive o activo/desactivado)"
+                      },
+                      "active": {
+                        "type": "boolean",
+                        "description": "Indica si el llamamiento está seleccionado/activo en el plan"
+                      },
+                      "selected": {
+                        "type": "boolean",
+                        "description": "Alias booleano alternativo de selección"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["standard", "written", "oral", "lab", "escrito", "orale", "scritto", "laboratorio"],
+                        "default": "standard",
+                        "description": "Tipo de prueba (escrito, oral, laboratorio o estándar)"
+                      },
+                      "appelloIndex": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Número de llamamiento (1º appello, 2º appello, etc.)"
+                      },
                       "moduleIds": {
                         "type": "array",
                         "items": { "type": "string" },
@@ -91,6 +127,11 @@
         },
         "additionalProperties": true
       }
+    },
+    "selectedCallIds": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Lista de identificadores de convocatorias seleccionadas/activas en el plan"
     }
   },
   "additionalProperties": true

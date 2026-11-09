@@ -80,6 +80,42 @@
         return 'medium';
       }
 
+      function normalizeEvaluationMode(val) {
+        const v = String(val || '').toLowerCase().trim();
+        if (['written_and_oral', 'scritto_orale', 'escrito_y_oral', 'oral', 'scritto_e_orale'].includes(v)) return 'written_and_oral';
+        if (['written_and_lab', 'scritto_lab', 'escrito_y_lab', 'lab', 'scritto_e_lab'].includes(v)) return 'written_and_lab';
+        return 'standard';
+      }
+
+      function normalizeOralBinding(val) {
+        const v = String(val || '').toLowerCase().trim();
+        if (['any_subsequent', 'flexible', 'cualquiera', 'subsequent', 'posterior'].includes(v)) return 'any_subsequent';
+        return 'same_appello';
+      }
+
+      function normalizeCallType(val, notes = '', modName = '') {
+        const v = String(val || '').toLowerCase().trim();
+        if (['written', 'scritto', 'escrito'].includes(v)) return 'written';
+        if (['oral', 'orale'].includes(v)) return 'oral';
+        if (['lab', 'laboratorio', 'practica', 'práctica'].includes(v)) return 'lab';
+        const combined = `${notes} ${modName}`.toLowerCase();
+        if (/\b(orale|oral)\b/.test(combined)) return 'oral';
+        if (/\b(scritto|escrito|teor[ií]a|parcial)\b/.test(combined)) return 'written';
+        if (/\b(lab|laboratorio|progetto|proyecto|pr[aá]ctica)\b/.test(combined)) return 'lab';
+        return 'standard';
+      }
+
+      function normalizeAppelloIndex(val, notes = '', cIdx = 0) {
+        if (typeof val === 'number' && val >= 1) return Math.round(val);
+        const parsed = parseInt(val, 10);
+        if (!isNaN(parsed) && parsed >= 1) return parsed;
+        const match = String(notes || '').match(/(\d+)\s*(?:[ºª°]|appello|convocatoria|llamamiento)/i);
+        if (match) return parseInt(match[1], 10);
+        const match2 = String(notes || '').match(/(?:appello|convocatoria|llamamiento)\s*(\d+)/i);
+        if (match2) return parseInt(match2[1], 10);
+        return cIdx + 1;
+      }
+
       function generateSubjectAcronym(name) {
         if (!name || typeof name !== 'string') return 'EXAM';
         const clean = name.trim();

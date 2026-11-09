@@ -28,7 +28,7 @@
                 name: String(s.name || normSched.meta?.session || normSched.meta?.title || 'Mi Sesión'),
                 icon: icon,
                 schedule: normSched,
-                selectedCallIds: Array.isArray(s.selectedCallIds) ? s.selectedCallIds : [],
+                selectedCallIds: (Array.isArray(s.selectedCallIds) && s.selectedCallIds.length > 0) ? s.selectedCallIds : extractSelectedCallIds(normSched),
                 subjectWeights: typeof s.subjectWeights === 'object' && s.subjectWeights !== null ? s.subjectWeights : {},
                 dayPlans: typeof s.dayPlans === 'object' && s.dayPlans !== null ? s.dayPlans : {},
                 prioritizeSafety: Boolean(s.prioritizeSafety),
@@ -82,17 +82,7 @@
           updatedAt: Date.now()
         };
 
-        if (Array.isArray(initialSched.presets) && initialSched.presets.length > 0 && initialSched.presets[0].selectedCallIds?.length > 0) {
-          initialSession.selectedCallIds = [...initialSched.presets[0].selectedCallIds];
-        } else {
-          (initialSched.subjects || []).forEach(sub => {
-            (sub.modules || []).forEach(mod => {
-              if (!mod.alreadyPassed && mod.calls?.[0]) {
-                initialSession.selectedCallIds.push(mod.calls[0].id);
-              }
-            });
-          });
-        }
+        initialSession.selectedCallIds = extractSelectedCallIds(initialSched);
         (initialSched.subjects || []).forEach(sub => {
           initialSession.subjectWeights[sub.id] = sub.defaultWeight || (sub.difficulty === 'high' ? 5 : sub.difficulty === 'low' ? 1 : 3);
         });
@@ -116,7 +106,10 @@
         active.icon = active.icon || schedule.meta?.icon || detectSessionIcon(schedule.meta);
         active.name = active.name || schedule.meta?.session || schedule.meta?.title || 'Mi Sesión';
 
-        state.selectedCallIds = new Set(Array.isArray(active.selectedCallIds) ? active.selectedCallIds : []);
+        const initialActiveIds = (Array.isArray(active.selectedCallIds) && active.selectedCallIds.length > 0)
+          ? active.selectedCallIds
+          : extractSelectedCallIds(schedule);
+        state.selectedCallIds = new Set(initialActiveIds);
         state.subjectWeights = typeof active.subjectWeights === 'object' && active.subjectWeights !== null ? { ...active.subjectWeights } : {};
         state.dayPlans = typeof active.dayPlans === 'object' && active.dayPlans !== null ? { ...active.dayPlans } : {};
         state.prioritizeSafety = Boolean(active.prioritizeSafety);
@@ -155,6 +148,21 @@
             active.dayPlans = { ...state.dayPlans };
             active.prioritizeSafety = Boolean(state.prioritizeSafety);
             active.updatedAt = Date.now();
+            if (active.schedule) {
+              (active.schedule.subjects || []).forEach(sub => {
+                (sub.modules || []).forEach(mod => {
+                  (mod.calls || []).forEach(c => {
+                    const isSel = state.selectedCallIds.has(String(c.id));
+                    c.status = isSel ? 'active' : 'inactive';
+                    c.active = isSel;
+                  });
+                });
+              });
+              active.schedule.selectedCallIds = Array.from(state.selectedCallIds);
+              if (Array.isArray(active.schedule.presets) && active.schedule.presets.length > 0) {
+                active.schedule.presets[0].selectedCallIds = Array.from(state.selectedCallIds);
+              }
+            }
           }
           localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
           if (activeSessionId) {

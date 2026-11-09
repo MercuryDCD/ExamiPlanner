@@ -182,30 +182,19 @@
           <span data-i18n="btn_manage_subjects">Gestionar Asignaturas</span>
         </button>
 
-        <!-- Load Plan Dropdown Menu -->
+        <!-- Load Plan Button (Direct to Import/Export tab) -->
         <div class="relative">
           <input type="file" id="top-file-input" accept=".json,.md,.txt" class="hidden">
-          <button id="btn-load-plan-dropdown" type="button" aria-expanded="false" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar archivo, pegar texto, prompt IA o markdown">
+          <button id="btn-load-plan-dropdown" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar o importar plan de exámenes (JSON, IA, archivo)">
             <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
             <span data-i18n="btn_load_plan">Cargar Plan</span>
-            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
-          <div id="load-plan-dropdown-menu" class="hidden absolute right-0 mt-1 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 py-1.5 text-xs space-y-0.5">
-            <button id="btn-top-upload" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg> <span data-i18n="menu_upload_file">Subir archivo (.json, .md, .txt)</span>
-            </button>
-            <button id="btn-menu-paste-text" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="menu_paste_text">Pegar texto o JSON</span>
-            </button>
-            <button id="btn-top-copy-prompt" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-medium">
-              <svg class="w-3.5 h-3.5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="menu_copy_prompt">Prompt IA (Copiar plantilla)</span>
-            </button>
-            <button id="btn-copy-md" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> <span data-i18n="menu_copy_md">Copiar resumen en Markdown</span>
-            </button>
-            <button id="btn-menu-download-json" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="menu_download_json">Descargar copia JSON</span>
-            </button>
+          <div id="load-plan-dropdown-menu" class="hidden" aria-hidden="true">
+            <button id="btn-top-upload" class="hidden" aria-hidden="true"></button>
+            <button id="btn-menu-paste-text" class="hidden" aria-hidden="true"></button>
+            <button id="btn-top-copy-prompt" class="hidden" aria-hidden="true"></button>
+            <button id="btn-copy-md" class="hidden" aria-hidden="true"></button>
+            <button id="btn-menu-download-json" class="hidden" aria-hidden="true"></button>
           </div>
         </div>
 
@@ -635,6 +624,26 @@
                 <label for="call-notes-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_notes">Notas / Modalidad</label>
                 <input type="text" id="call-notes-input" placeholder="ej: Oral + Escrito" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
               </div>
+              <div>
+                <label for="call-status-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_status">Estado de Selección</label>
+                <select id="call-status-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+                  <option value="active" data-i18n="opt_call_active">Activo (Seleccionado en el plan)</option>
+                  <option value="inactive" data-i18n="opt_call_inactive">Desactivado (No seleccionado)</option>
+                </select>
+              </div>
+              <div>
+                <label for="call-type-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_type">Tipo de Examen</label>
+                <select id="call-type-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+                  <option value="standard" data-i18n="type_standard">General / Estándar</option>
+                  <option value="written" data-i18n="type_written">Escrito (Scritto)</option>
+                  <option value="oral" data-i18n="type_oral">Oral (Orale)</option>
+                  <option value="lab" data-i18n="type_lab">Laboratorio / Práctica</option>
+                </select>
+              </div>
+              <div>
+                <label for="call-appello-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_appello">Nº de Appello / Llamamiento</label>
+                <input type="number" id="call-appello-input" min="1" max="20" placeholder="ej: 1, 2, 3..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
               <button type="button" id="call-save-btn" class="bg-violet-600 hover:bg-violet-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition" data-i18n="btn_save_call">
@@ -651,6 +660,83 @@
 
         <!-- Tab Panel 2: Import / Export -->
         <div id="tab-panel-import" class="hidden space-y-6">
+
+          <!-- 3-Step AI Workflow Guide Banner -->
+          <div class="bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-200 dark:border-indigo-900/60 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-extrabold text-sm sm:text-base text-indigo-950 dark:text-indigo-200 flex items-center gap-2" data-i18n="import_guide_title">
+                  <span>🤖</span> <span>Cómo cargar tus exámenes automáticamente con IA</span>
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5" data-i18n="import_guide_subtitle">
+                  Extrae asignaturas, fechas, horas y aulas directamente desde fotos, capturas o PDFs en 3 sencillos pasos.
+                </p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800" data-i18n="badge_guided_fast">
+                ⚡ Rápido y Guiado
+              </span>
+            </div>
+
+            <!-- 3 Step Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Step 1 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/40 rounded-xl p-3.5 space-y-2.5 shadow-xs relative flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-xs">1</span>
+                    <span class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Paso 1</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step1_title">Paso 1: Copiar Prompt IA</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step1_desc">
+                    Copia la plantilla con las instrucciones y formato que el planificador necesita.
+                  </p>
+                </div>
+                <button type="button" id="btn-guide-copy-prompt" class="w-full inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-2 rounded-lg text-xs shadow-xs transition active:scale-95">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                  <span data-i18n="btn_copy_ai_template">Copiar Plantilla para IA</span>
+                </button>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-slate-700 text-white font-black text-xs flex items-center justify-center">2</span>
+                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Paso 2</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step2_title">Paso 2: Generar con tu IA</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step2_desc">
+                    Abre ChatGPT, Claude o Gemini, pega el prompt y adjunta tus fotos o lista de exámenes.
+                  </p>
+                </div>
+                <div class="flex items-center justify-center gap-2 py-1.5 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                  <span>💬 ChatGPT</span>
+                  <span>•</span>
+                  <span>✨ Gemini</span>
+                  <span>•</span>
+                  <span>🧠 Claude</span>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">3</span>
+                    <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Paso 3</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step3_title">Paso 3: Pegar resultado e Importar</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step3_desc">
+                    Pega la respuesta de la IA en el recuadro de abajo y haz clic en "Procesar e Importar Plan".
+                  </p>
+                </div>
+                <div class="text-center text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 py-1.5 px-2 rounded-lg border border-emerald-200/60 dark:border-emerald-900/50" data-i18n="step_badge_ready">
+                  ✓ Listo en 1 clic
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
             <div>
               <h3 class="font-bold text-slate-900 dark:text-white uppercase tracking-wide" data-i18n="import_sec_title">

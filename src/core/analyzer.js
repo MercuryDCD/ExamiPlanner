@@ -76,6 +76,10 @@ function buildCallIndex(schedule) {
           moduleShortName: modShort,
           moduleCredits: module.credits,
           alreadyPassed: module.alreadyPassed,
+          evaluationMode: module.evaluationMode || 'standard',
+          oralBinding: module.oralBinding || 'any_subsequent',
+          type: call.type || 'standard',
+          appelloIndex: call.appelloIndex != null ? call.appelloIndex : null,
           hasMultipleModules,
           moduleIds
         };
@@ -166,6 +170,9 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
   let sameDateCongestionCount = 0;
   let turnaroundWarningCount = 0;
   let multipleCallsCount = 0;
+  let precedenceViolationCount = 0;
+  let bindingViolationCount = 0;
+  let missingWrittenPrerequisiteCount = 0;
 
   // 1. Check Exact Collision and Same-Date Congestion
   for (let i = 0; i < activeCalls.length; i++) {
@@ -246,32 +253,132 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
     }
   }
 
-  // 3. Multiple calls for the same module
-  const moduleCallsMap = new Map();
+  // 3. Multiple calls for the same module and type
+  const moduleCallsByTypeMap = new Map();
   for (const call of activeCalls) {
-    if (!moduleCallsMap.has(call.moduleId)) {
-      moduleCallsMap.set(call.moduleId, []);
+    const key = `${call.moduleId}__${call.type || 'standard'}`;
+    if (!moduleCallsByTypeMap.has(key)) {
+      moduleCallsByTypeMap.set(key, []);
     }
-    moduleCallsMap.get(call.moduleId).push(call);
+    moduleCallsByTypeMap.get(key).push(call);
   }
 
-  for (const [moduleId, calls] of moduleCallsMap.entries()) {
+  for (const [key, calls] of moduleCallsByTypeMap.entries()) {
     const distinctDates = new Set(calls.map(c => `${c.date}_${c.time}`));
     if (distinctDates.size > 1) {
       multipleCallsCount++;
       const modName = calls[0].moduleName;
+      const typeLabel = calls[0].type === 'written' ? ' (Escrito)' : (calls[0].type === 'oral' ? ' (Oral)' : (calls[0].type === 'lab' ? ' (Lab)' : ''));
       const dates = Array.from(distinctDates).map(dt => dt.split('_')[0]).join(', ');
       conflicts.push({
-        id: `multiple_${moduleId}`,
+        id: `multiple_${key}`,
         type: 'multiple_calls',
         severity: 'info',
         icon: 'ℹ️',
         badgeClass: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20',
-        title: `Convocatoria Adicional / Reserva: ${modName}`,
-        description: `Has seleccionado ${distinctDates.size} llamamientos activos (${dates}) para este módulo. Recuerda que solo debes presentarte a 1 examen por módulo (las fechas extra sirven como convocatoria de reserva/recuperación).`,
+        title: `Convocatoria Adicional / Reserva: ${modName}${typeLabel}`,
+        description: `Has seleccionado ${distinctDates.size} llamamientos activos (${dates}) para esta parte del examen. Recuerda que solo debes presentarte a 1 examen por convocatoria (las fechas extra sirven como convocatoria de reserva/recuperación).`,
         callIds: calls.map(c => c.id),
-        moduleId
+        moduleId: calls[0].moduleId
       });
+    }
+  }
+
+  // 4. Precedence & Appello Binding Rules for Multi-part Exams
+  const activeCallsByModule = new Map();
+  for (const call of activeCalls) {
+    if (!activeCallsByModule.has(call.moduleId)) {
+      activeCallsByModule.set(call.moduleId, []);
+    }
+    activeCallsByModule.get(call.moduleId).push(call);
+  }
+
+  if (schedule && Array.isArray(schedule.subjects)) {
+    for (const sub of schedule.subjects) {
+      for (const mod of sub.modules || []) {
+        if (mod.alreadyPassed) continue;
+        const evalMode = mod.evaluationMode || 'standard';
+        if (evalMode === 'standard') continue;
+
+        const callsInMod = activeCallsByModule.get(mod.id) || [];
+        const writtens = callsInMod.filter(c => c.type === 'written');
+        const secondaryType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+        const secondaries = callsInMod.filter(c => c.type === secondaryType);
+        const secLabel = evalMode === 'written_and_lab' ? 'práctico/laboratorio' : 'oral';
+
+        // Missing written prerequisite check
+        if (secondaries.length > 0 && writtens.length === 0) {
+          missingWrittenPrerequisiteCount++;
+          conflicts.push({
+            id: `missing_written_${mod.id}`,
+            type: 'missing_written_prerequisite',
+            severity: 'high',
+            icon: '⚠️',
+            badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
+            title: `Falta Examen Escrito Previo: ${mod.name}`,
+            description: `Has seleccionado el examen ${secLabel} pero ningún examen escrito para este módulo. No es posible realizar el examen ${secLabel} sin haber realizado previamente el escrito.`,
+            callIds: secondaries.map(c => c.id),
+            moduleId: mod.id
+          });
+        }
+
+        // Pairwise precedence & appello binding checks
+        for (const w of writtens) {
+          for (const s of secondaries) {
+            // Precedence: secondary must be strictly after written
+            if (s.startTimestamp <= w.startTimestamp) {
+              precedenceViolationCount++;
+              conflicts.push({
+                id: `precedence_${mod.id}_${w.id}_${s.id}`,
+                type: 'precedence_violation',
+                severity: 'critical',
+                icon: '⛔',
+                badgeClass: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
+                title: `Violación de Precedencia: ${mod.name}`,
+                description: `El examen ${secLabel} (${s.date} ${s.time}) no puede realizarse antes o al mismo tiempo que el examen escrito (${w.date} ${w.time}). Debe ser estrictamente posterior.`,
+                callIds: [w.id, s.id],
+                moduleId: mod.id,
+                date: s.date
+              });
+            }
+
+            // Appello binding
+            if (mod.oralBinding === 'same_appello') {
+              if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                bindingViolationCount++;
+                conflicts.push({
+                  id: `binding_${mod.id}_${w.id}_${s.id}`,
+                  type: 'binding_violation',
+                  severity: 'critical',
+                  icon: '⛔',
+                  badgeClass: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
+                  title: `Vinculación de Appello Incumplida: ${mod.name}`,
+                  description: `Esta asignatura exige realizar el examen ${secLabel} en el mismo llamamiento (Appello ${w.appelloIndex}) que el escrito. Has seleccionado el ${secLabel} en el Appello ${s.appelloIndex}.`,
+                  callIds: [w.id, s.id],
+                  moduleId: mod.id,
+                  date: s.date
+                });
+              }
+            } else if (mod.oralBinding === 'any_subsequent') {
+              if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                bindingViolationCount++;
+                conflicts.push({
+                  id: `binding_${mod.id}_${w.id}_${s.id}`,
+                  type: 'binding_violation',
+                  severity: 'critical',
+                  icon: '⛔',
+                  badgeClass: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
+                  title: `Llamamiento Inválido: ${mod.name}`,
+                  description: `El examen ${secLabel} no puede pertenecer a un llamamiento anterior (Appello ${s.appelloIndex}) al del escrito (Appello ${w.appelloIndex}).`,
+                  callIds: [w.id, s.id],
+                  moduleId: mod.id,
+                  date: s.date
+                });
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -425,6 +532,8 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
             moduleId: mod.id,
             moduleName: mod.name || sub.name,
             moduleShortName: mod.shortName || '',
+            evaluationMode: mod.evaluationMode || 'standard',
+            oralBinding: mod.oralBinding || 'any_subsequent',
             subjectId: sub.id,
             subjectName: sub.name,
             subjectShortName: sub.shortName || '',
@@ -436,17 +545,31 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
     }
   }
 
-  // Covered modules calculation accounting for joint sessions
+  // Covered modules calculation accounting for joint sessions and multi-part requirements
   const coveredModuleIds = new Set();
-  for (const call of activeCalls) {
-    if (Array.isArray(call.jointModuleIds)) {
-      call.jointModuleIds.forEach(id => coveredModuleIds.add(id));
-    }
-    if (Array.isArray(call.moduleIds)) {
-      call.moduleIds.forEach(id => coveredModuleIds.add(id));
-    }
-    if (call.moduleId) {
-      coveredModuleIds.add(call.moduleId);
+  for (const mod of allRequiredModules) {
+    const modCalls = activeCalls.filter(c =>
+      c.moduleId === mod.moduleId ||
+      (Array.isArray(c.moduleIds) && c.moduleIds.includes(mod.moduleId)) ||
+      (Array.isArray(c.jointModuleIds) && c.jointModuleIds.includes(mod.moduleId))
+    );
+
+    if (mod.evaluationMode === 'written_and_oral') {
+      const hasWritten = modCalls.some(c => c.type === 'written');
+      const hasOral = modCalls.some(c => c.type === 'oral');
+      if (hasWritten && hasOral) {
+        coveredModuleIds.add(mod.moduleId);
+      }
+    } else if (mod.evaluationMode === 'written_and_lab') {
+      const hasWritten = modCalls.some(c => c.type === 'written');
+      const hasLab = modCalls.some(c => c.type === 'lab');
+      if (hasWritten && hasLab) {
+        coveredModuleIds.add(mod.moduleId);
+      }
+    } else {
+      if (modCalls.length > 0) {
+        coveredModuleIds.add(mod.moduleId);
+      }
     }
   }
 
@@ -489,12 +612,15 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
   return {
     selectedCalls: activeCalls,
     conflicts,
-    hasCriticalErrors: exactCollisionCount > 0,
+    hasCriticalErrors: exactCollisionCount > 0 || precedenceViolationCount > 0 || bindingViolationCount > 0,
     counts: {
       exactCollisions: exactCollisionCount,
       sameDateCongestions: sameDateCongestionCount,
       turnaroundWarnings: turnaroundWarningCount,
       multipleCalls: multipleCallsCount,
+      precedenceViolations: precedenceViolationCount,
+      bindingViolations: bindingViolationCount,
+      missingWrittenPrerequisites: missingWrittenPrerequisiteCount,
       uncoveredModules: uncoveredModules.length,
       totalConflicts: conflicts.length
     },

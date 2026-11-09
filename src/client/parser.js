@@ -84,7 +84,34 @@
                 ? call.moduleIds.map(String)
                 : [String(modId)];
 
-              return {
+              const isCallActive = (
+                call.status === 'active' ||
+                call.status === 'activo' ||
+                call.active === true ||
+                call.selected === true
+              );
+              const isCallExplicitlyInactive = (
+                call.status === 'inactive' ||
+                call.status === 'desactivado' ||
+                call.status === 'inactivo' ||
+                call.active === false ||
+                call.selected === false
+              );
+
+              let callStatus;
+              let callActive;
+              if (isCallActive) {
+                callStatus = 'active';
+                callActive = true;
+              } else if (isCallExplicitlyInactive) {
+                callStatus = 'inactive';
+                callActive = false;
+              } else if (typeof call.status === 'string' && call.status.trim()) {
+                callStatus = call.status.trim();
+                callActive = false;
+              }
+
+              const normCall = {
                 id: String(callId),
                 date,
                 time,
@@ -92,8 +119,16 @@
                 deadline: deadline || date,
                 location: call.location || 'Aula Magna',
                 notes: call.notes || '',
+                type: normalizeCallType(call.type, call.notes, mod.name),
+                appelloIndex: normalizeAppelloIndex(call.appelloIndex, call.notes, cIdx),
                 moduleIds
               };
+              if (callStatus !== undefined) {
+                normCall.status = callStatus;
+                normCall.active = callActive;
+              }
+
+              return normCall;
             });
 
             return {
@@ -104,6 +139,8 @@
               difficulty: modDiff,
               defaultWeight: modWeight,
               alreadyPassed,
+              evaluationMode: normalizeEvaluationMode(mod.evaluationMode),
+              oralBinding: normalizeOralBinding(mod.oralBinding),
               calls
             };
           });
@@ -129,7 +166,122 @@
             }))
           : [];
 
-        return { meta, subjects, presets };
+        const result = { meta, subjects, presets };
+        if (Array.isArray(sched.selectedCallIds)) {
+          result.selectedCallIds = sched.selectedCallIds.map(String);
+        }
+        return result;
+      }
+
+      function extractSelectedCallIds(sched) {
+        if (!sched || typeof sched !== 'object') return [];
+        const explicitActiveIds = [];
+        let hasExplicitCallStatus = false;
+
+        (sched.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            (mod.calls || []).forEach(call => {
+              const isCallActive = (
+                call.status === 'active' ||
+                call.status === 'activo' ||
+                call.active === true ||
+                call.selected === true
+              );
+              const isCallInactive = (
+                call.status === 'inactive' ||
+                call.status === 'desactivado' ||
+                call.status === 'inactivo' ||
+                call.active === false ||
+                call.selected === false
+              );
+
+              if (isCallActive) {
+                explicitActiveIds.push(String(call.id));
+                hasExplicitCallStatus = true;
+              } else if (isCallInactive) {
+                hasExplicitCallStatus = true;
+              }
+            });
+          });
+        });
+
+        if (hasExplicitCallStatus) {
+          return explicitActiveIds;
+        }
+
+        if (Array.isArray(sched.selectedCallIds) && sched.selectedCallIds.length > 0) {
+          return sched.selectedCallIds.map(String);
+        }
+
+        if (Array.isArray(sched.presets) && sched.presets.length > 0 && Array.isArray(sched.presets[0].selectedCallIds) && sched.presets[0].selectedCallIds.length > 0) {
+          return sched.presets[0].selectedCallIds.map(String);
+        }
+
+        const fallback = [];
+        (sched.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            if (!mod.alreadyPassed && Array.isArray(mod.calls) && mod.calls.length > 0) {
+              const evalMode = normalizeEvaluationMode(mod.evaluationMode);
+              if (evalMode === 'written_and_oral') {
+                const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+                const o = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'oral');
+                if (w) fallback.push(String(w.id));
+                if (o) fallback.push(String(o.id));
+                if (!w && !o) fallback.push(String(mod.calls[0].id));
+              } else if (evalMode === 'written_and_lab') {
+                const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+                const l = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'lab');
+                if (w) fallback.push(String(w.id));
+                if (l) fallback.push(String(l.id));
+                if (!w && !l) fallback.push(String(mod.calls[0].id));
+              } else {
+                fallback.push(String(mod.calls[0].id));
+              }
+            }
+          });
+        });
+        return fallback;
+      }
+
+      function getExportableSchedule(sched, selectedCallIds = []) {
+        const idsArray = Array.isArray(selectedCallIds)
+          ? selectedCallIds
+          : (selectedCallIds instanceof Set
+            ? Array.from(selectedCallIds)
+            : (typeof selectedCallIds === 'string' && selectedCallIds ? [selectedCallIds] : []));
+        const selSet = new Set(idsArray.map(String));
+
+        const clone = JSON.parse(JSON.stringify(sched || {}));
+
+        (clone.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            (mod.calls || []).forEach(call => {
+              const isSelected = selSet.has(String(call.id));
+              call.status = isSelected ? 'active' : 'inactive';
+              call.active = isSelected;
+            });
+          });
+        });
+
+        const selectedList = Array.from(selSet);
+        if (!Array.isArray(clone.presets) || clone.presets.length === 0) {
+          clone.presets = [
+            {
+              name: 'Plan Seleccionado',
+              description: 'Convocatorias seleccionadas en el planificador',
+              selectedCallIds: selectedList
+            }
+          ];
+        } else {
+          clone.presets[0] = {
+            ...clone.presets[0],
+            selectedCallIds: selectedList
+          };
+        }
+
+        clone.selectedCallIds = selectedList;
+
+        return clone;
       }
 
       function parseMarkdownTable(markdown, metaOverrides = {}) {

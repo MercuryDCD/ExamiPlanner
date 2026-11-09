@@ -747,9 +747,10 @@
               const modDisplay = call.jointModuleLabel || call.moduleShortName || (call.hasMultipleModules ? call.moduleName : '');
               const verboseModuleLabel = `${call.subjectName}: ${call.moduleName}`;
               
+              const typeIcon = call.type === 'written' ? ' ✍️' : (call.type === 'oral' ? ' 🗣️' : (call.type === 'lab' ? ' 💻' : ''));
               const displayLabel = (call.hasMultipleModules && modDisplay)
-                ? `${subAcronym} · ${modDisplay}`
-                : (subAcronym || call.subjectName);
+                ? `${subAcronym} · ${modDisplay}${typeIcon}`
+                : `${subAcronym || call.subjectName}${typeIcon}`;
 
               const safeTooltip = `${escapeHtml(call.subjectName)}${call.hasMultipleModules ? ` · ${escapeHtml(call.moduleName)}` : ''} | 📅 ${call.date} ⏰ ${call.time || '09:00'} (${call.durationHours}h) - ${t('call_click_hint')}`;
 

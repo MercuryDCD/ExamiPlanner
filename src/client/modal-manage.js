@@ -119,16 +119,24 @@
           } else {
             callsHtml = `
               <div class="divide-y divide-slate-100 dark:divide-slate-800/60 bg-slate-50/30 dark:bg-slate-950/20">
-                ${calls.map(c => `
+                ${calls.map(c => {
+                  const isCallSelected = state.selectedCallIds.has(c.id);
+                  const statusBadge = isCallSelected
+                    ? `<button type="button" data-action="toggle-call" data-call-id="${c.id}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:opacity-80 transition cursor-pointer" title="Hacer clic para desactivar de la selección">✓ ${t('status_active')}</button>`
+                    : `<button type="button" data-action="toggle-call" data-call-id="${c.id}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer" title="Hacer clic para activar en la selección">○ ${t('status_inactive')}</button>`;
+                  return `
                   <div class="px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-[11px]">
                     <div class="flex items-center gap-2">
                       <span class="font-mono font-bold text-slate-700 dark:text-slate-300 inline-flex items-center gap-1">${renderIcon('📅', 'w-3 h-3')} ${c.date}</span>
                       <span class="text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">${renderIcon('⏰', 'w-3 h-3')} ${c.time || '09:00'} (${c.durationHours}h)</span>
+                      ${c.type && c.type !== 'standard' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800">${c.type === 'written' ? '✍️ ' + t('badge_written') : (c.type === 'oral' ? '🗣️ ' + t('badge_oral') : (c.type === 'lab' ? '💻 ' + t('badge_lab') : c.type))}</span>` : ''}
+                      ${c.appelloIndex ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800">${t('badge_appello', c.appelloIndex)}</span>` : ''}
                       ${c.moduleName ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
                       ${c.location ? `<span class="text-slate-400 inline-flex items-center gap-1">• ${renderIcon('📍', 'w-3 h-3')} ${escapeHtml(c.location)}</span>` : ''}
                       ${c.notes ? `<span class="text-slate-400 italic">• ${escapeHtml(c.notes)}</span>` : ''}
                     </div>
                     <div class="flex items-center gap-1.5">
+                      ${statusBadge}
                       <button type="button" data-action="edit-call" data-sub-id="${sub.id}" data-mod-id="${c.moduleId}" data-call-id="${c.id}" class="px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
                         ${t('btn_edit')}
                       </button>
@@ -137,7 +145,8 @@
                       </button>
                     </div>
                   </div>
-                `).join('')}
+                `;
+                }).join('')}
               </div>
             `;
           }
@@ -154,6 +163,7 @@
                     <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">[${escapeHtml(m.shortName || generateModuleShortName(m.name))}]</span>
                     <span>${escapeHtml(m.name)}</span>
                     <span class="text-slate-400 text-[9px]">(${m.credits || sub.credits} CFU)</span>
+                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? 'Escrito+Oral' : 'Escrito+Lab'} (${m.oralBinding === 'same_appello' ? 'Mismo Appello' : 'Appello libre'})</span>` : ''}
                   </span>
                 `).join('')}
               </div>
@@ -197,7 +207,16 @@
             const modId = btn.getAttribute('data-mod-id');
             const callId = btn.getAttribute('data-call-id');
 
-            if (action === 'add-call') {
+            if (action === 'toggle-call') {
+              if (state.selectedCallIds.has(callId)) {
+                state.selectedCallIds.delete(callId);
+              } else {
+                state.selectedCallIds.add(callId);
+              }
+              saveSessionsToStorage();
+              updateApp();
+              renderModalSubjects();
+            } else if (action === 'add-call') {
               showCallForm(subId, null, modId);
             } else if (action === 'edit-call') {
               showCallForm(subId, callId, modId);
@@ -247,10 +266,37 @@
               <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_credits')}</label>
               <input type="number" min="0" max="60" class="mod-credits-input w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs" value="${typeof m.credits === 'number' ? m.credits : 6}">
             </div>
+            <div class="w-36">
+              <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_eval_mode')}</label>
+              <select class="mod-eval-mode-select w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-indigo-500">
+                <option value="standard" ${(!m.evaluationMode || m.evaluationMode === 'standard') ? 'selected' : ''}>${t('eval_mode_standard')}</option>
+                <option value="written_and_oral" ${m.evaluationMode === 'written_and_oral' ? 'selected' : ''}>${t('eval_mode_written_oral')}</option>
+                <option value="written_and_lab" ${m.evaluationMode === 'written_and_lab' ? 'selected' : ''}>${t('eval_mode_written_lab')}</option>
+              </select>
+            </div>
+            <div class="w-40 mod-oral-binding-wrapper ${(!m.evaluationMode || m.evaluationMode === 'standard') ? 'opacity-40 pointer-events-none' : ''}">
+              <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_oral_binding')}</label>
+              <select class="mod-oral-binding-select w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-indigo-500">
+                <option value="same_appello" ${m.oralBinding === 'same_appello' ? 'selected' : ''}>${t('binding_same_appello')}</option>
+                <option value="any_subsequent" ${(!m.oralBinding || m.oralBinding === 'any_subsequent') ? 'selected' : ''}>${t('binding_any_subsequent')}</option>
+              </select>
+            </div>
             <div class="flex items-center gap-1.5 pt-4">
               <button type="button" class="btn-remove-mod-row text-xs font-bold text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 px-1.5 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Eliminar módulo">✕</button>
             </div>
           `;
+
+          const evalModeSel = row.querySelector('.mod-eval-mode-select');
+          const bindingWrapper = row.querySelector('.mod-oral-binding-wrapper');
+          if (evalModeSel && bindingWrapper) {
+            evalModeSel.addEventListener('change', () => {
+              if (evalModeSel.value === 'standard') {
+                bindingWrapper.classList.add('opacity-40', 'pointer-events-none');
+              } else {
+                bindingWrapper.classList.remove('opacity-40', 'pointer-events-none');
+              }
+            });
+          }
 
           row.querySelector('.btn-remove-mod-row').addEventListener('click', () => {
             const allRows = container.querySelectorAll('.module-row');
@@ -348,6 +394,8 @@
             const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
             const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
             const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
+            const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
+            const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
 
             const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
             const existingCalls = existingMod?.calls || [];
@@ -360,6 +408,8 @@
               difficulty: rDiff,
               defaultWeight: rWeight,
               alreadyPassed: Boolean(existingMod?.alreadyPassed),
+              evaluationMode: rEvalMode,
+              oralBinding: rOralBinding,
               calls: existingCalls
             };
           });
@@ -451,6 +501,7 @@
         const deadlineInput = document.getElementById('call-deadline-input');
         const locInput = document.getElementById('call-location-input');
         const notesInput = document.getElementById('call-notes-input');
+        const statusSelect = document.getElementById('call-status-select');
 
         document.getElementById('subject-form-box').classList.add('hidden');
 
@@ -493,6 +544,11 @@
             deadlineInput.value = foundCall.deadline || '';
             locInput.value = foundCall.location || '';
             notesInput.value = foundCall.notes || '';
+            if (statusSelect) statusSelect.value = state.selectedCallIds.has(callId) ? 'active' : 'inactive';
+            const typeSelect = document.getElementById('call-type-select');
+            if (typeSelect) typeSelect.value = foundCall.type || 'standard';
+            const appelloInput = document.getElementById('call-appello-input');
+            if (appelloInput) appelloInput.value = foundCall.appelloIndex != null ? foundCall.appelloIndex : '';
           }
         } else {
           titleEl.textContent = t('call_form_title_new');
@@ -504,6 +560,11 @@
           deadlineInput.value = '';
           locInput.value = 'Aula Magna';
           notesInput.value = '';
+          if (statusSelect) statusSelect.value = 'active';
+          const typeSelect = document.getElementById('call-type-select');
+          if (typeSelect) typeSelect.value = 'standard';
+          const appelloInput = document.getElementById('call-appello-input');
+          if (appelloInput) appelloInput.value = '';
         }
 
         form.classList.remove('hidden');
@@ -528,6 +589,11 @@
         let deadline = normalizeDateStr(document.getElementById('call-deadline-input').value);
         const location = document.getElementById('call-location-input').value.trim() || 'Aula Magna';
         const notes = document.getElementById('call-notes-input').value.trim();
+        const statusSelect = document.getElementById('call-status-select');
+        const isNowActive = !statusSelect || statusSelect.value === 'active';
+        const callType = document.getElementById('call-type-select')?.value || 'standard';
+        const parsedAppello = parseInt(document.getElementById('call-appello-input')?.value, 10);
+        const appelloIndex = (!isNaN(parsedAppello) && parsedAppello >= 1) ? parsedAppello : null;
 
         if (!date) {
           alert('Por favor selecciona una fecha válida para el examen.');
@@ -560,6 +626,11 @@
               location,
               notes
             };
+            if (isNowActive) {
+              state.selectedCallIds.add(callId);
+            } else {
+              state.selectedCallIds.delete(callId);
+            }
           }
         } else {
           const newCallId = `${mod.id}_call_${Date.now()}`;
@@ -571,11 +642,15 @@
             durationHours,
             deadline,
             location,
-            notes
+            notes,
+            type: callType,
+            appelloIndex
           });
           // Auto-select newly created call if module previously had none selected
-          if (!hadCallsSelected) {
+          if (isNowActive) {
             state.selectedCallIds.add(newCallId);
+          } else {
+            state.selectedCallIds.delete(newCallId);
           }
         }
 
@@ -812,7 +887,9 @@ Genera ÚNICAMENTE un bloque de código JSON válido con la siguiente estructura
               "durationHours": 2.5,
               "deadline": "2027-01-10",
               "location": "Aula Magna",
-              "notes": "1º Llamamiento Ordinario"
+              "notes": "1º Llamamiento Ordinario",
+              "status": "active",
+              "active": true
             },
             {
               "id": "ml_call_2",
@@ -821,7 +898,9 @@ Genera ÚNICAMENTE un bloque de código JSON válido con la siguiente estructura
               "durationHours": 2.5,
               "deadline": "2027-01-31",
               "location": "Aula 2.1",
-              "notes": "2º Llamamiento Ordinario"
+              "notes": "2º Llamamiento Ordinario",
+              "status": "inactive",
+              "active": false
             }
           ]
         }

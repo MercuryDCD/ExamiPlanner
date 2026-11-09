@@ -102,15 +102,68 @@ function optimizeSchedule(schedule, optionsOrMode = {}, maybeOptions = {}) {
         }
       }
 
-      // If user has fixed a call for this module, restrict to that call only
-      const fixedCall = validCalls.find(c => fixedSet.has(c.id));
-      const candidates = fixedCall ? [fixedCall] : validCalls;
+      const evalMode = module.evaluationMode || 'standard';
+      const oralBinding = module.oralBinding || 'any_subsequent';
+      let candidates = [];
+
+      if (evalMode === 'written_and_oral' || evalMode === 'written_and_lab') {
+        const secType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+        let writtens = validCalls.filter(c => c.type === 'written');
+        let secondaries = validCalls.filter(c => c.type === secType);
+
+        if (writtens.length === 0 || secondaries.length === 0) {
+          const fixedCall = validCalls.find(c => fixedSet.has(c.id));
+          candidates = (fixedCall ? [fixedCall] : validCalls).map(c => [c]);
+        } else {
+          if (fixedSet.size > 0) {
+            const fixedW = writtens.filter(c => fixedSet.has(c.id));
+            if (fixedW.length > 0) writtens = fixedW;
+            const fixedS = secondaries.filter(c => fixedSet.has(c.id));
+            if (fixedS.length > 0) secondaries = fixedS;
+          }
+
+          for (const w of writtens) {
+            for (const s of secondaries) {
+              if (w.startTimestamp >= s.startTimestamp) continue;
+              if (w.endTimestamp > s.startTimestamp) continue;
+
+              if (oralBinding === 'same_appello') {
+                if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                  continue;
+                }
+              } else if (oralBinding === 'any_subsequent') {
+                if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                  continue;
+                }
+              }
+
+              candidates.push([w, s]);
+            }
+          }
+
+          if (candidates.length === 0) {
+            for (const w of writtens) {
+              for (const s of secondaries) {
+                if (w.startTimestamp < s.startTimestamp) {
+                  candidates.push([w, s]);
+                }
+              }
+            }
+            if (candidates.length === 0) {
+              candidates = validCalls.map(c => [c]);
+            }
+          }
+        }
+      } else {
+        const fixedCall = validCalls.find(c => fixedSet.has(c.id));
+        candidates = (fixedCall ? [fixedCall] : validCalls).map(c => [c]);
+      }
 
       modulesToSchedule.push({
         module,
         subject,
         weight: modWeight,
-        calls: candidates
+        candidates
       });
     }
   }
@@ -154,41 +207,41 @@ function optimizeSchedule(schedule, optionsOrMode = {}, maybeOptions = {}) {
       return;
     }
 
-    const { calls } = modulesToSchedule[moduleIndex];
+    const { candidates } = modulesToSchedule[moduleIndex];
 
-    for (let c = 0; c < calls.length; c++) {
-      const call = calls[c];
+    for (let c = 0; c < candidates.length; c++) {
+      const callTuple = candidates[c];
 
-      // Prune branch: check if this call directly has an exact collision with any already selected call
       let collides = false;
-      for (let s = 0; s < currentSelection.length; s++) {
-        const existing = currentSelection[s];
+      for (let t = 0; t < callTuple.length; t++) {
+        const call = callTuple[t];
+        for (let s = 0; s < currentSelection.length; s++) {
+          const existing = currentSelection[s];
 
-        // Simultaneous calls of distinct modules for the SAME subject represent the same physical exam
-        const isSameSubjectJoint = call.subjectId === existing.subjectId && (
-          (call.jointExamKey && call.jointExamKey === existing.jointExamKey) ||
-          (call.date === existing.date && call.time === existing.time)
-        );
+          const isSameSubjectJoint = call.subjectId === existing.subjectId && (
+            (call.jointExamKey && call.jointExamKey === existing.jointExamKey) ||
+            (call.date === existing.date && call.time === existing.time)
+          );
 
-        if (isSameSubjectJoint) {
-          // Same joint exam: allowed to be taken together without collision
-          continue;
+          if (isSameSubjectJoint) {
+            continue;
+          }
+
+          if (call.startTimestamp < existing.endTimestamp && existing.startTimestamp < call.endTimestamp) {
+            collides = true;
+            break;
+          }
         }
-
-        if (call.startTimestamp < existing.endTimestamp && existing.startTimestamp < call.endTimestamp) {
-          collides = true;
-          break;
-        }
+        if (collides) break;
       }
 
       if (collides) {
-        // Prune: do not explore branches with critical collisions
         continue;
       }
 
-      currentSelection.push(call);
+      currentSelection.push(...callTuple);
       search(moduleIndex + 1, currentSelection);
-      currentSelection.pop();
+      currentSelection.splice(currentSelection.length - callTuple.length, callTuple.length);
     }
   }
 
@@ -327,7 +380,7 @@ function optimizeSchedule(schedule, optionsOrMode = {}, maybeOptions = {}) {
 
   // Fallback if all combinations had collisions: pick greedy best-effort
   if (!bestCombination && modulesToSchedule.length > 0) {
-    bestCombination = modulesToSchedule.map(m => m.calls[0]);
+    bestCombination = modulesToSchedule.flatMap(m => m.candidates[0] || []);
     bestScore = -9999;
     bestMetrics = {
       minBufferDays: 0,

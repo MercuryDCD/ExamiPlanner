@@ -182,30 +182,19 @@
           <span data-i18n="btn_manage_subjects">Gestionar Asignaturas</span>
         </button>
 
-        <!-- Load Plan Dropdown Menu -->
+        <!-- Load Plan Button (Direct to Import/Export tab) -->
         <div class="relative">
           <input type="file" id="top-file-input" accept=".json,.md,.txt" class="hidden">
-          <button id="btn-load-plan-dropdown" type="button" aria-expanded="false" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar archivo, pegar texto, prompt IA o markdown">
+          <button id="btn-load-plan-dropdown" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar o importar plan de exámenes (JSON, IA, archivo)">
             <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
             <span data-i18n="btn_load_plan">Cargar Plan</span>
-            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
-          <div id="load-plan-dropdown-menu" class="hidden absolute right-0 mt-1 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 py-1.5 text-xs space-y-0.5">
-            <button id="btn-top-upload" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg> <span data-i18n="menu_upload_file">Subir archivo (.json, .md, .txt)</span>
-            </button>
-            <button id="btn-menu-paste-text" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="menu_paste_text">Pegar texto o JSON</span>
-            </button>
-            <button id="btn-top-copy-prompt" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-medium">
-              <svg class="w-3.5 h-3.5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span data-i18n="menu_copy_prompt">Prompt IA (Copiar plantilla)</span>
-            </button>
-            <button id="btn-copy-md" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> <span data-i18n="menu_copy_md">Copiar resumen en Markdown</span>
-            </button>
-            <button id="btn-menu-download-json" type="button" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200">
-              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="menu_download_json">Descargar copia JSON</span>
-            </button>
+          <div id="load-plan-dropdown-menu" class="hidden" aria-hidden="true">
+            <button id="btn-top-upload" class="hidden" aria-hidden="true"></button>
+            <button id="btn-menu-paste-text" class="hidden" aria-hidden="true"></button>
+            <button id="btn-top-copy-prompt" class="hidden" aria-hidden="true"></button>
+            <button id="btn-copy-md" class="hidden" aria-hidden="true"></button>
+            <button id="btn-menu-download-json" class="hidden" aria-hidden="true"></button>
           </div>
         </div>
 
@@ -635,6 +624,26 @@
                 <label for="call-notes-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_notes">Notas / Modalidad</label>
                 <input type="text" id="call-notes-input" placeholder="ej: Oral + Escrito" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
               </div>
+              <div>
+                <label for="call-status-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_status">Estado de Selección</label>
+                <select id="call-status-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+                  <option value="active" data-i18n="opt_call_active">Activo (Seleccionado en el plan)</option>
+                  <option value="inactive" data-i18n="opt_call_inactive">Desactivado (No seleccionado)</option>
+                </select>
+              </div>
+              <div>
+                <label for="call-type-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_type">Tipo de Examen</label>
+                <select id="call-type-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+                  <option value="standard" data-i18n="type_standard">General / Estándar</option>
+                  <option value="written" data-i18n="type_written">Escrito (Scritto)</option>
+                  <option value="oral" data-i18n="type_oral">Oral (Orale)</option>
+                  <option value="lab" data-i18n="type_lab">Laboratorio / Práctica</option>
+                </select>
+              </div>
+              <div>
+                <label for="call-appello-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_appello">Nº de Appello / Llamamiento</label>
+                <input type="number" id="call-appello-input" min="1" max="20" placeholder="ej: 1, 2, 3..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
+              </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
               <button type="button" id="call-save-btn" class="bg-violet-600 hover:bg-violet-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-sm transition" data-i18n="btn_save_call">
@@ -651,6 +660,83 @@
 
         <!-- Tab Panel 2: Import / Export -->
         <div id="tab-panel-import" class="hidden space-y-6">
+
+          <!-- 3-Step AI Workflow Guide Banner -->
+          <div class="bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-200 dark:border-indigo-900/60 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-extrabold text-sm sm:text-base text-indigo-950 dark:text-indigo-200 flex items-center gap-2" data-i18n="import_guide_title">
+                  <span>🤖</span> <span>Cómo cargar tus exámenes automáticamente con IA</span>
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5" data-i18n="import_guide_subtitle">
+                  Extrae asignaturas, fechas, horas y aulas directamente desde fotos, capturas o PDFs en 3 sencillos pasos.
+                </p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800" data-i18n="badge_guided_fast">
+                ⚡ Rápido y Guiado
+              </span>
+            </div>
+
+            <!-- 3 Step Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Step 1 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/40 rounded-xl p-3.5 space-y-2.5 shadow-xs relative flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-xs">1</span>
+                    <span class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Paso 1</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step1_title">Paso 1: Copiar Prompt IA</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step1_desc">
+                    Copia la plantilla con las instrucciones y formato que el planificador necesita.
+                  </p>
+                </div>
+                <button type="button" id="btn-guide-copy-prompt" class="w-full inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-2 rounded-lg text-xs shadow-xs transition active:scale-95">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                  <span data-i18n="btn_copy_ai_template">Copiar Plantilla para IA</span>
+                </button>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-slate-700 text-white font-black text-xs flex items-center justify-center">2</span>
+                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Paso 2</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step2_title">Paso 2: Generar con tu IA</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step2_desc">
+                    Abre ChatGPT, Claude o Gemini, pega el prompt y adjunta tus fotos o lista de exámenes.
+                  </p>
+                </div>
+                <div class="flex items-center justify-center gap-2 py-1.5 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                  <span>💬 ChatGPT</span>
+                  <span>•</span>
+                  <span>✨ Gemini</span>
+                  <span>•</span>
+                  <span>🧠 Claude</span>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5 shadow-xs flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">3</span>
+                    <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Paso 3</span>
+                  </div>
+                  <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step3_title">Paso 3: Pegar resultado e Importar</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step3_desc">
+                    Pega la respuesta de la IA en el recuadro de abajo y haz clic en "Procesar e Importar Plan".
+                  </p>
+                </div>
+                <div class="text-center text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 py-1.5 px-2 rounded-lg border border-emerald-200/60 dark:border-emerald-900/50" data-i18n="step_badge_ready">
+                  ✓ Listo en 1 clic
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
             <div>
               <h3 class="font-bold text-slate-900 dark:text-white uppercase tracking-wide" data-i18n="import_sec_title">
@@ -1156,6 +1242,8 @@
           "difficulty": "high",
           "defaultWeight": 5,
           "alreadyPassed": false,
+          "evaluationMode": "standard",
+          "oralBinding": "same_appello",
           "calls": [
             {
               "id": "ml_appello_1",
@@ -1165,6 +1253,8 @@
               "deadline": "2027-01-10",
               "location": "Aula Magna - Edificio Central",
               "notes": "1ª Convocatoria Ordinaria - Teoría y ejercicios prácticos",
+              "type": "written",
+              "appelloIndex": 1,
               "moduleIds": [
                 "ml_mod"
               ]
@@ -1177,6 +1267,8 @@
               "deadline": "2027-01-31",
               "location": "Aula 2.1 - Pabellón A",
               "notes": "2ª Convocatoria Ordinaria",
+              "type": "standard",
+              "appelloIndex": 2,
               "moduleIds": [
                 "ml_mod"
               ]
@@ -1189,6 +1281,8 @@
               "deadline": "2027-02-18",
               "location": "Aula 1.05 - Pabellón B",
               "notes": "Convocatoria de Recuperación",
+              "type": "standard",
+              "appelloIndex": 3,
               "moduleIds": [
                 "ml_mod"
               ]
@@ -1215,6 +1309,8 @@
           "difficulty": "high",
           "defaultWeight": 5,
           "alreadyPassed": false,
+          "evaluationMode": "standard",
+          "oralBinding": "same_appello",
           "calls": [
             {
               "id": "dlcv_appello_1",
@@ -1224,6 +1320,8 @@
               "deadline": "2027-01-15",
               "location": "Laboratorio L1",
               "notes": "Entrega obligatoria del proyecto 5 días antes",
+              "type": "written",
+              "appelloIndex": 1,
               "moduleIds": [
                 "dlcv_mod"
               ]
@@ -1236,6 +1334,8 @@
               "deadline": "2027-02-05",
               "location": "Laboratorio L1",
               "notes": "2ª Convocatoria Ordinaria",
+              "type": "written",
+              "appelloIndex": 2,
               "moduleIds": [
                 "dlcv_mod"
               ]
@@ -1248,6 +1348,8 @@
               "deadline": "2027-02-21",
               "location": "Laboratorio L1",
               "notes": "Convocatoria de Recuperación",
+              "type": "written",
+              "appelloIndex": 3,
               "moduleIds": [
                 "dlcv_mod"
               ]
@@ -1274,6 +1376,8 @@
           "difficulty": "medium",
           "defaultWeight": 3,
           "alreadyPassed": false,
+          "evaluationMode": "standard",
+          "oralBinding": "same_appello",
           "calls": [
             {
               "id": "nlp_appello_1",
@@ -1283,6 +1387,8 @@
               "deadline": "2027-01-19",
               "location": "Aula 3.2",
               "notes": "Examen escrito con preguntas teóricas y código",
+              "type": "written",
+              "appelloIndex": 1,
               "moduleIds": [
                 "nlp_mod"
               ]
@@ -1295,6 +1401,8 @@
               "deadline": "2027-02-09",
               "location": "Aula 1.3",
               "notes": "2ª Convocatoria",
+              "type": "standard",
+              "appelloIndex": 2,
               "moduleIds": [
                 "nlp_mod"
               ]
@@ -1321,6 +1429,8 @@
           "difficulty": "medium",
           "defaultWeight": 3,
           "alreadyPassed": false,
+          "evaluationMode": "standard",
+          "oralBinding": "same_appello",
           "calls": [
             {
               "id": "krr_appello_1",
@@ -1330,6 +1440,8 @@
               "deadline": "2027-01-24",
               "location": "Auditorio",
               "notes": "Resolución de problemas de razonamiento semántico",
+              "type": "standard",
+              "appelloIndex": 1,
               "moduleIds": [
                 "krr_mod"
               ]
@@ -1342,6 +1454,8 @@
               "deadline": "2027-02-13",
               "location": "Auditorio",
               "notes": "2ª Convocatoria Ordinaria",
+              "type": "standard",
+              "appelloIndex": 2,
               "moduleIds": [
                 "krr_mod"
               ]
@@ -1368,6 +1482,8 @@
           "difficulty": "low",
           "defaultWeight": 1,
           "alreadyPassed": false,
+          "evaluationMode": "standard",
+          "oralBinding": "same_appello",
           "calls": [
             {
               "id": "ethics_appello_1",
@@ -1377,6 +1493,8 @@
               "deadline": "2027-01-28",
               "location": "Aula 3",
               "notes": "Ensayo argumentativo y análisis de casos",
+              "type": "standard",
+              "appelloIndex": 1,
               "moduleIds": [
                 "ethics_mod"
               ]
@@ -1389,6 +1507,8 @@
               "deadline": "2027-02-16",
               "location": "Aula 3",
               "notes": "2ª Convocatoria Ordinaria",
+              "type": "standard",
+              "appelloIndex": 2,
               "moduleIds": [
                 "ethics_mod"
               ]
@@ -1484,6 +1604,42 @@
         if (['high', 'alta', 'alto', 'difficile', '5'].includes(d)) return 'high';
         if (['low', 'baja', 'basso', 'bassa', 'facile', '1'].includes(d)) return 'low';
         return 'medium';
+      }
+
+      function normalizeEvaluationMode(val) {
+        const v = String(val || '').toLowerCase().trim();
+        if (['written_and_oral', 'scritto_orale', 'escrito_y_oral', 'oral', 'scritto_e_orale'].includes(v)) return 'written_and_oral';
+        if (['written_and_lab', 'scritto_lab', 'escrito_y_lab', 'lab', 'scritto_e_lab'].includes(v)) return 'written_and_lab';
+        return 'standard';
+      }
+
+      function normalizeOralBinding(val) {
+        const v = String(val || '').toLowerCase().trim();
+        if (['any_subsequent', 'flexible', 'cualquiera', 'subsequent', 'posterior'].includes(v)) return 'any_subsequent';
+        return 'same_appello';
+      }
+
+      function normalizeCallType(val, notes = '', modName = '') {
+        const v = String(val || '').toLowerCase().trim();
+        if (['written', 'scritto', 'escrito'].includes(v)) return 'written';
+        if (['oral', 'orale'].includes(v)) return 'oral';
+        if (['lab', 'laboratorio', 'practica', 'práctica'].includes(v)) return 'lab';
+        const combined = `${notes} ${modName}`.toLowerCase();
+        if (/\b(orale|oral)\b/.test(combined)) return 'oral';
+        if (/\b(scritto|escrito|teor[ií]a|parcial)\b/.test(combined)) return 'written';
+        if (/\b(lab|laboratorio|progetto|proyecto|pr[aá]ctica)\b/.test(combined)) return 'lab';
+        return 'standard';
+      }
+
+      function normalizeAppelloIndex(val, notes = '', cIdx = 0) {
+        if (typeof val === 'number' && val >= 1) return Math.round(val);
+        const parsed = parseInt(val, 10);
+        if (!isNaN(parsed) && parsed >= 1) return parsed;
+        const match = String(notes || '').match(/(\d+)\s*(?:[ºª°]|appello|convocatoria|llamamiento)/i);
+        if (match) return parseInt(match[1], 10);
+        const match2 = String(notes || '').match(/(?:appello|convocatoria|llamamiento)\s*(\d+)/i);
+        if (match2) return parseInt(match2[1], 10);
+        return cIdx + 1;
       }
 
       function generateSubjectAcronym(name) {
@@ -1708,7 +1864,34 @@
                 ? call.moduleIds.map(String)
                 : [String(modId)];
 
-              return {
+              const isCallActive = (
+                call.status === 'active' ||
+                call.status === 'activo' ||
+                call.active === true ||
+                call.selected === true
+              );
+              const isCallExplicitlyInactive = (
+                call.status === 'inactive' ||
+                call.status === 'desactivado' ||
+                call.status === 'inactivo' ||
+                call.active === false ||
+                call.selected === false
+              );
+
+              let callStatus;
+              let callActive;
+              if (isCallActive) {
+                callStatus = 'active';
+                callActive = true;
+              } else if (isCallExplicitlyInactive) {
+                callStatus = 'inactive';
+                callActive = false;
+              } else if (typeof call.status === 'string' && call.status.trim()) {
+                callStatus = call.status.trim();
+                callActive = false;
+              }
+
+              const normCall = {
                 id: String(callId),
                 date,
                 time,
@@ -1716,8 +1899,16 @@
                 deadline: deadline || date,
                 location: call.location || 'Aula Magna',
                 notes: call.notes || '',
+                type: normalizeCallType(call.type, call.notes, mod.name),
+                appelloIndex: normalizeAppelloIndex(call.appelloIndex, call.notes, cIdx),
                 moduleIds
               };
+              if (callStatus !== undefined) {
+                normCall.status = callStatus;
+                normCall.active = callActive;
+              }
+
+              return normCall;
             });
 
             return {
@@ -1728,6 +1919,8 @@
               difficulty: modDiff,
               defaultWeight: modWeight,
               alreadyPassed,
+              evaluationMode: normalizeEvaluationMode(mod.evaluationMode),
+              oralBinding: normalizeOralBinding(mod.oralBinding),
               calls
             };
           });
@@ -1753,7 +1946,122 @@
             }))
           : [];
 
-        return { meta, subjects, presets };
+        const result = { meta, subjects, presets };
+        if (Array.isArray(sched.selectedCallIds)) {
+          result.selectedCallIds = sched.selectedCallIds.map(String);
+        }
+        return result;
+      }
+
+      function extractSelectedCallIds(sched) {
+        if (!sched || typeof sched !== 'object') return [];
+        const explicitActiveIds = [];
+        let hasExplicitCallStatus = false;
+
+        (sched.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            (mod.calls || []).forEach(call => {
+              const isCallActive = (
+                call.status === 'active' ||
+                call.status === 'activo' ||
+                call.active === true ||
+                call.selected === true
+              );
+              const isCallInactive = (
+                call.status === 'inactive' ||
+                call.status === 'desactivado' ||
+                call.status === 'inactivo' ||
+                call.active === false ||
+                call.selected === false
+              );
+
+              if (isCallActive) {
+                explicitActiveIds.push(String(call.id));
+                hasExplicitCallStatus = true;
+              } else if (isCallInactive) {
+                hasExplicitCallStatus = true;
+              }
+            });
+          });
+        });
+
+        if (hasExplicitCallStatus) {
+          return explicitActiveIds;
+        }
+
+        if (Array.isArray(sched.selectedCallIds) && sched.selectedCallIds.length > 0) {
+          return sched.selectedCallIds.map(String);
+        }
+
+        if (Array.isArray(sched.presets) && sched.presets.length > 0 && Array.isArray(sched.presets[0].selectedCallIds) && sched.presets[0].selectedCallIds.length > 0) {
+          return sched.presets[0].selectedCallIds.map(String);
+        }
+
+        const fallback = [];
+        (sched.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            if (!mod.alreadyPassed && Array.isArray(mod.calls) && mod.calls.length > 0) {
+              const evalMode = normalizeEvaluationMode(mod.evaluationMode);
+              if (evalMode === 'written_and_oral') {
+                const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+                const o = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'oral');
+                if (w) fallback.push(String(w.id));
+                if (o) fallback.push(String(o.id));
+                if (!w && !o) fallback.push(String(mod.calls[0].id));
+              } else if (evalMode === 'written_and_lab') {
+                const w = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'written');
+                const l = mod.calls.find(c => normalizeCallType(c.type, c.notes, mod.name) === 'lab');
+                if (w) fallback.push(String(w.id));
+                if (l) fallback.push(String(l.id));
+                if (!w && !l) fallback.push(String(mod.calls[0].id));
+              } else {
+                fallback.push(String(mod.calls[0].id));
+              }
+            }
+          });
+        });
+        return fallback;
+      }
+
+      function getExportableSchedule(sched, selectedCallIds = []) {
+        const idsArray = Array.isArray(selectedCallIds)
+          ? selectedCallIds
+          : (selectedCallIds instanceof Set
+            ? Array.from(selectedCallIds)
+            : (typeof selectedCallIds === 'string' && selectedCallIds ? [selectedCallIds] : []));
+        const selSet = new Set(idsArray.map(String));
+
+        const clone = JSON.parse(JSON.stringify(sched || {}));
+
+        (clone.subjects || []).forEach(sub => {
+          (sub.modules || []).forEach(mod => {
+            (mod.calls || []).forEach(call => {
+              const isSelected = selSet.has(String(call.id));
+              call.status = isSelected ? 'active' : 'inactive';
+              call.active = isSelected;
+            });
+          });
+        });
+
+        const selectedList = Array.from(selSet);
+        if (!Array.isArray(clone.presets) || clone.presets.length === 0) {
+          clone.presets = [
+            {
+              name: 'Plan Seleccionado',
+              description: 'Convocatorias seleccionadas en el planificador',
+              selectedCallIds: selectedList
+            }
+          ];
+        } else {
+          clone.presets[0] = {
+            ...clone.presets[0],
+            selectedCallIds: selectedList
+          };
+        }
+
+        clone.selectedCallIds = selectedList;
+
+        return clone;
       }
 
       function parseMarkdownTable(markdown, metaOverrides = {}) {
@@ -2577,8 +2885,48 @@
           lbl_call_deadline: 'Límite Inscripción (Deadline)',
           lbl_call_location: 'Aula / Ubicación',
           lbl_call_notes: 'Notas / Modalidad',
+          lbl_call_status: 'Estado de Selección',
+          opt_call_active: 'Activo (Seleccionado en el plan)',
+          opt_call_inactive: 'Desactivado (No seleccionado)',
+          status_active: 'Activo',
+          status_inactive: 'Desactivado',
+          toast_json_downloaded: '¡Plan descargado en JSON con exámenes activos!',
+          toast_json_copied: '¡Plan JSON copiado al portapapeles con exámenes activos!',
           btn_save_call: 'Guardar Convocatoria',
+          conflict_precedence_title: (m) => `Violación de Precedencia: ${m}`,
+          conflict_precedence_desc: (dOral, dWritten) => `El examen oral (${dOral}) debe realizarse obligatoriamente después del examen escrito (${dWritten}).`,
+          conflict_binding_title: (m) => `Vinculación de Appello Incumplida: ${m}`,
+          conflict_binding_desc: (wApp, oApp) => `Esta asignatura exige realizar el oral en el mismo llamamiento que el escrito (escrito en Appello ${wApp}, oral en Appello ${oApp}).`,
+          conflict_missing_written_title: (m) => `Falta Examen Escrito Previo: ${m}`,
+          conflict_missing_written_desc: 'Has seleccionado el examen oral sin haber elegido el examen escrito previo obligatorio para este módulo.',
+          lbl_mod_eval_mode: 'Modalidad de Evaluación',
+          eval_mode_standard: 'Estándar (1 examen)',
+          eval_mode_written_oral: 'Escrito + Oral',
+          eval_mode_written_lab: 'Escrito + Práctica/Lab',
+          lbl_mod_oral_binding: 'Vinculación del Oral',
+          binding_same_appello: 'Mismo Appello obligatorio',
+          binding_any_subsequent: 'Mismo o cualquier Appello posterior',
+          lbl_call_type: 'Tipo de Examen',
+          type_standard: 'General / Estándar',
+          type_written: 'Escrito (Scritto)',
+          type_oral: 'Oral (Orale)',
+          type_lab: 'Laboratorio / Práctica',
+          lbl_call_appello: 'Nº de Appello / Llamamiento',
+          badge_written: 'Escrito',
+          badge_oral: 'Oral',
+          badge_lab: 'Lab',
+          badge_appello: (n) => `Appello ${n}`,
           import_sec_title: 'Importar Datos Universitarios (JSON, README de IA o Markdown)',
+          import_guide_title: 'Cómo cargar tus exámenes automáticamente con IA',
+          import_guide_subtitle: 'Extrae asignaturas, fechas, horas y aulas directamente desde fotos, capturas o PDFs en 3 sencillos pasos.',
+          step1_title: 'Paso 1: Copiar Prompt IA',
+          step1_desc: 'Copia la plantilla con las instrucciones y formato que el planificador necesita.',
+          step2_title: 'Paso 2: Generar con tu IA',
+          step2_desc: 'Abre ChatGPT, Claude o Gemini, pega el prompt y adjunta tus fotos o lista de exámenes.',
+          step3_title: 'Paso 3: Pegar resultado e Importar',
+          step3_desc: 'Pega la respuesta de la IA en el recuadro de abajo y haz clic en "Procesar e Importar Plan".',
+          badge_guided_fast: '⚡ Rápido y Guiado',
+          step_badge_ready: '✓ Listo en 1 clic',
           import_sec_desc: 'Arrastra tu archivo, pega el esquema JSON, o pega la respuesta completa generada por una IA (incluso con texto conversacional y formato ```json).',
           import_dest_label: 'Destino del plan importado:',
           import_dest_new: '✨ Crear automáticamente una nueva sesión',
@@ -2859,8 +3207,25 @@
           lbl_call_deadline: 'Registration Deadline',
           lbl_call_location: 'Room / Location',
           lbl_call_notes: 'Notes / Format',
+          lbl_call_status: 'Selection Status',
+          opt_call_active: 'Active (Selected in plan)',
+          opt_call_inactive: 'Inactive (Not selected)',
+          status_active: 'Active',
+          status_inactive: 'Inactive',
+          toast_json_downloaded: 'Plan downloaded in JSON with active exams!',
+          toast_json_copied: 'JSON plan copied to clipboard with active exams!',
           btn_save_call: 'Save Exam Call',
           import_sec_title: 'Import University Data (JSON, AI Output or Markdown)',
+          import_guide_title: 'How to Load Your Exams Automatically with AI',
+          import_guide_subtitle: 'Extract subjects, dates, times, and rooms directly from photos, screenshots, or PDFs in 3 easy steps.',
+          step1_title: 'Step 1: Copy AI Prompt',
+          step1_desc: 'Copy the template with instructions and format the planner expects.',
+          step2_title: 'Step 2: Generate with AI',
+          step2_desc: 'Open ChatGPT, Claude, or Gemini, paste the prompt, and attach your photos or exam list.',
+          step3_title: 'Step 3: Paste result & Import',
+          step3_desc: 'Paste the AI response in the box below and click "Process and Import Plan".',
+          badge_guided_fast: '⚡ Fast & Guided',
+          step_badge_ready: '✓ Ready in 1 click',
           import_sec_desc: 'Drag and drop your file, paste JSON schema, or paste the raw AI response (including ```json blocks).',
           import_dest_label: 'Imported plan destination:',
           import_dest_new: '✨ Automatically create a new session',
@@ -3141,8 +3506,48 @@
           lbl_call_deadline: 'Scadenza Iscrizione',
           lbl_call_location: 'Aula / Sede',
           lbl_call_notes: 'Note / Modalità',
+          lbl_call_status: 'Stato Selezione',
+          opt_call_active: 'Attivo (Selezionato nel piano)',
+          opt_call_inactive: 'Disattivato (Non selezionato)',
+          status_active: 'Attivo',
+          status_inactive: 'Disattivato',
+          toast_json_downloaded: 'Piano scaricato in JSON con appelli attivi!',
+          toast_json_copied: 'Piano JSON copiato negli appunti con appelli attivi!',
           btn_save_call: 'Salva Appello',
+          conflict_precedence_title: (m) => `Violazione di Precedenza: ${m}`,
+          conflict_precedence_desc: (dOral, dWritten) => `L'esame orale (${dOral}) deve essere sostenuto obbligatoriamente dopo lo scritto (${dWritten}).`,
+          conflict_binding_title: (m) => `Vincolo d'Appello Violato: ${m}`,
+          conflict_binding_desc: (wApp, oApp) => `Questa materia richiede l'orale nello stesso appello dello scritto (scritto nell'Appello ${wApp}, orale nell'Appello ${oApp}).`,
+          conflict_missing_written_title: (m) => `Manca lo Scritto Propedeutico: ${m}`,
+          conflict_missing_written_desc: 'Hai selezionato l\'esame orale senza aver scelto il corrispondente esame scritto propedeutico per questo modulo.',
+          lbl_mod_eval_mode: 'Modalità di Valutazione',
+          eval_mode_standard: 'Standard (1 esame)',
+          eval_mode_written_oral: 'Scritto + Orale',
+          eval_mode_written_lab: 'Scritto + Laboratorio',
+          lbl_mod_oral_binding: 'Vincolo dell\'Orale',
+          binding_same_appello: 'Stesso Appello obbligatorio',
+          binding_any_subsequent: 'Stesso o qualsiasi Appello successivo',
+          lbl_call_type: 'Tipo di Esame',
+          type_standard: 'Generale / Standard',
+          type_written: 'Scritto',
+          type_oral: 'Orale',
+          type_lab: 'Laboratorio / Progetto',
+          lbl_call_appello: 'Nº Appello',
+          badge_written: 'Scritto',
+          badge_oral: 'Orale',
+          badge_lab: 'Lab',
+          badge_appello: (n) => `Appello ${n}`,
           import_sec_title: 'Importa Dati Universitari (JSON, Output IA o Markdown)',
+          import_guide_title: 'Come caricare i tuoi esami automaticamente con l\'IA',
+          import_guide_subtitle: 'Estrai materie, date, orari e aule direttamente da foto, screenshot o PDF in 3 semplici passaggi.',
+          step1_title: 'Passo 1: Copia Prompt IA',
+          step1_desc: 'Copia il template con le istruzioni e il formato che il pianificatore richiede.',
+          step2_title: 'Passo 2: Genera con l\'IA',
+          step2_desc: 'Apri ChatGPT, Claude o Gemini, incolla il prompt e allega le tue foto o elenco esami.',
+          step3_title: 'Passo 3: Incolla risultato e Importa',
+          step3_desc: 'Incolla la risposta dell\'IA nella casella sottostante e clicca su "Elabora e Importa Piano".',
+          badge_guided_fast: '⚡ Rapido e Guidato',
+          step_badge_ready: '✓ Pronto in 1 clic',
           import_sec_desc: 'Trascina il file, incolla lo schema JSON o incolla la risposta completa generata da un\'IA (anche con blocchi ```json).',
           import_dest_label: 'Destinazione del piano importato:',
           import_dest_new: '✨ Crea automaticamente una nuova sessione',
@@ -3253,7 +3658,7 @@
                 name: String(s.name || normSched.meta?.session || normSched.meta?.title || 'Mi Sesión'),
                 icon: icon,
                 schedule: normSched,
-                selectedCallIds: Array.isArray(s.selectedCallIds) ? s.selectedCallIds : [],
+                selectedCallIds: (Array.isArray(s.selectedCallIds) && s.selectedCallIds.length > 0) ? s.selectedCallIds : extractSelectedCallIds(normSched),
                 subjectWeights: typeof s.subjectWeights === 'object' && s.subjectWeights !== null ? s.subjectWeights : {},
                 dayPlans: typeof s.dayPlans === 'object' && s.dayPlans !== null ? s.dayPlans : {},
                 prioritizeSafety: Boolean(s.prioritizeSafety),
@@ -3307,17 +3712,7 @@
           updatedAt: Date.now()
         };
 
-        if (Array.isArray(initialSched.presets) && initialSched.presets.length > 0 && initialSched.presets[0].selectedCallIds?.length > 0) {
-          initialSession.selectedCallIds = [...initialSched.presets[0].selectedCallIds];
-        } else {
-          (initialSched.subjects || []).forEach(sub => {
-            (sub.modules || []).forEach(mod => {
-              if (!mod.alreadyPassed && mod.calls?.[0]) {
-                initialSession.selectedCallIds.push(mod.calls[0].id);
-              }
-            });
-          });
-        }
+        initialSession.selectedCallIds = extractSelectedCallIds(initialSched);
         (initialSched.subjects || []).forEach(sub => {
           initialSession.subjectWeights[sub.id] = sub.defaultWeight || (sub.difficulty === 'high' ? 5 : sub.difficulty === 'low' ? 1 : 3);
         });
@@ -3341,7 +3736,10 @@
         active.icon = active.icon || schedule.meta?.icon || detectSessionIcon(schedule.meta);
         active.name = active.name || schedule.meta?.session || schedule.meta?.title || 'Mi Sesión';
 
-        state.selectedCallIds = new Set(Array.isArray(active.selectedCallIds) ? active.selectedCallIds : []);
+        const initialActiveIds = (Array.isArray(active.selectedCallIds) && active.selectedCallIds.length > 0)
+          ? active.selectedCallIds
+          : extractSelectedCallIds(schedule);
+        state.selectedCallIds = new Set(initialActiveIds);
         state.subjectWeights = typeof active.subjectWeights === 'object' && active.subjectWeights !== null ? { ...active.subjectWeights } : {};
         state.dayPlans = typeof active.dayPlans === 'object' && active.dayPlans !== null ? { ...active.dayPlans } : {};
         state.prioritizeSafety = Boolean(active.prioritizeSafety);
@@ -3380,6 +3778,21 @@
             active.dayPlans = { ...state.dayPlans };
             active.prioritizeSafety = Boolean(state.prioritizeSafety);
             active.updatedAt = Date.now();
+            if (active.schedule) {
+              (active.schedule.subjects || []).forEach(sub => {
+                (sub.modules || []).forEach(mod => {
+                  (mod.calls || []).forEach(c => {
+                    const isSel = state.selectedCallIds.has(String(c.id));
+                    c.status = isSel ? 'active' : 'inactive';
+                    c.active = isSel;
+                  });
+                });
+              });
+              active.schedule.selectedCallIds = Array.from(state.selectedCallIds);
+              if (Array.isArray(active.schedule.presets) && active.schedule.presets.length > 0) {
+                active.schedule.presets[0].selectedCallIds = Array.from(state.selectedCallIds);
+              }
+            }
           }
           localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
           if (activeSessionId) {
@@ -3670,6 +4083,10 @@
                 moduleShortName: modShort,
                 moduleCredits: mod.credits || sub.credits,
                 alreadyPassed: mod.alreadyPassed,
+                evaluationMode: mod.evaluationMode || 'standard',
+                oralBinding: mod.oralBinding || 'any_subsequent',
+                type: c.type || 'standard',
+                appelloIndex: c.appelloIndex != null ? c.appelloIndex : null,
                 hasMultipleModules: (sub.modules || []).length > 1,
                 moduleIds
               };
@@ -3749,6 +4166,9 @@
         let sameDateCongestionCount = 0;
         let turnaroundWarningCount = 0;
         let multipleCallsCount = 0;
+        let precedenceViolationCount = 0;
+        let bindingViolationCount = 0;
+        let missingWrittenPrerequisiteCount = 0;
 
         // Collision & Congestion
         for (let i = 0; i < active.length; i++) {
@@ -3814,28 +4234,118 @@
           }
         }
 
-        // Multiple calls for same module
-        const modMap = new Map();
+        // Multiple calls for same module and type
+        const modTypeMap = new Map();
         active.forEach(c => {
-          if (!modMap.has(c.moduleId)) modMap.set(c.moduleId, []);
-          modMap.get(c.moduleId).push(c);
+          const key = `${c.moduleId}__${c.type || 'standard'}`;
+          if (!modTypeMap.has(key)) modTypeMap.set(key, []);
+          modTypeMap.get(key).push(c);
         });
 
-        modMap.forEach((calls, modId) => {
+        modTypeMap.forEach((calls, key) => {
           const distinctDates = new Set(calls.map(c => `${c.date}_${c.time}`));
           if (distinctDates.size > 1) {
             multipleCallsCount++;
+            const typeLabel = calls[0].type === 'written' ? ' (Escrito)' : (calls[0].type === 'oral' ? ' (Oral)' : (calls[0].type === 'lab' ? ' (Lab)' : ''));
             conflicts.push({
-              id: `multi_${modId}`,
+              id: `multi_${key}`,
               type: 'multiple_calls',
               severity: 'info',
               icon: 'ℹ️',
-              title: t('conflict_multi_title', calls[0].moduleName),
+              title: t('conflict_multi_title', (calls[0].moduleName || '') + typeLabel),
               description: t('conflict_multi_desc', distinctDates.size),
-              callIds: calls.map(c => c.id)
+              callIds: calls.map(c => c.id),
+              moduleId: calls[0].moduleId
             });
           }
         });
+
+        // Precedence & Appello Binding Rules for Multi-part Exams
+        const activeCallsByModule = new Map();
+        active.forEach(c => {
+          if (!activeCallsByModule.has(c.moduleId)) activeCallsByModule.set(c.moduleId, []);
+          activeCallsByModule.get(c.moduleId).push(c);
+        });
+
+        if (sched && Array.isArray(sched.subjects)) {
+          sched.subjects.forEach(sub => {
+            (sub.modules || []).forEach(mod => {
+              if (mod.alreadyPassed) return;
+              const evalMode = mod.evaluationMode || 'standard';
+              if (evalMode === 'standard') return;
+
+              const callsInMod = activeCallsByModule.get(mod.id) || [];
+              const writtens = callsInMod.filter(c => c.type === 'written');
+              const secondaryType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+              const secondaries = callsInMod.filter(c => c.type === secondaryType);
+
+              if (secondaries.length > 0 && writtens.length === 0) {
+                missingWrittenPrerequisiteCount++;
+                conflicts.push({
+                  id: `missing_written_${mod.id}`,
+                  type: 'missing_written_prerequisite',
+                  severity: 'high',
+                  icon: '⚠️',
+                  title: t('conflict_missing_written_title', mod.name),
+                  description: t('conflict_missing_written_desc'),
+                  callIds: secondaries.map(c => c.id),
+                  moduleId: mod.id
+                });
+              }
+
+              for (const w of writtens) {
+                for (const s of secondaries) {
+                  if (s.startTimestamp <= w.startTimestamp) {
+                    precedenceViolationCount++;
+                    conflicts.push({
+                      id: `precedence_${mod.id}_${w.id}_${s.id}`,
+                      type: 'precedence_violation',
+                      severity: 'critical',
+                      icon: '⛔',
+                      title: t('conflict_precedence_title', mod.name),
+                      description: t('conflict_precedence_desc', s.date, w.date),
+                      callIds: [w.id, s.id],
+                      moduleId: mod.id,
+                      date: s.date
+                    });
+                  }
+
+                  if (mod.oralBinding === 'same_appello') {
+                    if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                      bindingViolationCount++;
+                      conflicts.push({
+                        id: `binding_${mod.id}_${w.id}_${s.id}`,
+                        type: 'binding_violation',
+                        severity: 'critical',
+                        icon: '⛔',
+                        title: t('conflict_binding_title', mod.name),
+                        description: t('conflict_binding_desc', w.appelloIndex, s.appelloIndex),
+                        callIds: [w.id, s.id],
+                        moduleId: mod.id,
+                        date: s.date
+                      });
+                    }
+                  } else if (mod.oralBinding === 'any_subsequent') {
+                    if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                      bindingViolationCount++;
+                      conflicts.push({
+                        id: `binding_${mod.id}_${w.id}_${s.id}`,
+                        type: 'binding_violation',
+                        severity: 'critical',
+                        icon: '⛔',
+                        title: t('conflict_binding_title', mod.name),
+                        description: t('conflict_binding_desc', w.appelloIndex, s.appelloIndex),
+                        callIds: [w.id, s.id],
+                        moduleId: mod.id,
+                        date: s.date
+                      });
+                    }
+                  }
+                }
+              }
+            });
+          });
+        }
 
         // Group simultaneous calls of the same subject into unified sessions for timeline
         const unifiedActiveSessions = [];
@@ -3967,6 +4477,8 @@
                 moduleId: mod.id,
                 moduleName: mod.name || sub.name,
                 moduleShortName: mod.shortName || '',
+                evaluationMode: mod.evaluationMode || 'standard',
+                oralBinding: mod.oralBinding || 'any_subsequent',
                 subjectId: sub.id,
                 subjectName: sub.name,
                 subjectShortName: sub.shortName || '',
@@ -4026,12 +4538,15 @@
         return {
           selectedCalls: active,
           conflicts,
-          hasCriticalErrors: exactCollisionCount > 0,
+          hasCriticalErrors: exactCollisionCount > 0 || precedenceViolationCount > 0 || bindingViolationCount > 0,
           counts: {
             exactCollisions: exactCollisionCount,
             sameDateCongestions: sameDateCongestionCount,
             turnaroundWarnings: turnaroundWarningCount,
             multipleCalls: multipleCallsCount,
+            precedenceViolations: precedenceViolationCount,
+            bindingViolations: bindingViolationCount,
+            missingWrittenPrerequisites: missingWrittenPrerequisiteCount,
             uncoveredModules: uncoveredModules.length,
             totalConflicts: conflicts.length
           },
@@ -4126,9 +4641,64 @@
             valid.forEach(c => {
               if (c.startTimestamp < earliestTimestamp) earliestTimestamp = c.startTimestamp;
             });
-            const fixedCall = valid.find(c => fixedSet.has(c.id));
-            const candidates = fixedCall ? [fixedCall] : valid;
-            modulesToSchedule.push({ module: mod, subject: sub, weight: modWeight, calls: candidates });
+            const evalMode = mod.evaluationMode || 'standard';
+            const oralBinding = mod.oralBinding || 'any_subsequent';
+            let candidates = [];
+
+            if (evalMode === 'written_and_oral' || evalMode === 'written_and_lab') {
+              const secType = evalMode === 'written_and_lab' ? 'lab' : 'oral';
+              let writtens = valid.filter(c => c.type === 'written');
+              let secondaries = valid.filter(c => c.type === secType);
+
+              if (writtens.length === 0 || secondaries.length === 0) {
+                const fixedCall = valid.find(c => fixedSet.has(c.id));
+                candidates = (fixedCall ? [fixedCall] : valid).map(c => [c]);
+              } else {
+                if (fixedSet.size > 0) {
+                  const fixedW = writtens.filter(c => fixedSet.has(c.id));
+                  if (fixedW.length > 0) writtens = fixedW;
+                  const fixedS = secondaries.filter(c => fixedSet.has(c.id));
+                  if (fixedS.length > 0) secondaries = fixedS;
+                }
+
+                for (const w of writtens) {
+                  for (const s of secondaries) {
+                    if (w.startTimestamp >= s.startTimestamp) continue;
+                    if (w.endTimestamp > s.startTimestamp) continue;
+
+                    if (oralBinding === 'same_appello') {
+                      if (w.appelloIndex != null && s.appelloIndex != null && w.appelloIndex !== s.appelloIndex) {
+                        continue;
+                      }
+                    } else if (oralBinding === 'any_subsequent') {
+                      if (w.appelloIndex != null && s.appelloIndex != null && s.appelloIndex < w.appelloIndex) {
+                        continue;
+                      }
+                    }
+
+                    candidates.push([w, s]);
+                  }
+                }
+
+                if (candidates.length === 0) {
+                  for (const w of writtens) {
+                    for (const s of secondaries) {
+                      if (w.startTimestamp < s.startTimestamp) {
+                        candidates.push([w, s]);
+                      }
+                    }
+                  }
+                  if (candidates.length === 0) {
+                    candidates = valid.map(c => [c]);
+                  }
+                }
+              }
+            } else {
+              const fixedCall = valid.find(c => fixedSet.has(c.id));
+              candidates = (fixedCall ? [fixedCall] : valid).map(c => [c]);
+            }
+
+            modulesToSchedule.push({ module: mod, subject: sub, weight: modWeight, candidates });
           });
         });
 
@@ -4261,33 +4831,37 @@
             return;
           }
 
-          const { calls } = modulesToSchedule[idx];
-          for (let i = 0; i < calls.length; i++) {
-            const candidate = calls[i];
+          const { candidates } = modulesToSchedule[idx];
+          for (let i = 0; i < candidates.length; i++) {
+            const callTuple = candidates[i];
             let collides = false;
-            for (let s = 0; s < current.length; s++) {
-              const existing = current[s];
-              const isSameSubjectJoint = candidate.subjectId === existing.subjectId && (
-                (candidate.jointExamKey && candidate.jointExamKey === existing.jointExamKey) ||
-                (candidate.date === existing.date && candidate.time === existing.time)
-              );
-              if (isSameSubjectJoint) {
-                continue;
+            for (let t = 0; t < callTuple.length; t++) {
+              const candidate = callTuple[t];
+              for (let s = 0; s < current.length; s++) {
+                const existing = current[s];
+                const isSameSubjectJoint = candidate.subjectId === existing.subjectId && (
+                  (candidate.jointExamKey && candidate.jointExamKey === existing.jointExamKey) ||
+                  (candidate.date === existing.date && candidate.time === existing.time)
+                );
+                if (isSameSubjectJoint) {
+                  continue;
+                }
+                if (candidate.startTimestamp < existing.endTimestamp && existing.startTimestamp < candidate.endTimestamp) {
+                  collides = true;
+                  break;
+                }
               }
-              if (candidate.startTimestamp < existing.endTimestamp && existing.startTimestamp < candidate.endTimestamp) {
-                collides = true;
-                break;
-              }
+              if (collides) break;
             }
             if (collides) continue;
-            current.push(candidate);
+            current.push(...callTuple);
             search(idx + 1, current);
-            current.pop();
+            current.splice(current.length - callTuple.length, callTuple.length);
           }
         }
 
         search(0, []);
-        const chosenIds = bestSelection || modulesToSchedule.map(m => m.calls[0].id);
+        const chosenIds = bestSelection || modulesToSchedule.flatMap(m => m.candidates[0] || []).map(c => c.id);
         return {
           selectedCallIds: chosenIds,
           mode,
@@ -5051,9 +5625,10 @@
               const modDisplay = call.jointModuleLabel || call.moduleShortName || (call.hasMultipleModules ? call.moduleName : '');
               const verboseModuleLabel = `${call.subjectName}: ${call.moduleName}`;
               
+              const typeIcon = call.type === 'written' ? ' ✍️' : (call.type === 'oral' ? ' 🗣️' : (call.type === 'lab' ? ' 💻' : ''));
               const displayLabel = (call.hasMultipleModules && modDisplay)
-                ? `${subAcronym} · ${modDisplay}`
-                : (subAcronym || call.subjectName);
+                ? `${subAcronym} · ${modDisplay}${typeIcon}`
+                : `${subAcronym || call.subjectName}${typeIcon}`;
 
               const safeTooltip = `${escapeHtml(call.subjectName)}${call.hasMultipleModules ? ` · ${escapeHtml(call.moduleName)}` : ''} | 📅 ${call.date} ⏰ ${call.time || '09:00'} (${call.durationHours}h) - ${t('call_click_hint')}`;
 
@@ -5452,7 +6027,7 @@
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${token.lightBg} ${token.text}">
                       ${safeSubCode}
                     </span>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><span>${safeSubName}</span>${call.hasMultipleModules && modDisplay ? `<span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60">[${escapeHtml(modDisplay)}]</span>` : ''}</h3>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><span>${safeSubName}</span>${call.hasMultipleModules && modDisplay ? `<span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60">[${escapeHtml(modDisplay)}]</span>` : ''}${call.type && call.type !== 'standard' ? `<span class="text-xs font-bold px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800">${call.type === 'written' ? '✍️ ' + t('badge_written') : (call.type === 'oral' ? '🗣️ ' + t('badge_oral') : (call.type === 'lab' ? '💻 ' + t('badge_lab') : call.type))}</span>` : ''}${call.appelloIndex ? `<span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">${t('badge_appello', call.appelloIndex)}</span>` : ''}</h3>
                     <span class="text-xs text-slate-400">• ${call.moduleCredits} ${escapeHtml(schedule.meta?.creditUnit || 'CFU')}</span>
                   </div>
 
@@ -5714,16 +6289,24 @@
           } else {
             callsHtml = `
               <div class="divide-y divide-slate-100 dark:divide-slate-800/60 bg-slate-50/30 dark:bg-slate-950/20">
-                ${calls.map(c => `
+                ${calls.map(c => {
+                  const isCallSelected = state.selectedCallIds.has(c.id);
+                  const statusBadge = isCallSelected
+                    ? `<button type="button" data-action="toggle-call" data-call-id="${c.id}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:opacity-80 transition cursor-pointer" title="Hacer clic para desactivar de la selección">✓ ${t('status_active')}</button>`
+                    : `<button type="button" data-action="toggle-call" data-call-id="${c.id}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer" title="Hacer clic para activar en la selección">○ ${t('status_inactive')}</button>`;
+                  return `
                   <div class="px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-[11px]">
                     <div class="flex items-center gap-2">
                       <span class="font-mono font-bold text-slate-700 dark:text-slate-300 inline-flex items-center gap-1">${renderIcon('📅', 'w-3 h-3')} ${c.date}</span>
                       <span class="text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">${renderIcon('⏰', 'w-3 h-3')} ${c.time || '09:00'} (${c.durationHours}h)</span>
+                      ${c.type && c.type !== 'standard' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800">${c.type === 'written' ? '✍️ ' + t('badge_written') : (c.type === 'oral' ? '🗣️ ' + t('badge_oral') : (c.type === 'lab' ? '💻 ' + t('badge_lab') : c.type))}</span>` : ''}
+                      ${c.appelloIndex ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800">${t('badge_appello', c.appelloIndex)}</span>` : ''}
                       ${c.moduleName ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
                       ${c.location ? `<span class="text-slate-400 inline-flex items-center gap-1">• ${renderIcon('📍', 'w-3 h-3')} ${escapeHtml(c.location)}</span>` : ''}
                       ${c.notes ? `<span class="text-slate-400 italic">• ${escapeHtml(c.notes)}</span>` : ''}
                     </div>
                     <div class="flex items-center gap-1.5">
+                      ${statusBadge}
                       <button type="button" data-action="edit-call" data-sub-id="${sub.id}" data-mod-id="${c.moduleId}" data-call-id="${c.id}" class="px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
                         ${t('btn_edit')}
                       </button>
@@ -5732,7 +6315,8 @@
                       </button>
                     </div>
                   </div>
-                `).join('')}
+                `;
+                }).join('')}
               </div>
             `;
           }
@@ -5749,6 +6333,7 @@
                     <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">[${escapeHtml(m.shortName || generateModuleShortName(m.name))}]</span>
                     <span>${escapeHtml(m.name)}</span>
                     <span class="text-slate-400 text-[9px]">(${m.credits || sub.credits} CFU)</span>
+                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? 'Escrito+Oral' : 'Escrito+Lab'} (${m.oralBinding === 'same_appello' ? 'Mismo Appello' : 'Appello libre'})</span>` : ''}
                   </span>
                 `).join('')}
               </div>
@@ -5792,7 +6377,16 @@
             const modId = btn.getAttribute('data-mod-id');
             const callId = btn.getAttribute('data-call-id');
 
-            if (action === 'add-call') {
+            if (action === 'toggle-call') {
+              if (state.selectedCallIds.has(callId)) {
+                state.selectedCallIds.delete(callId);
+              } else {
+                state.selectedCallIds.add(callId);
+              }
+              saveSessionsToStorage();
+              updateApp();
+              renderModalSubjects();
+            } else if (action === 'add-call') {
               showCallForm(subId, null, modId);
             } else if (action === 'edit-call') {
               showCallForm(subId, callId, modId);
@@ -5842,10 +6436,37 @@
               <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_credits')}</label>
               <input type="number" min="0" max="60" class="mod-credits-input w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs" value="${typeof m.credits === 'number' ? m.credits : 6}">
             </div>
+            <div class="w-36">
+              <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_eval_mode')}</label>
+              <select class="mod-eval-mode-select w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-indigo-500">
+                <option value="standard" ${(!m.evaluationMode || m.evaluationMode === 'standard') ? 'selected' : ''}>${t('eval_mode_standard')}</option>
+                <option value="written_and_oral" ${m.evaluationMode === 'written_and_oral' ? 'selected' : ''}>${t('eval_mode_written_oral')}</option>
+                <option value="written_and_lab" ${m.evaluationMode === 'written_and_lab' ? 'selected' : ''}>${t('eval_mode_written_lab')}</option>
+              </select>
+            </div>
+            <div class="w-40 mod-oral-binding-wrapper ${(!m.evaluationMode || m.evaluationMode === 'standard') ? 'opacity-40 pointer-events-none' : ''}">
+              <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">${t('lbl_mod_oral_binding')}</label>
+              <select class="mod-oral-binding-select w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-indigo-500">
+                <option value="same_appello" ${m.oralBinding === 'same_appello' ? 'selected' : ''}>${t('binding_same_appello')}</option>
+                <option value="any_subsequent" ${(!m.oralBinding || m.oralBinding === 'any_subsequent') ? 'selected' : ''}>${t('binding_any_subsequent')}</option>
+              </select>
+            </div>
             <div class="flex items-center gap-1.5 pt-4">
               <button type="button" class="btn-remove-mod-row text-xs font-bold text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 px-1.5 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Eliminar módulo">✕</button>
             </div>
           `;
+
+          const evalModeSel = row.querySelector('.mod-eval-mode-select');
+          const bindingWrapper = row.querySelector('.mod-oral-binding-wrapper');
+          if (evalModeSel && bindingWrapper) {
+            evalModeSel.addEventListener('change', () => {
+              if (evalModeSel.value === 'standard') {
+                bindingWrapper.classList.add('opacity-40', 'pointer-events-none');
+              } else {
+                bindingWrapper.classList.remove('opacity-40', 'pointer-events-none');
+              }
+            });
+          }
 
           row.querySelector('.btn-remove-mod-row').addEventListener('click', () => {
             const allRows = container.querySelectorAll('.module-row');
@@ -5943,6 +6564,8 @@
             const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
             const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
             const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
+            const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
+            const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
 
             const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
             const existingCalls = existingMod?.calls || [];
@@ -5955,6 +6578,8 @@
               difficulty: rDiff,
               defaultWeight: rWeight,
               alreadyPassed: Boolean(existingMod?.alreadyPassed),
+              evaluationMode: rEvalMode,
+              oralBinding: rOralBinding,
               calls: existingCalls
             };
           });
@@ -6046,6 +6671,7 @@
         const deadlineInput = document.getElementById('call-deadline-input');
         const locInput = document.getElementById('call-location-input');
         const notesInput = document.getElementById('call-notes-input');
+        const statusSelect = document.getElementById('call-status-select');
 
         document.getElementById('subject-form-box').classList.add('hidden');
 
@@ -6088,6 +6714,11 @@
             deadlineInput.value = foundCall.deadline || '';
             locInput.value = foundCall.location || '';
             notesInput.value = foundCall.notes || '';
+            if (statusSelect) statusSelect.value = state.selectedCallIds.has(callId) ? 'active' : 'inactive';
+            const typeSelect = document.getElementById('call-type-select');
+            if (typeSelect) typeSelect.value = foundCall.type || 'standard';
+            const appelloInput = document.getElementById('call-appello-input');
+            if (appelloInput) appelloInput.value = foundCall.appelloIndex != null ? foundCall.appelloIndex : '';
           }
         } else {
           titleEl.textContent = t('call_form_title_new');
@@ -6099,6 +6730,11 @@
           deadlineInput.value = '';
           locInput.value = 'Aula Magna';
           notesInput.value = '';
+          if (statusSelect) statusSelect.value = 'active';
+          const typeSelect = document.getElementById('call-type-select');
+          if (typeSelect) typeSelect.value = 'standard';
+          const appelloInput = document.getElementById('call-appello-input');
+          if (appelloInput) appelloInput.value = '';
         }
 
         form.classList.remove('hidden');
@@ -6123,6 +6759,11 @@
         let deadline = normalizeDateStr(document.getElementById('call-deadline-input').value);
         const location = document.getElementById('call-location-input').value.trim() || 'Aula Magna';
         const notes = document.getElementById('call-notes-input').value.trim();
+        const statusSelect = document.getElementById('call-status-select');
+        const isNowActive = !statusSelect || statusSelect.value === 'active';
+        const callType = document.getElementById('call-type-select')?.value || 'standard';
+        const parsedAppello = parseInt(document.getElementById('call-appello-input')?.value, 10);
+        const appelloIndex = (!isNaN(parsedAppello) && parsedAppello >= 1) ? parsedAppello : null;
 
         if (!date) {
           alert('Por favor selecciona una fecha válida para el examen.');
@@ -6155,6 +6796,11 @@
               location,
               notes
             };
+            if (isNowActive) {
+              state.selectedCallIds.add(callId);
+            } else {
+              state.selectedCallIds.delete(callId);
+            }
           }
         } else {
           const newCallId = `${mod.id}_call_${Date.now()}`;
@@ -6166,11 +6812,15 @@
             durationHours,
             deadline,
             location,
-            notes
+            notes,
+            type: callType,
+            appelloIndex
           });
           // Auto-select newly created call if module previously had none selected
-          if (!hadCallsSelected) {
+          if (isNowActive) {
             state.selectedCallIds.add(newCallId);
+          } else {
+            state.selectedCallIds.delete(newCallId);
           }
         }
 
@@ -6407,7 +7057,9 @@ Genera ÚNICAMENTE un bloque de código JSON válido con la siguiente estructura
               "durationHours": 2.5,
               "deadline": "2027-01-10",
               "location": "Aula Magna",
-              "notes": "1º Llamamiento Ordinario"
+              "notes": "1º Llamamiento Ordinario",
+              "status": "active",
+              "active": true
             },
             {
               "id": "ml_call_2",
@@ -6416,7 +7068,9 @@ Genera ÚNICAMENTE un bloque de código JSON válido con la siguiente estructura
               "durationHours": 2.5,
               "deadline": "2027-01-31",
               "location": "Aula 2.1",
-              "notes": "2º Llamamiento Ordinario"
+              "notes": "2º Llamamiento Ordinario",
+              "status": "inactive",
+              "active": false
             }
           ]
         }
@@ -6551,18 +7205,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
               parsed.meta.icon = detectedIcon;
 
               const newSchedule = normalizeSchedule(parsed);
-              let newSelectedCallIds = [];
-              if (Array.isArray(newSchedule.presets) && newSchedule.presets.length > 0 && newSchedule.presets[0].selectedCallIds?.length > 0) {
-                newSelectedCallIds = [...newSchedule.presets[0].selectedCallIds];
-              } else {
-                (newSchedule.subjects || []).forEach(sub => {
-                  (sub.modules || []).forEach(mod => {
-                    if (!mod.alreadyPassed && mod.calls?.[0]) {
-                      newSelectedCallIds.push(mod.calls[0].id);
-                    }
-                  });
-                });
-              }
+              let newSelectedCallIds = extractSelectedCallIds(parsed);
 
               const newWeights = {};
               (newSchedule.subjects || []).forEach(sub => {
@@ -6594,18 +7237,9 @@ REGLAS ESTRICTAS DE RESPUESTA:
               }
             } else {
               const norm = normalizeSchedule(parsed);
+              const extractedIds = extractSelectedCallIds(parsed);
               state.selectedCallIds.clear();
-              if (Array.isArray(norm.presets) && norm.presets.length > 0 && norm.presets[0].selectedCallIds?.length > 0) {
-                norm.presets[0].selectedCallIds.forEach(id => state.selectedCallIds.add(id));
-              } else {
-                (norm.subjects || []).forEach(sub => {
-                  (sub.modules || []).forEach(mod => {
-                    if (!mod.alreadyPassed && mod.calls?.[0]) {
-                      state.selectedCallIds.add(mod.calls[0].id);
-                    }
-                  });
-                });
-              }
+              extractedIds.forEach(id => state.selectedCallIds.add(id));
               persistSchedule(norm);
               showToast(`¡Plan cargado en sesión activa! (${parsed.subjects.length} asignaturas, ${totalCalls} convocatorias).`, 'success');
 
@@ -6705,6 +7339,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
         // Copy prompt buttons
         document.getElementById('btn-top-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
         document.getElementById('btn-modal-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
+        document.getElementById('btn-guide-copy-prompt')?.addEventListener('click', copyPromptToClipboard);
 
         // Whole page Drag & Drop Overlay
         const overlay = document.getElementById('drop-overlay');
@@ -6758,23 +7393,26 @@ REGLAS ESTRICTAS DE RESPUESTA:
           processScheduleText(text, 'texto introducido');
         });
 
-        // Download JSON Config
+        // Download JSON Config (Preserves Active Calls Status and Presets)
         document.getElementById('btn-download-json-config')?.addEventListener('click', () => {
-          const blob = new Blob([JSON.stringify(schedule, null, 2)], { type: 'application/json' });
+          const exportData = getExportableSchedule(schedule, state.selectedCallIds);
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `plan_examenes_${schedule.meta?.title ? slugify(schedule.meta.title) : 'config'}.json`;
+          a.download = plan_examenes_.json;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
+          showToast(t('toast_json_downloaded'), 'success');
         });
 
-        // Copy JSON Config
+        // Copy JSON Config (Preserves Active Calls Status and Presets)
         document.getElementById('btn-copy-json-config')?.addEventListener('click', () => {
-          navigator.clipboard.writeText(JSON.stringify(schedule, null, 2)).then(() => {
-            alert('¡Configuración JSON copiada al portapapeles!');
+          const exportData = getExportableSchedule(schedule, state.selectedCallIds);
+          navigator.clipboard.writeText(JSON.stringify(exportData, null, 2)).then(() => {
+            showToast(t('toast_json_copied'), 'success');
           }).catch(() => {
             alert('No se pudo copiar al portapapeles.');
           });
@@ -6949,20 +7587,17 @@ REGLAS ESTRICTAS DE RESPUESTA:
           }
         });
 
-        // Load Plan Dropdown & Actions
+        // Load Plan Button: Opens directly the Import/Export tab
         const loadPlanBtn = document.getElementById('btn-load-plan-dropdown');
-        const loadPlanMenu = document.getElementById('load-plan-dropdown-menu');
-        if (loadPlanBtn && loadPlanMenu) {
+        if (loadPlanBtn) {
           loadPlanBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isHidden = loadPlanMenu.classList.contains('hidden');
-            loadPlanMenu.classList.toggle('hidden', !isHidden);
-            loadPlanBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-          });
-          document.addEventListener('click', (e) => {
-            if (!loadPlanBtn.contains(e.target) && !loadPlanMenu.contains(e.target)) {
-              loadPlanMenu.classList.add('hidden');
-              loadPlanBtn.setAttribute('aria-expanded', 'false');
+            renderModalSubjects();
+            populateMetaForm();
+            switchModalTab('import');
+            const modal = document.getElementById('manage-modal');
+            if (modal && typeof modal.showModal === 'function') {
+              modal.showModal();
             }
           });
         }
