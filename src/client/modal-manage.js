@@ -131,7 +131,7 @@
                       <span class="text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">${renderIcon('⏰', 'w-3 h-3')} ${c.time || '09:00'} (${c.durationHours}h)</span>
                       ${c.type && c.type !== 'standard' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800">${c.type === 'written' ? '✍️ ' + t('badge_written') : (c.type === 'oral' ? '🗣️ ' + t('badge_oral') : (c.type === 'lab' ? '💻 ' + t('badge_lab') : c.type))}</span>` : ''}
                       ${c.appelloIndex ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800">${t('badge_appello', c.appelloIndex)}</span>` : ''}
-                      ${c.moduleName ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
+                      ${sub.hasModules !== false && c.moduleName && c.moduleName !== sub.name ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
                       ${c.location ? `<span class="text-slate-400 inline-flex items-center gap-1">• ${renderIcon('📍', 'w-3 h-3')} ${escapeHtml(c.location)}</span>` : ''}
                       ${c.notes ? `<span class="text-slate-400 italic">• ${escapeHtml(c.notes)}</span>` : ''}
                     </div>
@@ -154,7 +154,8 @@
           const subAcronym = escapeHtml(sub.shortName || generateSubjectAcronym(sub.name));
 
           let modulesBadgesHtml = '';
-          if (sub.modules && sub.modules.length > 0) {
+          const isMultiModuleSub = sub.hasModules !== false && sub.modules && sub.modules.length > 1;
+          if (isMultiModuleSub) {
             modulesBadgesHtml = `
               <div class="px-4 py-2 bg-slate-50/70 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center gap-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400">${t('modules_label')}</span>
@@ -163,7 +164,7 @@
                     <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">[${escapeHtml(m.shortName || generateModuleShortName(m.name))}]</span>
                     <span>${escapeHtml(m.name)}</span>
                     <span class="text-slate-400 text-[9px]">(${m.credits || sub.credits} CFU)</span>
-                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? 'Escrito+Oral' : 'Escrito+Lab'} (${m.oralBinding === 'same_appello' ? 'Mismo Appello' : 'Appello libre'})</span>` : ''}
+                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? t('eval_mode_written_oral') : t('eval_mode_written_lab')} (${m.oralBinding === 'same_appello' ? t('binding_same_appello') : t('binding_any_subsequent')})</span>` : ''}
                   </span>
                 `).join('')}
               </div>
@@ -179,6 +180,8 @@
                 <strong class="text-xs text-slate-900 dark:text-white">${safeName}</strong>
                 <span class="text-[11px] text-slate-400">(${sub.credits} ${escapeHtml(schedule.meta?.creditUnit || 'CFU')})</span>
                 <span class="text-[10px] text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-700/60">${diffBadge}</span>
+                ${sub.hasModules === false ? `<span class="text-[10px] text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-700/60 font-medium">${t('badge_no_modules')}</span>` : ''}
+                ${sub.hasModules === false && sub.evaluationMode && sub.evaluationMode !== 'standard' ? `<span class="text-[10px] text-violet-600 dark:text-violet-400 font-semibold px-1.5 py-0.5 rounded bg-violet-50 dark:bg-violet-950/60 border border-violet-200/60 dark:border-violet-800/60">${sub.evaluationMode === 'written_and_oral' ? t('eval_mode_written_oral') : t('eval_mode_written_lab')}</span>` : ''}
               </div>
               <div class="flex items-center gap-1.5">
                 <button type="button" data-action="add-call" data-sub-id="${sub.id}" data-mod-id="${(sub.modules && sub.modules[0]) ? sub.modules[0].id : ''}" class="px-2.5 py-1 rounded bg-violet-600 hover:bg-violet-700 text-white font-medium text-[11px] shadow-sm transition">
@@ -301,7 +304,7 @@
           row.querySelector('.btn-remove-mod-row').addEventListener('click', () => {
             const allRows = container.querySelectorAll('.module-row');
             if (allRows.length <= 1) {
-              alert('La asignatura debe tener al menos un módulo.');
+              alert(t('alert_min_one_module'));
               return;
             }
             row.remove();
@@ -323,6 +326,12 @@
         const colorSelect = document.getElementById('sub-color-select');
 
         document.getElementById('call-form-box').classList.add('hidden');
+        const hasModulesCheckbox = document.getElementById('sub-has-modules-checkbox');
+        const subModulesWrapper = document.getElementById('sub-modules-wrapper');
+        const subSingleEvalWrapper = document.getElementById('sub-single-eval-wrapper');
+        const subEvalModeSelect = document.getElementById('sub-eval-mode-select');
+        const subOralBindingSelect = document.getElementById('sub-oral-binding-select');
+        const subOralBindingWrapper = document.getElementById('sub-oral-binding-wrapper');
 
         if (subId) {
           const sub = (schedule.subjects || []).find(s => s.id === subId);
@@ -336,6 +345,21 @@
           diffSelect.value = sub.difficulty || 'medium';
           colorSelect.value = sub.color || 'indigo';
 
+          const hasModules = sub.hasModules !== undefined ? Boolean(sub.hasModules) : (Array.isArray(sub.modules) && sub.modules.length > 1);
+          if (hasModulesCheckbox) hasModulesCheckbox.checked = hasModules;
+          if (subEvalModeSelect) subEvalModeSelect.value = sub.evaluationMode || sub.modules?.[0]?.evaluationMode || 'standard';
+          if (subOralBindingSelect) subOralBindingSelect.value = sub.oralBinding || sub.modules?.[0]?.oralBinding || 'same_appello';
+          if (hasModules) {
+            subModulesWrapper?.classList.remove('hidden');
+            subSingleEvalWrapper?.classList.add('hidden');
+          } else {
+            subModulesWrapper?.classList.add('hidden');
+            subSingleEvalWrapper?.classList.remove('hidden');
+          }
+          if (subEvalModeSelect && subOralBindingWrapper) {
+            if (subEvalModeSelect.value === 'standard') subOralBindingWrapper.classList.add('opacity-40', 'pointer-events-none');
+            else subOralBindingWrapper.classList.remove('opacity-40', 'pointer-events-none');
+          }
           renderModuleRows(sub.modules && sub.modules.length > 0 ? sub.modules : [
             { id: `${sub.id}_mod`, name: sub.name, shortName: sub.shortName || generateSubjectAcronym(sub.name), credits: sub.credits || 6, difficulty: sub.difficulty || 'medium', calls: [] }
           ]);
@@ -349,6 +373,12 @@
           diffSelect.value = 'medium';
           colorSelect.value = COLOR_PALETTE[(schedule.subjects?.length || 0) % COLOR_PALETTE.length];
 
+          if (hasModulesCheckbox) hasModulesCheckbox.checked = false;
+          if (subEvalModeSelect) subEvalModeSelect.value = 'standard';
+          if (subOralBindingSelect) subOralBindingSelect.value = 'same_appello';
+          subModulesWrapper?.classList.add('hidden');
+          subSingleEvalWrapper?.classList.remove('hidden');
+          if (subOralBindingWrapper) subOralBindingWrapper.classList.add('opacity-40', 'pointer-events-none');
           renderModuleRows([
             { id: `mod_${Date.now()}`, name: '', shortName: '', credits: 6, difficulty: 'medium', calls: [] }
           ]);
@@ -373,59 +403,79 @@
         const color = document.getElementById('sub-color-select').value;
 
         if (!name) {
-          alert('Por favor introduce el nombre de la asignatura.');
+          alert(t('alert_enter_subject_name'));
           return;
         }
 
         const subjects = [...(schedule.subjects || [])];
         const defaultWeight = difficulty === 'high' ? 5 : difficulty === 'low' ? 1 : 3;
 
-        // Parse module rows from UI
-        const rows = Array.from(document.querySelectorAll('#subject-modules-list .module-row'));
-        const existingSub = idHidden ? subjects.find(s => s.id === idHidden) : null;
-        const existingModulesMap = new Map((existingSub?.modules || []).map(m => [m.id, m]));
-
+        const hasModules = Boolean(document.getElementById('sub-has-modules-checkbox')?.checked);
         let modules = [];
-        if (rows.length > 0) {
-          modules = rows.map((r, idx) => {
-            const rId = r.dataset.modId || `mod_${Date.now()}_${idx + 1}`;
-            const rName = r.querySelector('.mod-name-input')?.value.trim() || (rows.length > 1 ? `Módulo ${idx + 1}` : name);
-            const rShort = r.querySelector('.mod-short-input')?.value.trim().toUpperCase() || generateModuleShortName(rName, idx, rows.length);
-            const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
-            const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
-            const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
-            const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
-            const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
+        let evaluationMode = 'standard';
+        let oralBinding = 'same_appello';
 
-            const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
-            const existingCalls = existingMod?.calls || [];
-
-            return {
-              id: rId,
-              name: rName,
-              shortName: rShort,
-              credits: rCredits,
-              difficulty: rDiff,
-              defaultWeight: rWeight,
-              alreadyPassed: Boolean(existingMod?.alreadyPassed),
-              evaluationMode: rEvalMode,
-              oralBinding: rOralBinding,
-              calls: existingCalls
-            };
-          });
-        } else {
-          // Fallback single module
-          const modId = existingSub?.modules?.[0]?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+        if (!hasModules) {
+          evaluationMode = document.getElementById('sub-eval-mode-select')?.value || 'standard';
+          oralBinding = document.getElementById('sub-oral-binding-select')?.value || 'same_appello';
+          const existingMod = existingSub?.modules?.[0];
+          const modId = existingMod?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+          const existingCalls = existingMod?.calls || existingSub?.calls || [];
           modules = [{
             id: modId,
             name,
-            shortName: shortName || generateSubjectAcronym(name),
+            shortName: '',
             credits,
             difficulty,
             defaultWeight,
-            alreadyPassed: false,
-            calls: existingSub?.modules?.[0]?.calls || []
+            alreadyPassed: Boolean(existingMod?.alreadyPassed),
+            evaluationMode,
+            oralBinding,
+            calls: existingCalls,
+            isImplicit: true
           }];
+        } else {
+          const rows = Array.from(document.querySelectorAll('#subject-modules-list .module-row'));
+          if (rows.length > 0) {
+            modules = rows.map((r, idx) => {
+              const rId = r.dataset.modId || `mod_${Date.now()}_${idx + 1}`;
+              const rName = r.querySelector('.mod-name-input')?.value.trim() || (rows.length > 1 ? `Módulo ${idx + 1}` : name);
+              const rShort = r.querySelector('.mod-short-input')?.value.trim().toUpperCase() || generateModuleShortName(rName, idx, rows.length);
+              const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
+              const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
+              const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
+              const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
+              const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
+
+              const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
+              const existingCalls = existingMod?.calls || [];
+
+              return {
+                id: rId,
+                name: rName,
+                shortName: rShort,
+                credits: rCredits,
+                difficulty: rDiff,
+                defaultWeight: rWeight,
+                alreadyPassed: Boolean(existingMod?.alreadyPassed),
+                evaluationMode: rEvalMode,
+                oralBinding: rOralBinding,
+                calls: existingCalls
+              };
+            });
+          } else {
+            const modId = existingSub?.modules?.[0]?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+            modules = [{
+              id: modId,
+              name,
+              shortName: shortName || generateSubjectAcronym(name),
+              credits,
+              difficulty,
+              defaultWeight,
+              alreadyPassed: false,
+              calls: existingSub?.modules?.[0]?.calls || []
+            }];
+          }
         }
 
         if (idHidden) {
@@ -440,6 +490,10 @@
               difficulty,
               color,
               defaultWeight,
+              hasModules,
+              evaluationMode,
+              oralBinding,
+              calls: hasModules ? [] : modules[0].calls,
               modules
             };
             state.subjectWeights[idHidden] = defaultWeight;
@@ -463,6 +517,10 @@
             color,
             difficulty,
             defaultWeight,
+            hasModules,
+            evaluationMode,
+            oralBinding,
+            calls: hasModules ? [] : modules[0].calls,
             modules
           });
           state.subjectWeights[uniqueId] = defaultWeight;
@@ -481,7 +539,7 @@
       function deleteSubject(subId) {
         const sub = (schedule.subjects || []).find(s => s.id === subId);
         if (!sub) return;
-        if (!confirm(`¿Eliminar la asignatura "${sub.name}" y todas sus convocatorias?`)) return;
+        if (!confirm(t('confirm_delete_subject', sub.name))) return;
 
         schedule.subjects = (schedule.subjects || []).filter(s => s.id !== subId);
         delete state.subjectWeights[subId];
@@ -509,7 +567,7 @@
         if (!sub) return;
 
         targetSubHidden.value = subId;
-        subBadge.textContent = `Asignatura: ${sub.name}`;
+        subBadge.textContent = t('subject_prefix', sub.name);
 
         const modSelectWrapper = document.getElementById('call-module-select-wrapper');
         const modSelect = document.getElementById('call-module-select');
@@ -596,7 +654,7 @@
         const appelloIndex = (!isNaN(parsedAppello) && parsedAppello >= 1) ? parsedAppello : null;
 
         if (!date) {
-          alert('Por favor selecciona una fecha válida para el examen.');
+          alert(t('alert_valid_date'));
           return;
         }
 
@@ -663,7 +721,7 @@
       function deleteCall(subId, callId) {
         const sub = (schedule.subjects || []).find(s => s.id === subId);
         if (!sub) return;
-        if (!confirm('¿Eliminar esta convocatoria?')) return;
+        if (!confirm(t('confirm_delete_call'))) return;
 
         let targetMod = null;
         (sub.modules || []).forEach(m => {
@@ -716,7 +774,7 @@
         }
 
         persistSchedule(schedule);
-        alert('Datos de titulación actualizados con éxito.');
+        alert(t('toast_meta_saved'));
       }
 
       function switchModalTab(tabId) {
@@ -777,6 +835,30 @@
         document.getElementById('tab-btn-meta')?.addEventListener('click', () => switchModalTab('meta'));
 
         // Subject actions
+        const formHasModulesCheckbox = document.getElementById('sub-has-modules-checkbox');
+        const formSubModulesWrapper = document.getElementById('sub-modules-wrapper');
+        const formSubSingleEvalWrapper = document.getElementById('sub-single-eval-wrapper');
+        const formSubEvalModeSelect = document.getElementById('sub-eval-mode-select');
+        const formSubOralBindingWrapper = document.getElementById('sub-oral-binding-wrapper');
+
+        formHasModulesCheckbox?.addEventListener('change', () => {
+          if (formHasModulesCheckbox.checked) {
+            formSubModulesWrapper?.classList.remove('hidden');
+            formSubSingleEvalWrapper?.classList.add('hidden');
+          } else {
+            formSubModulesWrapper?.classList.add('hidden');
+            formSubSingleEvalWrapper?.classList.remove('hidden');
+          }
+        });
+
+        formSubEvalModeSelect?.addEventListener('change', () => {
+          if (formSubEvalModeSelect.value === 'standard') {
+            formSubOralBindingWrapper?.classList.add('opacity-40', 'pointer-events-none');
+          } else {
+            formSubOralBindingWrapper?.classList.remove('opacity-40', 'pointer-events-none');
+          }
+        });
+
         document.getElementById('btn-show-add-subject')?.addEventListener('click', () => showSubjectForm());
         document.getElementById('sub-cancel-btn')?.addEventListener('click', hideSubjectForm);
         document.getElementById('sub-save-btn')?.addEventListener('click', saveSubject);

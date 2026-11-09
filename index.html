@@ -125,7 +125,7 @@
 
         <!-- Session Switcher Dropdown (Accessible modern-web-guidance) -->
         <div class="relative ml-1 sm:ml-2" id="session-switcher-container">
-          <button id="btn-session-dropdown" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/90 text-slate-900 dark:text-slate-100 font-bold text-xs border border-slate-300 dark:border-slate-700 shadow-sm transition active:scale-95 group" title="Cambiar de sesión o gestionar calendarios">
+          <button id="btn-session-dropdown" type="button" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/90 text-slate-900 dark:text-slate-100 font-bold text-xs border border-slate-300 dark:border-slate-700 shadow-sm transition active:scale-95 group" title="Cambiar de sesión o gestionar calendarios" data-i18n-title="title_session_dropdown">
             <span id="current-session-icon" class="text-sm leading-none">❄️</span>
             <div class="text-left leading-none">
               <span class="block text-[8px] uppercase font-bold text-indigo-600 dark:text-indigo-400 tracking-wider" data-i18n="session_label">Sesión</span>
@@ -149,13 +149,13 @@
               <!-- Dynamically populated -->
             </div>
             <div class="border-t border-slate-100 dark:border-slate-800 pt-2 px-1 flex items-center justify-between gap-1.5 text-[11px]">
-              <button type="button" id="btn-duplicate-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Duplicar para probar otra combinación de fechas">
+              <button type="button" id="btn-duplicate-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Duplicar para probar otra combinación de fechas" data-i18n-title="title_duplicate">
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="btn_duplicate">Duplicar</span>
               </button>
-              <button type="button" id="btn-edit-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Renombrar o cambiar icono">
+              <button type="button" id="btn-edit-active-session" class="flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition" title="Renombrar o cambiar icono" data-i18n-title="title_rename">
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> <span data-i18n="btn_rename">Renombrar</span>
               </button>
-              <button type="button" id="btn-delete-active-session" class="inline-flex items-center justify-center p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Eliminar sesión actual">
+              <button type="button" id="btn-delete-active-session" class="inline-flex items-center justify-center p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Eliminar sesión actual" data-i18n-title="title_delete">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
               </button>
             </div>
@@ -171,13 +171,13 @@
       <!-- Quick Action Toolbar -->
       <div class="flex items-center flex-wrap gap-2">
         <!-- Language Switcher Toggle Button (ES / EN) -->
-        <button id="btn-lang-toggle" type="button" class="inline-flex items-center gap-1 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Switch Language / Cambiar Idioma">
+        <button id="btn-lang-toggle" type="button" class="inline-flex items-center gap-1 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Switch Language / Cambiar Idioma" data-i18n-title="title_lang_toggle">
           <svg class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <span id="lang-label">EN</span>
         </button>
 
         <!-- Manage Exams & Subjects Modal Trigger -->
-        <button id="btn-open-manage-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2.5 py-1.5 rounded-lg shadow-sm shadow-indigo-500/20 transition active:scale-95" title="Gestionar asignaturas, convocatorias o importar planes">
+        <button id="btn-open-manage-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2.5 py-1.5 rounded-lg shadow-sm shadow-indigo-500/20 transition active:scale-95" title="Gestionar asignaturas, convocatorias o importar planes" data-i18n-title="title_manage_subjects">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
           <span data-i18n="btn_manage_subjects">Gestionar Asignaturas</span>
         </button>
@@ -185,7 +185,7 @@
         <!-- Load Plan Button (Direct to Import/Export tab) -->
         <div class="relative">
           <input type="file" id="top-file-input" accept=".json,.md,.txt" class="hidden">
-          <button id="btn-load-plan-dropdown" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar o importar plan de exámenes (JSON, IA, archivo)">
+          <button id="btn-load-plan-dropdown" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Cargar o importar plan de exámenes (JSON, IA, archivo)" data-i18n-title="title_load_plan">
             <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
             <span data-i18n="btn_load_plan">Cargar Plan</span>
           </button>
@@ -199,13 +199,13 @@
         </div>
 
         <!-- Help & Feature Guide Modal Trigger -->
-        <button id="btn-open-help-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Guía y explicación de funciones">
+        <button id="btn-open-help-modal" type="button" class="inline-flex items-center gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 transition active:scale-95" title="Guía y explicación de funciones" data-i18n-title="title_help">
           <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <span data-i18n="btn_help">Ayuda</span>
         </button>
 
         <!-- Theme Toggle Button -->
-        <button id="theme-toggle" type="button" aria-label="Cambiar tema claro u oscuro" class="p-1.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+        <button id="theme-toggle" type="button" aria-label="Cambiar tema claro u oscuro" data-i18n-aria-label="title_theme_toggle" class="p-1.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
           <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
           <svg id="theme-icon-light" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
         </button>
@@ -507,7 +507,7 @@
               <h3 id="subject-form-title" class="font-bold text-indigo-900 dark:text-indigo-200 uppercase tracking-wide">
                 Nueva Asignatura
               </h3>
-              <button type="button" id="sub-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">✕ Cancelar</button>
+              <button type="button" id="sub-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-i18n="btn_cancel_sub">✕ Cancelar</button>
             </div>
             <input type="hidden" id="sub-id-hidden">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -517,8 +517,8 @@
               </div>
               <div>
                 <label for="sub-shortname-input" class="block font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Abreviatura / Acrónimo
-                  <span class="text-[10px] text-slate-400 font-normal">(ej. FAI, ML, SO, FP — visible en calendario y sliders)</span>
+                  <span data-i18n="lbl_sub_acronym">Abreviatura / Acrónimo</span>
+                  <span class="text-[10px] text-slate-400 font-normal" data-i18n="hint_sub_acronym">(ej. FAI, ML, SO, FP — visible en calendario y sliders)</span>
                 </label>
                 <input type="text" id="sub-shortname-input" maxlength="10" placeholder="ej: SO" class="w-full uppercase font-mono font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               </div>
@@ -553,23 +553,52 @@
                 </select>
               </div>
 
-              <!-- Modules Management Inside Subject -->
+              <!-- Divided into modules toggle & evaluation setup -->
               <div class="sm:col-span-2 pt-3 border-t border-indigo-200 dark:border-indigo-900/60">
-                <div class="flex items-center justify-between mb-2">
-                  <div>
-                    <h4 class="text-xs font-bold text-indigo-950 dark:text-indigo-200 uppercase tracking-wider" data-i18n="lbl_sub_modules">
-                      Módulos / Partes de la Asignatura
-                    </h4>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
-                      Asigna a cada módulo su nombre y abreviatura (ej. M1, M2, Teoría, Lab) para mostrarse en la UI.
-                    </p>
-                  </div>
-                  <button type="button" id="btn-add-module-row" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition" data-i18n="btn_add_module">
-                    + Añadir Módulo
-                  </button>
+                <div class="flex items-center gap-2 mb-3">
+                  <input type="checkbox" id="sub-has-modules-checkbox" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 dark:border-slate-700 cursor-pointer">
+                  <label for="sub-has-modules-checkbox" class="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer" data-i18n="lbl_has_modules">
+                    Esta asignatura se divide en módulos
+                  </label>
                 </div>
-                <div id="subject-modules-list" class="space-y-2">
-                  <!-- Dynamically populated module rows -->
+
+                <!-- Single subject direct evaluation mode (when no modules) -->
+                <div id="sub-single-eval-wrapper" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <label for="sub-eval-mode-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_subject_eval_mode">Modalidad de Evaluación</label>
+                    <select id="sub-eval-mode-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                      <option value="standard" data-i18n="eval_mode_standard">Estándar (1 solo examen por convocatoria)</option>
+                      <option value="written_and_oral" data-i18n="eval_mode_written_oral">Escrito + Oral (ambas partes obligatorias)</option>
+                      <option value="written_and_lab" data-i18n="eval_mode_written_lab">Escrito + Laboratorio / Práctica</option>
+                    </select>
+                  </div>
+                  <div id="sub-oral-binding-wrapper" class="opacity-40 pointer-events-none">
+                    <label for="sub-oral-binding-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_mod_oral_binding">Vinculación del Oral</label>
+                    <select id="sub-oral-binding-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                      <option value="same_appello" data-i18n="binding_same_appello">Mismo llamamiento (estricto)</option>
+                      <option value="any_subsequent" data-i18n="binding_any_subsequent">Cualquier llamamiento posterior (flexible)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Modules Management Inside Subject -->
+                <div id="sub-modules-wrapper" class="hidden space-y-2 mt-2">
+                  <div class="flex items-center justify-between mb-2">
+                    <div>
+                      <h4 class="text-xs font-bold text-indigo-950 dark:text-indigo-200 uppercase tracking-wider" data-i18n="lbl_sub_modules">
+                        Módulos / Partes de la Asignatura
+                      </h4>
+                      <p class="text-[11px] text-slate-500 dark:text-slate-400" data-i18n="hint_sub_modules">
+                        Asigna a cada módulo su nombre y abreviatura (ej. M1, M2, Teoría, Lab) para mostrarse en la UI.
+                      </p>
+                    </div>
+                    <button type="button" id="btn-add-module-row" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition" data-i18n="btn_add_module">
+                      + Añadir Módulo
+                    </button>
+                  </div>
+                  <div id="subject-modules-list" class="space-y-2">
+                    <!-- Dynamically populated module rows -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -589,13 +618,13 @@
                 </h3>
                 <p id="call-subject-name-badge" class="text-[11px] text-violet-700 dark:text-violet-300 font-semibold mt-0.5"></p>
               </div>
-              <button type="button" id="call-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">✕ Cancelar</button>
+              <button type="button" id="call-cancel-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" data-i18n="btn_cancel_call">✕ Cancelar</button>
             </div>
             <input type="hidden" id="call-target-sub-id">
             <input type="hidden" id="call-target-mod-id">
             <input type="hidden" id="call-id-hidden">
             <div id="call-module-select-wrapper" class="hidden mb-2">
-              <label for="call-module-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Módulo Evaluado en este Examen</label>
+              <label for="call-module-select" class="block font-medium text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_call_mod_evaluated">Módulo Evaluado en este Examen</label>
               <select id="call-module-select" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none">
               </select>
             </div>
@@ -684,7 +713,7 @@
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-xs">1</span>
-                    <span class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Paso 1</span>
+                    <span class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider" data-i18n="step_1_badge">Paso 1</span>
                   </div>
                   <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step1_title">Paso 1: Copiar Prompt IA</h4>
                   <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step1_desc">
@@ -702,7 +731,7 @@
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="w-6 h-6 rounded-full bg-slate-700 text-white font-black text-xs flex items-center justify-center">2</span>
-                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Paso 2</span>
+                    <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" data-i18n="step_2_badge">Paso 2</span>
                   </div>
                   <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step2_title">Paso 2: Generar con tu IA</h4>
                   <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step2_desc">
@@ -723,7 +752,7 @@
                 <div>
                   <div class="flex items-center justify-between">
                     <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">3</span>
-                    <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Paso 3</span>
+                    <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider" data-i18n="step_3_badge">Paso 3</span>
                   </div>
                   <h4 class="font-bold text-xs text-slate-900 dark:text-white mt-1.5" data-i18n="step3_title">Paso 3: Pegar resultado e Importar</h4>
                   <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" data-i18n="step3_desc">
@@ -754,10 +783,10 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
               </div>
               <div>
-                <p class="font-semibold text-slate-800 dark:text-slate-200 text-xs">
+                <p class="font-semibold text-slate-800 dark:text-slate-200 text-xs" data-i18n="dropzone_prompt">
                   Arrastra aquí tu archivo <span class="text-indigo-600 dark:text-indigo-400 underline">.json, .md o .txt</span> o haz clic para seleccionarlo
                 </p>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="dropzone_hint">
                   Detección automática de bloques JSON, sanitización de comentarios y tablas Markdown
                 </p>
               </div>
@@ -773,7 +802,7 @@
                 </label>
                 <label class="inline-flex items-center gap-1.5 cursor-pointer">
                   <input type="radio" name="import-destination-mode" value="current" class="accent-indigo-600">
-                  <span class="text-slate-600 dark:text-slate-400">Sobrescribir sesión activa (<span id="import-current-session-label">...</span>)</span>
+                  <span class="text-slate-600 dark:text-slate-400"><span data-i18n="import_dest_overwrite">Sobrescribir sesión activa</span> (<span id="import-current-session-label">...</span>)</span>
                 </label>
               </div>
             </div>
@@ -781,6 +810,7 @@
             <textarea 
               id="import-text-input" 
               rows="6" 
+              data-i18n-placeholder="import_textarea_placeholder"
               placeholder="O pega directamente aquí el JSON o el texto de la IA (incluyendo ```json ... ``` o tablas)..." 
               class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 font-mono text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             ></textarea>
@@ -811,23 +841,23 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">
               <h4 class="font-bold text-slate-900 dark:text-white" data-i18n="export_sec_title">Exportar Configuración</h4>
-              <p class="text-slate-500 dark:text-slate-400">Descarga el JSON actualizado para respaldar o usar en otros dispositivos.</p>
+              <p class="text-slate-500 dark:text-slate-400" data-i18n="export_sec_desc">Descarga el JSON actualizado para respaldar o usar en otros dispositivos.</p>
               <div class="flex items-center gap-2 pt-1">
                 <button type="button" id="btn-download-json-config" class="bg-slate-800 hover:bg-slate-900 text-white dark:bg-slate-700 dark:hover:bg-slate-600 font-medium px-3 py-1.5 rounded-lg transition text-xs">
-                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar JSON
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="btn_download_json">Descargar JSON</span>
                 </button>
                 <button type="button" id="btn-copy-json-config" class="border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium px-3 py-1.5 rounded-lg transition text-xs">
-                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Copiar JSON
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> <span data-i18n="btn_copy_json">Copiar JSON</span>
                 </button>
               </div>
             </div>
 
             <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">
               <h4 class="font-bold text-red-600 dark:text-red-400" data-i18n="reset_sec_title">Restablecer Datos</h4>
-              <p class="text-slate-500 dark:text-slate-400">Borra las modificaciones guardadas en localStorage y restaura el plan original.</p>
+              <p class="text-slate-500 dark:text-slate-400" data-i18n="reset_sec_desc">Borra las modificaciones guardadas en localStorage y restaura el plan original.</p>
               <div class="pt-1">
                 <button type="button" id="btn-reset-storage" class="bg-red-600/10 hover:bg-red-600/20 text-red-700 dark:text-red-400 border border-red-500/20 font-medium px-3 py-1.5 rounded-lg transition text-xs">
-                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Restablecer a Datos de Fábrica
+                  <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> <span data-i18n="btn_reset_storage">Restablecer a Datos de Fábrica</span>
                 </button>
               </div>
             </div>
@@ -912,18 +942,18 @@
         <!-- Session Name Input -->
         <div>
           <label for="session-modal-name" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-            Nombre de la Sesión / Calendario <span class="text-rose-500">*</span>
+            <span data-i18n="lbl_session_name">Nombre de la Sesión / Calendario</span> <span class="text-rose-500">*</span>
           </label>
-          <input type="text" id="session-modal-name" required placeholder="Ej: ❄️ Sesión de Invierno, ☀️ Verano, 🎓 Máster AI..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+          <input type="text" id="session-modal-name" required data-i18n-placeholder="placeholder_session_name" placeholder="Ej: ❄️ Sesión de Invierno, ☀️ Verano, 🎓 Máster AI..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
         </div>
 
         <!-- Session Icon Selector -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <label class="block font-semibold text-slate-700 dark:text-slate-300">
+            <label class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="lbl_session_icon">
               Icono de la Sesión
             </label>
-            <span class="text-[11px] text-slate-400">Selecciona o escribe cualquier emoji</span>
+            <span class="text-[11px] text-slate-400" data-i18n="hint_session_emoji">Selecciona o escribe cualquier emoji</span>
           </div>
           
           <!-- Visual Emoji Grid -->
@@ -932,37 +962,37 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <span class="text-slate-500 text-xs">Emoji seleccionado:</span>
+            <span class="text-slate-500 text-xs" data-i18n="lbl_selected_emoji">Emoji seleccionado:</span>
             <input type="text" id="session-modal-icon-input" maxlength="4" value="❄️" class="w-14 text-center text-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl py-1 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-            <span class="text-[11px] text-slate-400">(personalizable a mano si lo prefieres)</span>
+            <span class="text-[11px] text-slate-400" data-i18n="hint_custom_emoji">(personalizable a mano si lo prefieres)</span>
           </div>
         </div>
 
         <!-- Initial Content Mode (Only visible for new session) -->
         <div id="session-modal-initial-mode-wrapper" class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-          <label class="block font-semibold text-slate-700 dark:text-slate-300">
+          <label class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="lbl_session_init_content">
             Contenido Inicial de Asignaturas:
           </label>
           <div class="space-y-2">
             <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
               <input type="radio" name="session-init-mode" value="copy_current" checked class="mt-0.5 accent-indigo-600">
               <div>
-                <span class="font-bold text-slate-800 dark:text-slate-200 block">Duplicar asignaturas de la sesión actual</span>
-                <span class="text-[11px] text-slate-400 block" id="session-init-copy-hint">Copia las asignaturas y llamamientos para comparar estrategias.</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block" data-i18n="session_init_copy_title">Duplicar asignaturas de la sesión actual</span>
+                <span class="text-[11px] text-slate-400 block" id="session-init-copy-hint" data-i18n="session_init_copy_hint">Copia las asignaturas y llamamientos para comparar estrategias.</span>
               </div>
             </label>
             <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
               <input type="radio" name="session-init-mode" value="sample" class="mt-0.5 accent-indigo-600">
               <div>
-                <span class="font-bold text-slate-800 dark:text-slate-200 block">Cargar plantilla universitaria de ejemplo</span>
-                <span class="text-[11px] text-slate-400 block">Asignaturas de prueba con múltiples convocatorias para planificar.</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block" data-i18n="session_init_sample_title">Cargar plantilla universitaria de ejemplo</span>
+                <span class="text-[11px] text-slate-400 block" data-i18n="session_init_sample_hint">Asignaturas de prueba con múltiples convocatorias para planificar.</span>
               </div>
             </label>
             <label class="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
               <input type="radio" name="session-init-mode" value="empty" class="mt-0.5 accent-indigo-600">
               <div>
-                <span class="font-bold text-slate-800 dark:text-slate-200 block">Calendario en blanco (vacío)</span>
-                <span class="text-[11px] text-slate-400 block">Empieza desde cero y añade o importa tus asignaturas.</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200 block" data-i18n="session_init_empty_title">Calendario en blanco (vacío)</span>
+                <span class="text-[11px] text-slate-400 block" data-i18n="session_init_empty_hint">Empieza desde cero y añade o importa tus asignaturas.</span>
               </div>
             </label>
           </div>
@@ -973,7 +1003,7 @@
           <button type="button" id="btn-cancel-session-modal" class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-slate-700 dark:text-slate-300 transition" data-i18n="btn_cancel">
             Cancelar
           </button>
-          <button type="submit" id="btn-save-session-modal" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md shadow-indigo-500/20 transition active:scale-95">
+          <button type="submit" id="btn-save-session-modal" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md shadow-indigo-500/20 transition active:scale-95" data-i18n="btn_save_session">
             Guardar Sesión
           </button>
         </div>
@@ -1057,7 +1087,7 @@
           <label for="day-dialog-note" class="block font-semibold text-slate-700 dark:text-slate-300" data-i18n="day_note_label">
             Nota o Tarea (opcional):
           </label>
-          <input type="text" id="day-dialog-note" maxlength="60" placeholder="Ej: Repasar temas 1-3, simulacro..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="day-dialog-note" maxlength="60" data-i18n-placeholder="placeholder_day_note" placeholder="Ej: Repasar temas 1-3, simulacro..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
 
         <!-- Actions -->
@@ -1233,6 +1263,10 @@
       "color": "indigo",
       "difficulty": "high",
       "defaultWeight": 4,
+      "hasModules": true,
+      "evaluationMode": "standard",
+      "oralBinding": "same_appello",
+      "calls": [],
       "modules": [
         {
           "id": "ml_mod",
@@ -1300,6 +1334,10 @@
       "color": "violet",
       "difficulty": "high",
       "defaultWeight": 5,
+      "hasModules": true,
+      "evaluationMode": "standard",
+      "oralBinding": "same_appello",
+      "calls": [],
       "modules": [
         {
           "id": "dlcv_mod",
@@ -1367,6 +1405,10 @@
       "color": "emerald",
       "difficulty": "medium",
       "defaultWeight": 3,
+      "hasModules": true,
+      "evaluationMode": "standard",
+      "oralBinding": "same_appello",
+      "calls": [],
       "modules": [
         {
           "id": "nlp_mod",
@@ -1420,6 +1462,10 @@
       "color": "amber",
       "difficulty": "medium",
       "defaultWeight": 3,
+      "hasModules": true,
+      "evaluationMode": "standard",
+      "oralBinding": "same_appello",
+      "calls": [],
       "modules": [
         {
           "id": "krr_mod",
@@ -1473,6 +1519,10 @@
       "color": "rose",
       "difficulty": "low",
       "defaultWeight": 1,
+      "hasModules": true,
+      "evaluationMode": "standard",
+      "oralBinding": "same_appello",
+      "calls": [],
       "modules": [
         {
           "id": "ethics_mod",
@@ -1794,6 +1844,17 @@
         }
         if (!Array.isArray(sched.subjects) || (!allowEmptySubjects && sched.subjects.length === 0)) {
           errors.push('Debe existir al menos una asignatura en "subjects".');
+        } else {
+          sched.subjects.forEach((sub, sIdx) => {
+            const subName = sub?.name || `Asignatura #${sIdx + 1}`;
+            if (!sub.id) errors.push(`${subName}: Falta el "id".`);
+            if (!sub.name) errors.push(`${subName}: Falta el "name".`);
+            const hasValidModules = Array.isArray(sub.modules) && sub.modules.length > 0;
+            const hasValidDirectCalls = Array.isArray(sub.calls) && sub.calls.length > 0;
+            if (!hasValidModules && !hasValidDirectCalls) {
+              errors.push(`${subName}: Debe contener convocatorias directas en "calls" o al menos un módulo en "modules".`);
+            }
+          });
         }
         return { valid: errors.length === 0, errors };
       }
@@ -1832,9 +1893,28 @@
             ? sub.shortName.trim()
             : generateSubjectAcronym(sub.name);
 
-          const rawModules = Array.isArray(sub.modules) && sub.modules.length > 0
-            ? sub.modules
-            : [{ id: `${subId}_mod`, name: sub.name, credits: subCredits, calls: sub.calls || [] }];
+          const hasExplicitModules = Array.isArray(sub.modules) && sub.modules.length > 0 && sub.hasModules !== false;
+          let rawModules = Array.isArray(sub.modules) && sub.modules.length > 0 ? sub.modules : [];
+
+          if (rawModules.length === 0 && Array.isArray(sub.calls) && sub.calls.length > 0) {
+            rawModules = [{
+              id: `${subId}_mod`,
+              name: sub.name,
+              shortName: '',
+              credits: subCredits,
+              difficulty: diff,
+              defaultWeight,
+              alreadyPassed: Boolean(sub.alreadyPassed),
+              evaluationMode: sub.evaluationMode || 'standard',
+              oralBinding: sub.oralBinding || 'same_appello',
+              calls: sub.calls,
+              isImplicit: true
+            }];
+          }
+
+          const hasModules = sub.hasModules !== undefined
+            ? Boolean(sub.hasModules)
+            : (hasExplicitModules && (rawModules.length > 1 || (rawModules.length === 1 && rawModules[0].name !== sub.name && !rawModules[0].isImplicit)));
 
           const modules = rawModules.map((mod, mIdx) => {
             const modId = mod.id || `${subId}_mod_${mIdx + 1}`;
@@ -1925,6 +2005,7 @@
             };
           });
 
+          const primaryMod = modules[0] || {};
           return {
             id: String(subId),
             name: sub.name || `Asignatura ${sIdx + 1}`,
@@ -1934,6 +2015,10 @@
             color,
             difficulty: diff,
             defaultWeight,
+            hasModules,
+            evaluationMode: normalizeEvaluationMode(sub.evaluationMode || primaryMod.evaluationMode || 'standard'),
+            oralBinding: normalizeOralBinding(sub.oralBinding || primaryMod.oralBinding || 'same_appello'),
+            calls: hasModules ? [] : (primaryMod.calls || []),
             modules
           };
         });
@@ -1961,28 +2046,20 @@
         (sched.subjects || []).forEach(sub => {
           (sub.modules || []).forEach(mod => {
             (mod.calls || []).forEach(call => {
-              const isCallActive = (
-                call.status === 'active' ||
-                call.status === 'activo' ||
-                call.active === true ||
-                call.selected === true
-              );
-              const isCallInactive = (
-                call.status === 'inactive' ||
-                call.status === 'desactivado' ||
-                call.status === 'inactivo' ||
-                call.active === false ||
-                call.selected === false
-              );
-
-              if (isCallActive) {
-                explicitActiveIds.push(String(call.id));
-                hasExplicitCallStatus = true;
-              } else if (isCallInactive) {
-                hasExplicitCallStatus = true;
-              }
+              const isCallActive = (call.status === 'active' || call.status === 'activo' || call.active === true || call.selected === true);
+              const isCallInactive = (call.status === 'inactive' || call.status === 'desactivado' || call.status === 'inactivo' || call.active === false || call.selected === false);
+              if (isCallActive) { explicitActiveIds.push(String(call.id)); hasExplicitCallStatus = true; }
+              else if (isCallInactive) { hasExplicitCallStatus = true; }
             });
           });
+          if (Array.isArray(sub.calls)) {
+            sub.calls.forEach(call => {
+              const isCallActive = (call.status === 'active' || call.status === 'activo' || call.active === true || call.selected === true);
+              const isCallInactive = (call.status === 'inactive' || call.status === 'desactivado' || call.status === 'inactivo' || call.active === false || call.selected === false);
+              if (isCallActive) { if (!explicitActiveIds.includes(String(call.id))) explicitActiveIds.push(String(call.id)); hasExplicitCallStatus = true; }
+              else if (isCallInactive) { hasExplicitCallStatus = true; }
+            });
+          }
         });
 
         if (hasExplicitCallStatus) {
@@ -2041,6 +2118,13 @@
               call.active = isSelected;
             });
           });
+          if (Array.isArray(sub.calls)) {
+            sub.calls.forEach(call => {
+              const isSelected = selSet.has(String(call.id));
+              call.status = isSelected ? 'active' : 'inactive';
+              call.active = isSelected;
+            });
+          }
         });
 
         const selectedList = Array.from(selSet);
@@ -2899,6 +2983,9 @@
           conflict_binding_desc: (wApp, oApp) => `Esta asignatura exige realizar el oral en el mismo llamamiento que el escrito (escrito en Appello ${wApp}, oral en Appello ${oApp}).`,
           conflict_missing_written_title: (m) => `Falta Examen Escrito Previo: ${m}`,
           conflict_missing_written_desc: 'Has seleccionado el examen oral sin haber elegido el examen escrito previo obligatorio para este módulo.',
+          lbl_has_modules: 'Esta asignatura se divide en módulos',
+          badge_no_modules: 'Sin módulos',
+          lbl_subject_eval_mode: 'Modalidad de Evaluación',
           lbl_mod_eval_mode: 'Modalidad de Evaluación',
           eval_mode_standard: 'Estándar (1 examen)',
           eval_mode_written_oral: 'Escrito + Oral',
@@ -2942,7 +3029,74 @@
           lbl_meta_year: 'Año Académico',
           lbl_meta_session: 'Nombre de la Sesión',
           lbl_meta_icon: 'Icono / Emoji de la Sesión',
-          btn_save_meta: 'Guardar Datos de Titulación'
+          btn_save_meta: 'Guardar Datos de Titulación',
+          step_1_badge: 'Paso 1',
+          step_2_badge: 'Paso 2',
+          step_3_badge: 'Paso 3',
+          dropzone_prompt: 'Arrastra aquí tu archivo <span class="text-indigo-600 dark:text-indigo-400 underline">.json, .md o .txt</span> o haz clic para seleccionarlo',
+          dropzone_hint: 'Detección automática de bloques JSON, sanitización de comentarios y tablas Markdown',
+          import_dest_overwrite: 'Sobrescribir sesión activa',
+          import_textarea_placeholder: 'O pega directamente aquí el JSON o el texto de la IA (incluyendo ```json ... ``` o tablas)...',
+          export_sec_desc: 'Descarga el JSON actualizado para respaldar o usar en otros dispositivos.',
+          btn_download_json: 'Descargar JSON',
+          btn_copy_json: 'Copiar JSON',
+          reset_sec_desc: 'Borra las modificaciones guardadas en localStorage y restaura el plan original.',
+          btn_reset_storage: 'Restablecer a Datos de Fábrica',
+          toast_prompt_copied: '✓ ¡Plantilla y prompt para IA copiado al portapapeles! Pégalo a una IA junto con tus capturas.',
+          toast_prompt_copied_simple: '✓ ¡Plantilla y prompt para IA copiado al portapapeles!',
+          alert_copy_failed: 'No se pudo copiar automáticamente al portapapeles.',
+          toast_new_session_imported: (icon, name, subs, calls) => `¡Nueva sesión "${icon} ${name}" creada! (${subs} asignaturas, ${calls} llamamientos).`,
+          toast_session_imported_active: (subs, calls) => `¡Plan cargado en sesión activa! (${subs} asignaturas, ${calls} convocatorias).`,
+          toast_image_pdf_uploaded: 'ℹ️ Has subido una imagen o PDF. Copia la plantilla con el botón "Prompt IA", envíasela a ChatGPT/Gemini junto con tus capturas, y arrastra aquí el JSON o Markdown resultante.',
+          toast_file_read_error: (name) => `Error al leer el archivo ${name}.`,
+          confirm_reset_storage: '¿Restablecer el planificador a la configuración inicial? Se perderán todas las sesiones y asignaturas añadidas en el navegador.',
+          toast_markdown_copied: '✓ ¡Resumen Markdown copiado al portapapeles!',
+          alert_no_exams_export_ics: 'No hay exámenes seleccionados para exportar.',
+          lbl_sub_acronym: 'Abreviatura / Acrónimo',
+          hint_sub_acronym: '(ej. FAI, ML, SO, FP — visible en calendario y sliders)',
+          hint_sub_modules: 'Asigna a cada módulo su nombre y abreviatura (ej. M1, M2, Teoría, Lab) para mostrarse en la UI.',
+          lbl_call_mod_evaluated: 'Módulo Evaluado en este Examen',
+          btn_cancel_sub: '✕ Cancelar',
+          btn_cancel_call: '✕ Cancelar',
+          title_duplicate: 'Duplicar para probar otra combinación de fechas',
+          title_rename: 'Renombrar o cambiar icono',
+          title_delete: 'Eliminar sesión actual',
+          title_manage_subjects: 'Gestionar asignaturas, convocatorias o importar planes',
+          title_load_plan: 'Cargar o importar plan de exámenes (JSON, IA, archivo)',
+          title_help: 'Guía y explicación de funciones',
+          title_theme_toggle: 'Cambiar tema claro u oscuro',
+          title_lang_toggle: 'Switch Language / Cambiar Idioma',
+          title_session_dropdown: 'Cambiar de sesión o gestionar calendarios',
+          placeholder_day_note: 'Ej: Repasar temas 1-3, simulacro...',
+          placeholder_session_name: 'Ej: ❄️ Sesión de Invierno, ☀️ Verano, 🎓 Máster AI...',
+          lbl_session_name: 'Nombre de la Sesión / Calendario',
+          lbl_session_icon: 'Icono de la Sesión',
+          hint_session_emoji: 'Selecciona o escribe cualquier emoji',
+          lbl_selected_emoji: 'Emoji seleccionado:',
+          hint_custom_emoji: '(personalizable a mano si lo prefieres)',
+          lbl_session_init_content: 'Contenido Inicial de Asignaturas:',
+          session_init_copy_title: 'Duplicar asignaturas de la sesión actual',
+          session_init_copy_hint: 'Copia las asignaturas y llamamientos para comparar estrategias.',
+          session_init_copy_named: (name) => `Copia las asignaturas y llamamientos de "${name}".`,
+          session_init_sample_title: 'Cargar plantilla universitaria de ejemplo',
+          session_init_sample_hint: 'Asignaturas de prueba con múltiples convocatorias para planificar.',
+          session_init_empty_title: 'Calendario en blanco (vacío)',
+          session_init_empty_hint: 'Empieza desde cero y añade o importa tus asignaturas.',
+          btn_save_session: 'Guardar Sesión',
+          presets_default_opt: '⚙️ Presets de Estrategia...',
+          subject_prefix: (name) => `Asignatura: ${name}`,
+          confirm_delete_subject: (name) => `¿Eliminar la asignatura "${name}" y todas sus convocatorias?`,
+          confirm_delete_call: '¿Eliminar esta convocatoria?',
+          alert_enter_subject_name: 'Por favor introduce el nombre de la asignatura.',
+          alert_min_one_module: 'La asignatura debe tener al menos un módulo.',
+          alert_valid_date: 'Por favor selecciona una fecha válida para el examen.',
+          alert_session_name_required: 'Por favor, indica un nombre para la sesión.',
+          toast_session_saved: 'Sesión actualizada con éxito.',
+          toast_meta_saved: 'Datos de titulación actualizados con éxito.',
+          delete_single_session_disabled_title: 'No se puede eliminar la única sesión disponible',
+          diff_high_opt: 'Alta (5/5)',
+          diff_medium_opt: 'Media (3/5)',
+          diff_low_opt: 'Baja (1/5)'
         },
         en: {
           lang_code: 'EN',
@@ -3241,7 +3395,100 @@
           lbl_meta_year: 'Academic Year',
           lbl_meta_session: 'Session Name',
           lbl_meta_icon: 'Session Icon / Emoji',
-          btn_save_meta: 'Save Degree Info'
+          btn_save_meta: 'Save Degree Info',
+          conflict_precedence_title: (m) => `Precedence Violation: ${m}`,
+          conflict_precedence_desc: (dOral, dWritten) => `Oral exam (${dOral}) must strictly be taken after written exam (${dWritten}).`,
+          conflict_binding_title: (m) => `Call Binding Violation: ${m}`,
+          conflict_binding_desc: (wApp, oApp) => `This course requires taking the oral in the same call as the written exam (written in Call ${wApp}, oral in Call ${oApp}).`,
+          conflict_missing_written_title: (m) => `Missing Prerequisite Written Exam: ${m}`,
+          conflict_missing_written_desc: 'You selected the oral exam without selecting the mandatory prerequisite written exam for this module.',
+          lbl_has_modules: 'This subject is divided into modules',
+          badge_no_modules: 'No modules',
+          lbl_subject_eval_mode: 'Evaluation Mode',
+          lbl_mod_eval_mode: 'Evaluation Mode',
+          eval_mode_standard: 'Standard (1 exam)',
+          eval_mode_written_oral: 'Written + Oral',
+          eval_mode_written_lab: 'Written + Practical/Lab',
+          lbl_mod_oral_binding: 'Oral Exam Binding',
+          binding_same_appello: 'Same Call required',
+          binding_any_subsequent: 'Same or any subsequent Call',
+          lbl_call_type: 'Exam Type',
+          type_standard: 'General / Standard',
+          type_written: 'Written',
+          type_oral: 'Oral',
+          type_lab: 'Lab / Practical',
+          lbl_call_appello: 'Call / Appello Number',
+          badge_written: 'Written',
+          badge_oral: 'Oral',
+          badge_lab: 'Lab',
+          badge_appello: (n) => `Call ${n}`,
+          step_1_badge: 'Step 1',
+          step_2_badge: 'Step 2',
+          step_3_badge: 'Step 3',
+          dropzone_prompt: 'Drag & drop your <span class="text-indigo-600 dark:text-indigo-400 underline">.json, .md or .txt</span> file here or click to select',
+          dropzone_hint: 'Automatic detection of JSON blocks, comment stripping, and Markdown tables',
+          import_dest_overwrite: 'Overwrite active session',
+          import_textarea_placeholder: 'Or paste directly here the JSON or AI output (including ```json ... ``` or tables)...',
+          export_sec_desc: 'Download the updated JSON to backup or use on other devices.',
+          btn_download_json: 'Download JSON',
+          btn_copy_json: 'Copy JSON',
+          reset_sec_desc: 'Clears changes stored in localStorage and restores the original schedule.',
+          btn_reset_storage: 'Reset to Factory Defaults',
+          toast_prompt_copied: '✓ AI prompt template copied to clipboard! Paste it into an AI along with your screenshots.',
+          toast_prompt_copied_simple: '✓ AI prompt template copied to clipboard!',
+          alert_copy_failed: 'Could not copy to clipboard automatically.',
+          toast_new_session_imported: (icon, name, subs, calls) => `New session "${icon} ${name}" created! (${subs} subjects, ${calls} exam calls).`,
+          toast_session_imported_active: (subs, calls) => `Plan loaded into active session! (${subs} subjects, ${calls} exam calls).`,
+          toast_image_pdf_uploaded: 'ℹ️ You uploaded an image or PDF. Copy the template using "AI Prompt", send it to ChatGPT/Gemini with your screenshots, and drop the resulting JSON or Markdown here.',
+          toast_file_read_error: (name) => `Error reading file ${name}.`,
+          confirm_reset_storage: 'Reset planner to factory defaults? All sessions and custom subjects in this browser will be lost.',
+          toast_markdown_copied: '✓ Markdown summary copied to clipboard!',
+          alert_no_exams_export_ics: 'No exams selected to export.',
+          lbl_sub_acronym: 'Short Name / Acronym',
+          hint_sub_acronym: '(e.g. FAI, ML, OS, CS — visible in calendar and sliders)',
+          hint_sub_modules: 'Assign each module a name and short label (e.g. M1, M2, Theory, Lab) for UI display.',
+          lbl_call_mod_evaluated: 'Module Evaluated in this Exam',
+          btn_cancel_sub: '✕ Cancel',
+          btn_cancel_call: '✕ Cancel',
+          title_duplicate: 'Duplicate to test another date strategy',
+          title_rename: 'Rename or change icon',
+          title_delete: 'Delete current session',
+          title_manage_subjects: 'Manage subjects, exam calls, or import schedules',
+          title_load_plan: 'Load or import exam plan (JSON, AI, file)',
+          title_help: 'Guide and feature explanation',
+          title_theme_toggle: 'Toggle light or dark theme',
+          title_lang_toggle: 'Switch Language / Cambiar Idioma',
+          title_session_dropdown: 'Switch session or manage calendars',
+          placeholder_day_note: 'E.g. Review topics 1-3, mock exam...',
+          placeholder_session_name: 'E.g. ❄️ Winter Session, ☀️ Summer, 🎓 AI Master...',
+          lbl_session_name: 'Session / Calendar Name',
+          lbl_session_icon: 'Session Icon',
+          hint_session_emoji: 'Select or type any emoji',
+          lbl_selected_emoji: 'Selected emoji:',
+          hint_custom_emoji: '(customizable manually if you prefer)',
+          lbl_session_init_content: 'Initial Subject Content:',
+          session_init_copy_title: 'Duplicate subjects from current session',
+          session_init_copy_hint: 'Copies subjects and calls to compare strategies.',
+          session_init_copy_named: (name) => `Copies subjects and calls from "${name}".`,
+          session_init_sample_title: 'Load sample university template',
+          session_init_sample_hint: 'Sample subjects with multiple exam calls to plan.',
+          session_init_empty_title: 'Blank calendar (empty)',
+          session_init_empty_hint: 'Start from scratch and add or import your subjects.',
+          btn_save_session: 'Save Session',
+          presets_default_opt: '⚙️ Strategy Presets...',
+          subject_prefix: (name) => `Subject: ${name}`,
+          confirm_delete_subject: (name) => `Delete subject "${name}" and all its scheduled calls?`,
+          confirm_delete_call: 'Delete this exam call?',
+          alert_enter_subject_name: 'Please enter the subject name.',
+          alert_min_one_module: 'The subject must have at least one module.',
+          alert_valid_date: 'Please select a valid exam date.',
+          alert_session_name_required: 'Please provide a name for the session.',
+          toast_session_saved: 'Session updated successfully.',
+          toast_meta_saved: 'Degree details updated successfully.',
+          delete_single_session_disabled_title: 'Cannot delete the only available session',
+          diff_high_opt: 'High (5/5)',
+          diff_medium_opt: 'Medium (3/5)',
+          diff_low_opt: 'Low (1/5)'
         },
         it: {
           lang_code: 'IT',
@@ -3524,6 +3771,9 @@
           eval_mode_standard: 'Standard (1 esame)',
           eval_mode_written_oral: 'Scritto + Orale',
           eval_mode_written_lab: 'Scritto + Laboratorio',
+          lbl_has_modules: 'Questa materia è divisa in moduli',
+          badge_no_modules: 'Senza moduli',
+          lbl_subject_eval_mode: 'Modalità di Valutazione',
           lbl_mod_oral_binding: 'Vincolo dell\'Orale',
           binding_same_appello: 'Stesso Appello obbligatorio',
           binding_any_subsequent: 'Stesso o qualsiasi Appello successivo',
@@ -3563,7 +3813,74 @@
           lbl_meta_year: 'Anno Accademico',
           lbl_meta_session: 'Nome della Sessione',
           lbl_meta_icon: 'Icona / Emoji della Sessione',
-          btn_save_meta: 'Salva Dati Corso'
+          btn_save_meta: 'Salva Dati Corso',
+          step_1_badge: 'Passo 1',
+          step_2_badge: 'Passo 2',
+          step_3_badge: 'Passo 3',
+          dropzone_prompt: 'Trascina qui il tuo file <span class="text-indigo-600 dark:text-indigo-400 underline">.json, .md o .txt</span> oppure clicca per selezionarlo',
+          dropzone_hint: 'Rilevamento automatico di blocchi JSON, pulizia dei commenti e tabelle Markdown',
+          import_dest_overwrite: 'Sovrascrivi sessione attiva',
+          import_textarea_placeholder: 'Oppure incolla direttamente qui il JSON o l\'output dell\'IA (inclusi blocchi ```json ... ``` o tabelle)...',
+          export_sec_desc: 'Scarica il JSON aggiornato per il backup o per l\'uso su altri dispositivi.',
+          btn_download_json: 'Scarica JSON',
+          btn_copy_json: 'Copia JSON',
+          reset_sec_desc: 'Cancella le modifiche salvate in localStorage e ripristina il piano originale.',
+          btn_reset_storage: 'Ripristina ai Dati Predefiniti',
+          toast_prompt_copied: '✓ Modello prompt IA copiato negli appunti! Incollalo in un\'IA insieme ai tuoi screenshot.',
+          toast_prompt_copied_simple: '✓ Modello prompt IA copiato negli appunti!',
+          alert_copy_failed: 'Impossibile copiare automaticamente negli appunti.',
+          toast_new_session_imported: (icon, name, subs, calls) => `Nuova sessione "${icon} ${name}" creata! (${subs} materie, ${calls} appelli).`,
+          toast_session_imported_active: (subs, calls) => `Piano caricato nella sessione attiva! (${subs} materie, ${calls} appelli).`,
+          toast_image_pdf_uploaded: 'ℹ️ Hai caricato un\'immagine o PDF. Copia il modello con il pulsante "Prompt IA", invialo a ChatGPT/Gemini insieme ai tuoi screenshot e trascina qui il JSON o Markdown risultante.',
+          toast_file_read_error: (name) => `Errore durante la lettura del file ${name}.`,
+          confirm_reset_storage: 'Ripristinare il pianificatore ai dati di fabbrica? Tutte le sessioni e le materie aggiunte nel browser andranno perse.',
+          toast_markdown_copied: '✓ Riepilogo Markdown copiato negli appunti!',
+          alert_no_exams_export_ics: 'Nessun esame selezionato da esportare.',
+          lbl_sub_acronym: 'Abbreviazione / Acronimo',
+          hint_sub_acronym: '(es. FAI, ML, SO, FP — visibile nel calendario e slider)',
+          hint_sub_modules: 'Assegna a ogni modulo nome e abbreviazione (es. M1, M2, Teoria, Lab) da mostrare nella UI.',
+          lbl_call_mod_evaluated: 'Modulo Valutato in questo Esame',
+          btn_cancel_sub: '✕ Annulla',
+          btn_cancel_call: '✕ Annulla',
+          title_duplicate: 'Duplica per testare un\'altra combinazione di date',
+          title_rename: 'Rinomina o cambia icona',
+          title_delete: 'Elimina sessione corrente',
+          title_manage_subjects: 'Gestisci materie, appelli o importa piani',
+          title_load_plan: 'Carica o importa piano esami (JSON, IA, file)',
+          title_help: 'Guida e spiegazione delle funzioni',
+          title_theme_toggle: 'Cambia tema chiaro o scuro',
+          title_lang_toggle: 'Cambia Lingua / Switch Language',
+          title_session_dropdown: 'Cambia sessione o gestisci calendari',
+          placeholder_day_note: 'Es: Ripassare capitoli 1-3, simulazione...',
+          placeholder_session_name: 'Es: ❄️ Sessione Invernale, ☀️ Estiva, 🎓 Laurea AI...',
+          lbl_session_name: 'Nome della Sessione / Calendario',
+          lbl_session_icon: 'Icona della Sessione',
+          hint_session_emoji: 'Seleziona o digita qualsiasi emoji',
+          lbl_selected_emoji: 'Emoji selezionata:',
+          hint_custom_emoji: '(personalizzabile a mano se preferisci)',
+          lbl_session_init_content: 'Contenuto Iniziale delle Materie:',
+          session_init_copy_title: 'Duplica materie dalla sessione corrente',
+          session_init_copy_hint: 'Copia materie e appelli per confrontare strategie.',
+          session_init_copy_named: (name) => `Copia materie e appelli da "${name}".`,
+          session_init_sample_title: 'Carica modello universitario di esempio',
+          session_init_sample_hint: 'Materie di prova con appelli multipli da pianificare.',
+          session_init_empty_title: 'Calendario vuoto',
+          session_init_empty_hint: 'Inizia da zero e aggiungi o importa le tue materie.',
+          btn_save_session: 'Salva Sessione',
+          presets_default_opt: '⚙️ Preset Strategici...',
+          subject_prefix: (name) => `Materia: ${name}`,
+          confirm_delete_subject: (name) => `Eliminare la materia "${name}" e tutti i suoi appelli?`,
+          confirm_delete_call: 'Eliminare questo appello?',
+          alert_enter_subject_name: 'Inserisci il nome della materia.',
+          alert_min_one_module: 'La materia deve avere almeno un modulo.',
+          alert_valid_date: 'Seleziona una data valida per l\'esame.',
+          alert_session_name_required: 'Inserisci un nome per la sessione.',
+          toast_session_saved: 'Sessione aggiornata con successo.',
+          toast_meta_saved: 'Dati del corso aggiornati con successo.',
+          delete_single_session_disabled_title: 'Impossibile eliminare l\'unica sessione disponibile',
+          diff_high_opt: 'Alta (5/5)',
+          diff_medium_opt: 'Media (3/5)',
+          diff_low_opt: 'Bassa (1/5)'
         }
       };
 
@@ -3601,11 +3918,30 @@
           document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n');
             if (dict[k] && typeof dict[k] === 'string') {
-              const renderedVal = replaceEmojisWithIcons(dict[k], 'w-3.5 h-3.5 inline-block shrink-0 -mt-0.5'); if (renderedVal.includes('<')) {
+              const renderedVal = replaceEmojisWithIcons(dict[k], 'w-3.5 h-3.5 inline-block shrink-0 -mt-0.5');
+              if (renderedVal.includes('<')) {
                 el.innerHTML = renderedVal;
               } else {
                 el.textContent = renderedVal;
               }
+            }
+          });
+          document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const k = el.getAttribute('data-i18n-placeholder');
+            if (dict[k] && typeof dict[k] === 'string') {
+              el.placeholder = dict[k];
+            }
+          });
+          document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const k = el.getAttribute('data-i18n-title');
+            if (dict[k] && typeof dict[k] === 'string') {
+              el.title = dict[k];
+            }
+          });
+          document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+            const k = el.getAttribute('data-i18n-aria-label');
+            if (dict[k] && typeof dict[k] === 'string') {
+              el.setAttribute('aria-label', dict[k]);
             }
           });
         }
@@ -3621,7 +3957,10 @@
           localStorage.setItem('examplan-lang', state.lang);
         } catch (e) {}
         applyI18n();
-        updateApp(); if (typeof renderModalSubjects === 'function') renderModalSubjects();
+        if (typeof renderPresets === 'function') renderPresets();
+        if (typeof renderSliders === 'function') renderSliders();
+        updateApp();
+        if (typeof renderModalSubjects === 'function') renderModalSubjects();
       }
 
       // Application Multi-Session State
@@ -4087,7 +4426,7 @@
                 oralBinding: mod.oralBinding || 'any_subsequent',
                 type: c.type || 'standard',
                 appelloIndex: c.appelloIndex != null ? c.appelloIndex : null,
-                hasMultipleModules: (sub.modules || []).length > 1,
+                hasMultipleModules: sub.hasModules !== false && (sub.modules || []).length > 1,
                 moduleIds
               };
               allCallsList.push(item);
@@ -4482,7 +4821,8 @@
                 subjectId: sub.id,
                 subjectName: sub.name,
                 subjectShortName: sub.shortName || '',
-                credits: Number(mod.credits) || Number(sub.credits) || 6,
+            hasMultipleModules: sub.hasModules !== false && (sub.modules || []).length > 1,
+            credits: Number(mod.credits) || Number(sub.credits) || 6,
                 callsCount: (mod.calls || []).length
               });
             }
@@ -4519,7 +4859,7 @@
         const isAllModulesCovered = uncoveredModules.length === 0;
 
         if (uncoveredModules.length > 0 && active.length > 0) {
-          const missingNames = uncoveredModules.map(m => `${m.subjectName} (${m.moduleName})`).join(', ');
+          const missingNames = uncoveredModules.map(m => (m.moduleName && m.moduleName !== m.subjectName) ? `${m.subjectName} (${m.moduleName})` : m.subjectName).join(', ');
           conflicts.push({
             id: 'uncovered_modules_alert',
             type: 'uncovered_modules',
@@ -4728,11 +5068,22 @@
             const sessionMap = new Map();
             for (const c of sorted) {
               const sessKey = `${c.subjectId}__${c.date}__${c.time || '09:00'}`;
-              const cWeight = typeof customWeights[c.moduleId] === 'number'
-                ? Math.max(1, Math.min(5, Number(customWeights[c.moduleId])))
-                : (typeof customWeights[c.subjectId] === 'number'
-                  ? Math.max(1, Math.min(5, Number(customWeights[c.subjectId])))
-                  : (c.moduleWeight || c.subjectWeight || 3));
+              const typeKeyMod = (c.type && c.type !== 'standard') ? `${c.moduleId}__${c.type}` : null;
+                const typeKeySub = (c.type && c.type !== 'standard') ? `${c.subjectId}__${c.type}` : null;
+
+                let rawW;
+                if (typeKeyMod && typeof customWeights[typeKeyMod] === 'number') {
+                  rawW = customWeights[typeKeyMod];
+                } else if (typeKeySub && typeof customWeights[typeKeySub] === 'number') {
+                  rawW = customWeights[typeKeySub];
+                } else if (typeof customWeights[c.moduleId] === 'number') {
+                  rawW = customWeights[c.moduleId];
+                } else if (typeof customWeights[c.subjectId] === 'number') {
+                  rawW = customWeights[c.subjectId];
+                } else {
+                  rawW = c.moduleWeight || c.subjectWeight || 3;
+                }
+                const cWeight = Math.max(1, Math.min(5, Number(rawW)));
 
               if (!sessionMap.has(sessKey)) {
                 sessionMap.set(sessKey, {
@@ -4793,11 +5144,21 @@
               const item = sorted[i];
               const allModCalls = moduleAllCallsMap.get(item.moduleId) || [];
               const rem = allModCalls.filter(other => other.startTimestamp > item.startTimestamp).length;
-              const weight = typeof customWeights[item.moduleId] === 'number'
-                ? Math.max(1, Math.min(5, Number(customWeights[item.moduleId])))
-                : (typeof customWeights[item.subjectId] === 'number'
-                  ? Math.max(1, Math.min(5, Number(customWeights[item.subjectId])))
-                  : (item.moduleWeight || item.subjectWeight || 3));
+              const typeKeyMod = (item.type && item.type !== 'standard') ? `${item.moduleId}__${item.type}` : null;
+                const typeKeySub = (item.type && item.type !== 'standard') ? `${item.subjectId}__${item.type}` : null;
+                let rawW;
+                if (typeKeyMod && typeof customWeights[typeKeyMod] === 'number') {
+                  rawW = customWeights[typeKeyMod];
+                } else if (typeKeySub && typeof customWeights[typeKeySub] === 'number') {
+                  rawW = customWeights[typeKeySub];
+                } else if (typeof customWeights[item.moduleId] === 'number') {
+                  rawW = customWeights[item.moduleId];
+                } else if (typeof customWeights[item.subjectId] === 'number') {
+                  rawW = customWeights[item.subjectId];
+                } else {
+                  rawW = item.moduleWeight || item.subjectWeight || 3;
+                }
+                const weight = Math.max(1, Math.min(5, Number(rawW)));
               safetyBonus += weight * rem;
             }
 
@@ -4974,11 +5335,11 @@
           if (sessions.length <= 1) {
             deleteActiveBtn.setAttribute('disabled', 'true');
             deleteActiveBtn.classList.add('opacity-40', 'cursor-not-allowed');
-            deleteActiveBtn.title = 'No se puede eliminar la única sesión disponible';
+            deleteActiveBtn.title = t('delete_single_session_disabled_title');
           } else {
             deleteActiveBtn.removeAttribute('disabled');
             deleteActiveBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-            deleteActiveBtn.title = 'Eliminar sesión actual';
+            deleteActiveBtn.title = t('title_delete');
           }
         }
       }
@@ -5050,12 +5411,12 @@
         const activeName = active ? active.name : '';
         const copyHint = document.getElementById('session-init-copy-hint');
         if (copyHint && activeName) {
-          copyHint.textContent = `Copia las asignaturas y llamamientos de "${activeName}".`;
+          copyHint.textContent = t('session_init_copy_named', activeName);
         }
 
         const nameInput = document.getElementById('session-modal-name');
         nameInput.value = '';
-        nameInput.placeholder = 'Ej: ☀️ Sesión de Verano, 🍂 Extraordinaria...';
+        nameInput.placeholder = t('placeholder_session_name');
 
         const defaultEmoji = '☀️';
         document.getElementById('session-modal-icon-input').value = defaultEmoji;
@@ -5131,7 +5492,7 @@
           const iconVal = document.getElementById('session-modal-icon-input').value.trim() || '🎓';
 
           if (!nameVal) {
-            alert('Por favor, indica un nombre para la sesión.');
+            alert(t('alert_session_name_required'));
             return;
           }
 
@@ -5153,7 +5514,7 @@
               renderSessionSwitcher();
               populateMetaForm();
               updateApp();
-              showToast('Sesión actualizada con éxito.', 'success');
+              showToast(t('toast_session_saved'), 'success');
             }
             closeSessionModal();
           } else {
@@ -5166,7 +5527,7 @@
 
       function renderPresets() {
         const select = document.getElementById('preset-select');
-        select.innerHTML = '<option value="">⚙️ Presets de Estrategia...</option>';
+        select.innerHTML = `<option value="">${t('presets_default_opt')}</option>`;
         (schedule.presets || []).forEach((p, idx) => {
           const opt = document.createElement('option');
           opt.value = idx;
@@ -5176,6 +5537,44 @@
         if (schedule.presets && schedule.presets.length > 0) {
           select.value = '0';
         }
+      }
+
+      function getExamTypesForModule(mod, sub) {
+        const evalMode = mod.evaluationMode || sub?.evaluationMode || 'standard';
+        const typesSet = new Set();
+        if (evalMode === 'written_and_oral') {
+          typesSet.add('written');
+          typesSet.add('oral');
+        } else if (evalMode === 'written_and_lab') {
+          typesSet.add('written');
+          typesSet.add('lab');
+        }
+        (mod.calls || []).forEach(c => {
+          if (c.type && c.type !== 'standard') {
+            typesSet.add(c.type);
+          }
+        });
+        if (typesSet.size === 0) {
+          return [{ type: 'standard', label: '', icon: '' }];
+        }
+        return Array.from(typesSet).map(type => {
+          let label = '';
+          let icon = '';
+          if (type === 'written') {
+            label = t('badge_written') || 'Escrito';
+            icon = '✍️';
+          } else if (type === 'oral') {
+            label = t('badge_oral') || 'Oral';
+            icon = '🗣️';
+          } else if (type === 'lab') {
+            label = t('badge_lab') || 'Lab';
+            icon = '💻';
+          } else {
+            label = type;
+            icon = '📝';
+          }
+          return { type, label, icon };
+        });
       }
 
       function renderSliders() {
@@ -5190,50 +5589,71 @@
           const subAcronym = escapeHtml(sub.shortName || generateSubjectAcronym(sub.name));
           const modulesList = (sub.modules || []).filter(m => !m.alreadyPassed);
           const totalMods = (sub.modules || []).length;
+          const isMultiModuleSub = sub.hasModules !== false && totalMods > 1;
 
           modulesList.forEach(mod => {
             const safeModName = escapeHtml(mod.name);
             const modAcronym = escapeHtml(mod.shortName || generateModuleShortName(mod.name));
-            const currentWeight = (state.subjectWeights && state.subjectWeights[mod.id]) || (state.subjectWeights && state.subjectWeights[sub.id]) || mod.defaultWeight || sub.defaultWeight || 3;
             const modCredits = mod.credits || sub.credits || 6;
+            const examTypes = getExamTypesForModule(mod, sub);
 
-            const acronymBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${token.bg} text-white shrink-0 tracking-wide">[${subAcronym}]</span>`;
-            const labelText = totalMods > 1 && safeModName !== safeSubName
-              ? `<div class="flex items-center gap-1.5 min-w-0"><span class="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">[${modAcronym}]</span><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeModName}</span></div>`
-              : `<div class="flex items-center gap-1.5 min-w-0"><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeSubName}</span></div>`;
+            examTypes.forEach(typeItem => {
+              const isTypeSpecific = examTypes.length > 1;
+              const sliderKey = isTypeSpecific ? `${mod.id}__${typeItem.type}` : mod.id;
+              const subTypeKey = isTypeSpecific ? `${sub.id}__${typeItem.type}` : sub.id;
 
-            const card = document.createElement('div');
-            card.className = 'space-y-1.5 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50';
+              const currentWeight = (state.subjectWeights && state.subjectWeights[sliderKey])
+                || (state.subjectWeights && state.subjectWeights[subTypeKey])
+                || (state.subjectWeights && state.subjectWeights[mod.id])
+                || (state.subjectWeights && state.subjectWeights[sub.id])
+                || mod.defaultWeight
+                || sub.defaultWeight
+                || 3;
 
-            card.innerHTML = `
-              <div class="flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 min-w-0">
-                  ${acronymBadge}
-                  <div class="font-semibold text-slate-800 dark:text-slate-200 truncate" title="${safeSubName} › ${safeModName}">
-                    ${labelText}
+              const acronymBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${token.bg} text-white shrink-0 tracking-wide">[${subAcronym}]</span>`;
+              const typeBadge = isTypeSpecific && typeItem.label
+                ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800 shrink-0 inline-flex items-center gap-1">${typeItem.icon} ${typeItem.label}</span>`
+                : '';
+
+              const labelText = isMultiModuleSub && safeModName !== safeSubName
+                ? `<div class="flex items-center gap-1.5 min-w-0 flex-wrap"><span class="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">[${modAcronym}]</span><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeModName}</span>${typeBadge}</div>`
+                : `<div class="flex items-center gap-1.5 min-w-0 flex-wrap"><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeSubName}</span>${typeBadge}</div>`;
+
+              const card = document.createElement('div');
+              card.className = 'space-y-1.5 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50';
+
+              card.innerHTML = `
+                <div class="flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2 min-w-0">
+                    ${acronymBadge}
+                    <div class="font-semibold text-slate-800 dark:text-slate-200 truncate" title="${safeSubName}${isMultiModuleSub ? ' › ' + safeModName : ''}${typeItem.label ? ' (' + typeItem.label + ')' : ''}">
+                      ${labelText}
+                    </div>
+                    <span class="text-[10px] text-slate-400 flex-shrink-0 font-mono">(${modCredits} ${creditUnit})</span>
                   </div>
-                  <span class="text-[10px] text-slate-400 flex-shrink-0 font-mono">(${modCredits} ${creditUnit})</span>
+                  <span id="slider-val-${sliderKey}" class="font-mono text-xs font-bold flex-shrink-0 ml-2 ${token.text}">
+                    ${currentWeight}/5
+                  </span>
                 </div>
-                <span id="slider-val-${mod.id}" class="font-mono text-xs font-bold flex-shrink-0 ml-2 ${token.text}">
-                  ${currentWeight}/5
-                </span>
-              </div>
-              <div class="flex items-center gap-3">
-                <input 
-                  type="range" 
-                  min="1" 
-                  max="5" 
-                  step="1" 
-                  value="${currentWeight}" 
-                  data-module-id="${mod.id}"
-                  data-subject-id="${sub.id}"
-                  aria-label="Dificultad de ${safeModName}"
-                  class="module-slider w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none"
-                >
-              </div>
-            `;
+                <div class="flex items-center gap-3">
+                  <input 
+                    type="range" 
+                    min="1" 
+                    max="5" 
+                    step="1" 
+                    value="${currentWeight}" 
+                    data-module-id="${mod.id}"
+                    data-subject-id="${sub.id}"
+                    data-exam-type="${typeItem.type}"
+                    data-slider-key="${sliderKey}"
+                    aria-label="Dificultad de ${safeModName} ${typeItem.label || ''}"
+                    class="module-slider w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none"
+                  >
+                </div>
+              `;
 
-            container.appendChild(card);
+              container.appendChild(card);
+            });
           });
         });
 
@@ -5243,14 +5663,20 @@
           input.addEventListener('input', (e) => {
             const modId = e.target.getAttribute('data-module-id');
             const subId = e.target.getAttribute('data-subject-id');
+            const examType = e.target.getAttribute('data-exam-type');
+            const sliderKey = e.target.getAttribute('data-slider-key') || modId;
             const val = parseInt(e.target.value, 10);
             
-            state.subjectWeights[modId] = val;
-            if (subId) {
-              state.subjectWeights[subId] = val;
+            state.subjectWeights[sliderKey] = val;
+            if (examType && examType !== 'standard') {
+              state.subjectWeights[`${modId}__${examType}`] = val;
+              if (subId) state.subjectWeights[`${subId}__${examType}`] = val;
+            } else {
+              state.subjectWeights[modId] = val;
+              if (subId) state.subjectWeights[subId] = val;
             }
             
-            const label = document.getElementById(`slider-val-${modId}`);
+            const label = document.getElementById(`slider-val-${sliderKey}`);
             if (label) label.textContent = `${val}/5`;
 
             sliderAnimFrame = requestAnimationFrame(() => {
@@ -6086,7 +6512,7 @@
       function exportToICS() {
         const analysis = state.currentAnalysis;
         if (!analysis || analysis.selectedCalls.length === 0) {
-          alert('No hay exámenes seleccionados para exportar.');
+          alert(t('alert_no_exams_export_ics'));
           return;
         }
 
@@ -6140,7 +6566,7 @@
       function copyMarkdownSummary() {
         const analysis = state.currentAnalysis;
         if (!analysis || analysis.selectedCalls.length === 0) {
-          alert('No hay exámenes seleccionados.');
+          alert(t('alert_no_exams_export_ics'));
           return;
         }
 
@@ -6161,9 +6587,9 @@
         });
 
         navigator.clipboard.writeText(md).then(() => {
-          alert('¡Resumen en Markdown copiado al portapapeles!');
+          alert(t('toast_markdown_copied'));
         }).catch(() => {
-          alert('No se pudo copiar automáticamente. Revisa los permisos.');
+          alert(t('alert_copy_failed'));
         });
       }
 
@@ -6301,7 +6727,7 @@
                       <span class="text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">${renderIcon('⏰', 'w-3 h-3')} ${c.time || '09:00'} (${c.durationHours}h)</span>
                       ${c.type && c.type !== 'standard' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800">${c.type === 'written' ? '✍️ ' + t('badge_written') : (c.type === 'oral' ? '🗣️ ' + t('badge_oral') : (c.type === 'lab' ? '💻 ' + t('badge_lab') : c.type))}</span>` : ''}
                       ${c.appelloIndex ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800">${t('badge_appello', c.appelloIndex)}</span>` : ''}
-                      ${c.moduleName ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
+                      ${sub.hasModules !== false && c.moduleName && c.moduleName !== sub.name ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-700 font-semibold">${escapeHtml(c.moduleName)}</span>` : ''}
                       ${c.location ? `<span class="text-slate-400 inline-flex items-center gap-1">• ${renderIcon('📍', 'w-3 h-3')} ${escapeHtml(c.location)}</span>` : ''}
                       ${c.notes ? `<span class="text-slate-400 italic">• ${escapeHtml(c.notes)}</span>` : ''}
                     </div>
@@ -6324,7 +6750,8 @@
           const subAcronym = escapeHtml(sub.shortName || generateSubjectAcronym(sub.name));
 
           let modulesBadgesHtml = '';
-          if (sub.modules && sub.modules.length > 0) {
+          const isMultiModuleSub = sub.hasModules !== false && sub.modules && sub.modules.length > 1;
+          if (isMultiModuleSub) {
             modulesBadgesHtml = `
               <div class="px-4 py-2 bg-slate-50/70 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center gap-2">
                 <span class="text-[10px] uppercase font-bold text-slate-400">${t('modules_label')}</span>
@@ -6333,7 +6760,7 @@
                     <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">[${escapeHtml(m.shortName || generateModuleShortName(m.name))}]</span>
                     <span>${escapeHtml(m.name)}</span>
                     <span class="text-slate-400 text-[9px]">(${m.credits || sub.credits} CFU)</span>
-                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? 'Escrito+Oral' : 'Escrito+Lab'} (${m.oralBinding === 'same_appello' ? 'Mismo Appello' : 'Appello libre'})</span>` : ''}
+                    ${m.evaluationMode && m.evaluationMode !== 'standard' ? `<span class="text-[9px] text-violet-600 dark:text-violet-400 font-semibold">• ${m.evaluationMode === 'written_and_oral' ? t('eval_mode_written_oral') : t('eval_mode_written_lab')} (${m.oralBinding === 'same_appello' ? t('binding_same_appello') : t('binding_any_subsequent')})</span>` : ''}
                   </span>
                 `).join('')}
               </div>
@@ -6349,6 +6776,8 @@
                 <strong class="text-xs text-slate-900 dark:text-white">${safeName}</strong>
                 <span class="text-[11px] text-slate-400">(${sub.credits} ${escapeHtml(schedule.meta?.creditUnit || 'CFU')})</span>
                 <span class="text-[10px] text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-700/60">${diffBadge}</span>
+                ${sub.hasModules === false ? `<span class="text-[10px] text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-700/60 font-medium">${t('badge_no_modules')}</span>` : ''}
+                ${sub.hasModules === false && sub.evaluationMode && sub.evaluationMode !== 'standard' ? `<span class="text-[10px] text-violet-600 dark:text-violet-400 font-semibold px-1.5 py-0.5 rounded bg-violet-50 dark:bg-violet-950/60 border border-violet-200/60 dark:border-violet-800/60">${sub.evaluationMode === 'written_and_oral' ? t('eval_mode_written_oral') : t('eval_mode_written_lab')}</span>` : ''}
               </div>
               <div class="flex items-center gap-1.5">
                 <button type="button" data-action="add-call" data-sub-id="${sub.id}" data-mod-id="${(sub.modules && sub.modules[0]) ? sub.modules[0].id : ''}" class="px-2.5 py-1 rounded bg-violet-600 hover:bg-violet-700 text-white font-medium text-[11px] shadow-sm transition">
@@ -6471,7 +6900,7 @@
           row.querySelector('.btn-remove-mod-row').addEventListener('click', () => {
             const allRows = container.querySelectorAll('.module-row');
             if (allRows.length <= 1) {
-              alert('La asignatura debe tener al menos un módulo.');
+              alert(t('alert_min_one_module'));
               return;
             }
             row.remove();
@@ -6493,6 +6922,12 @@
         const colorSelect = document.getElementById('sub-color-select');
 
         document.getElementById('call-form-box').classList.add('hidden');
+        const hasModulesCheckbox = document.getElementById('sub-has-modules-checkbox');
+        const subModulesWrapper = document.getElementById('sub-modules-wrapper');
+        const subSingleEvalWrapper = document.getElementById('sub-single-eval-wrapper');
+        const subEvalModeSelect = document.getElementById('sub-eval-mode-select');
+        const subOralBindingSelect = document.getElementById('sub-oral-binding-select');
+        const subOralBindingWrapper = document.getElementById('sub-oral-binding-wrapper');
 
         if (subId) {
           const sub = (schedule.subjects || []).find(s => s.id === subId);
@@ -6506,6 +6941,21 @@
           diffSelect.value = sub.difficulty || 'medium';
           colorSelect.value = sub.color || 'indigo';
 
+          const hasModules = sub.hasModules !== undefined ? Boolean(sub.hasModules) : (Array.isArray(sub.modules) && sub.modules.length > 1);
+          if (hasModulesCheckbox) hasModulesCheckbox.checked = hasModules;
+          if (subEvalModeSelect) subEvalModeSelect.value = sub.evaluationMode || sub.modules?.[0]?.evaluationMode || 'standard';
+          if (subOralBindingSelect) subOralBindingSelect.value = sub.oralBinding || sub.modules?.[0]?.oralBinding || 'same_appello';
+          if (hasModules) {
+            subModulesWrapper?.classList.remove('hidden');
+            subSingleEvalWrapper?.classList.add('hidden');
+          } else {
+            subModulesWrapper?.classList.add('hidden');
+            subSingleEvalWrapper?.classList.remove('hidden');
+          }
+          if (subEvalModeSelect && subOralBindingWrapper) {
+            if (subEvalModeSelect.value === 'standard') subOralBindingWrapper.classList.add('opacity-40', 'pointer-events-none');
+            else subOralBindingWrapper.classList.remove('opacity-40', 'pointer-events-none');
+          }
           renderModuleRows(sub.modules && sub.modules.length > 0 ? sub.modules : [
             { id: `${sub.id}_mod`, name: sub.name, shortName: sub.shortName || generateSubjectAcronym(sub.name), credits: sub.credits || 6, difficulty: sub.difficulty || 'medium', calls: [] }
           ]);
@@ -6519,6 +6969,12 @@
           diffSelect.value = 'medium';
           colorSelect.value = COLOR_PALETTE[(schedule.subjects?.length || 0) % COLOR_PALETTE.length];
 
+          if (hasModulesCheckbox) hasModulesCheckbox.checked = false;
+          if (subEvalModeSelect) subEvalModeSelect.value = 'standard';
+          if (subOralBindingSelect) subOralBindingSelect.value = 'same_appello';
+          subModulesWrapper?.classList.add('hidden');
+          subSingleEvalWrapper?.classList.remove('hidden');
+          if (subOralBindingWrapper) subOralBindingWrapper.classList.add('opacity-40', 'pointer-events-none');
           renderModuleRows([
             { id: `mod_${Date.now()}`, name: '', shortName: '', credits: 6, difficulty: 'medium', calls: [] }
           ]);
@@ -6543,59 +6999,79 @@
         const color = document.getElementById('sub-color-select').value;
 
         if (!name) {
-          alert('Por favor introduce el nombre de la asignatura.');
+          alert(t('alert_enter_subject_name'));
           return;
         }
 
         const subjects = [...(schedule.subjects || [])];
         const defaultWeight = difficulty === 'high' ? 5 : difficulty === 'low' ? 1 : 3;
 
-        // Parse module rows from UI
-        const rows = Array.from(document.querySelectorAll('#subject-modules-list .module-row'));
-        const existingSub = idHidden ? subjects.find(s => s.id === idHidden) : null;
-        const existingModulesMap = new Map((existingSub?.modules || []).map(m => [m.id, m]));
-
+        const hasModules = Boolean(document.getElementById('sub-has-modules-checkbox')?.checked);
         let modules = [];
-        if (rows.length > 0) {
-          modules = rows.map((r, idx) => {
-            const rId = r.dataset.modId || `mod_${Date.now()}_${idx + 1}`;
-            const rName = r.querySelector('.mod-name-input')?.value.trim() || (rows.length > 1 ? `Módulo ${idx + 1}` : name);
-            const rShort = r.querySelector('.mod-short-input')?.value.trim().toUpperCase() || generateModuleShortName(rName, idx, rows.length);
-            const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
-            const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
-            const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
-            const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
-            const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
+        let evaluationMode = 'standard';
+        let oralBinding = 'same_appello';
 
-            const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
-            const existingCalls = existingMod?.calls || [];
-
-            return {
-              id: rId,
-              name: rName,
-              shortName: rShort,
-              credits: rCredits,
-              difficulty: rDiff,
-              defaultWeight: rWeight,
-              alreadyPassed: Boolean(existingMod?.alreadyPassed),
-              evaluationMode: rEvalMode,
-              oralBinding: rOralBinding,
-              calls: existingCalls
-            };
-          });
-        } else {
-          // Fallback single module
-          const modId = existingSub?.modules?.[0]?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+        if (!hasModules) {
+          evaluationMode = document.getElementById('sub-eval-mode-select')?.value || 'standard';
+          oralBinding = document.getElementById('sub-oral-binding-select')?.value || 'same_appello';
+          const existingMod = existingSub?.modules?.[0];
+          const modId = existingMod?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+          const existingCalls = existingMod?.calls || existingSub?.calls || [];
           modules = [{
             id: modId,
             name,
-            shortName: shortName || generateSubjectAcronym(name),
+            shortName: '',
             credits,
             difficulty,
             defaultWeight,
-            alreadyPassed: false,
-            calls: existingSub?.modules?.[0]?.calls || []
+            alreadyPassed: Boolean(existingMod?.alreadyPassed),
+            evaluationMode,
+            oralBinding,
+            calls: existingCalls,
+            isImplicit: true
           }];
+        } else {
+          const rows = Array.from(document.querySelectorAll('#subject-modules-list .module-row'));
+          if (rows.length > 0) {
+            modules = rows.map((r, idx) => {
+              const rId = r.dataset.modId || `mod_${Date.now()}_${idx + 1}`;
+              const rName = r.querySelector('.mod-name-input')?.value.trim() || (rows.length > 1 ? `Módulo ${idx + 1}` : name);
+              const rShort = r.querySelector('.mod-short-input')?.value.trim().toUpperCase() || generateModuleShortName(rName, idx, rows.length);
+              const rDiff = r.querySelector('.mod-diff-select')?.value || difficulty;
+              const rCredits = parseFloat(r.querySelector('.mod-credits-input')?.value) || (rows.length > 1 ? Math.round(credits / rows.length) : credits);
+              const rWeight = rDiff === 'high' ? 5 : rDiff === 'low' ? 1 : 3;
+              const rEvalMode = r.querySelector('.mod-eval-mode-select')?.value || 'standard';
+              const rOralBinding = r.querySelector('.mod-oral-binding-select')?.value || 'any_subsequent';
+
+              const existingMod = existingModulesMap.get(rId) || (idx === 0 && existingSub?.modules?.[0]) || null;
+              const existingCalls = existingMod?.calls || [];
+
+              return {
+                id: rId,
+                name: rName,
+                shortName: rShort,
+                credits: rCredits,
+                difficulty: rDiff,
+                defaultWeight: rWeight,
+                alreadyPassed: Boolean(existingMod?.alreadyPassed),
+                evaluationMode: rEvalMode,
+                oralBinding: rOralBinding,
+                calls: existingCalls
+              };
+            });
+          } else {
+            const modId = existingSub?.modules?.[0]?.id || `${idHidden || slugify(code || name) || 'sub'}_mod`;
+            modules = [{
+              id: modId,
+              name,
+              shortName: shortName || generateSubjectAcronym(name),
+              credits,
+              difficulty,
+              defaultWeight,
+              alreadyPassed: false,
+              calls: existingSub?.modules?.[0]?.calls || []
+            }];
+          }
         }
 
         if (idHidden) {
@@ -6610,6 +7086,10 @@
               difficulty,
               color,
               defaultWeight,
+              hasModules,
+              evaluationMode,
+              oralBinding,
+              calls: hasModules ? [] : modules[0].calls,
               modules
             };
             state.subjectWeights[idHidden] = defaultWeight;
@@ -6633,6 +7113,10 @@
             color,
             difficulty,
             defaultWeight,
+            hasModules,
+            evaluationMode,
+            oralBinding,
+            calls: hasModules ? [] : modules[0].calls,
             modules
           });
           state.subjectWeights[uniqueId] = defaultWeight;
@@ -6651,7 +7135,7 @@
       function deleteSubject(subId) {
         const sub = (schedule.subjects || []).find(s => s.id === subId);
         if (!sub) return;
-        if (!confirm(`¿Eliminar la asignatura "${sub.name}" y todas sus convocatorias?`)) return;
+        if (!confirm(t('confirm_delete_subject', sub.name))) return;
 
         schedule.subjects = (schedule.subjects || []).filter(s => s.id !== subId);
         delete state.subjectWeights[subId];
@@ -6679,7 +7163,7 @@
         if (!sub) return;
 
         targetSubHidden.value = subId;
-        subBadge.textContent = `Asignatura: ${sub.name}`;
+        subBadge.textContent = t('subject_prefix', sub.name);
 
         const modSelectWrapper = document.getElementById('call-module-select-wrapper');
         const modSelect = document.getElementById('call-module-select');
@@ -6766,7 +7250,7 @@
         const appelloIndex = (!isNaN(parsedAppello) && parsedAppello >= 1) ? parsedAppello : null;
 
         if (!date) {
-          alert('Por favor selecciona una fecha válida para el examen.');
+          alert(t('alert_valid_date'));
           return;
         }
 
@@ -6833,7 +7317,7 @@
       function deleteCall(subId, callId) {
         const sub = (schedule.subjects || []).find(s => s.id === subId);
         if (!sub) return;
-        if (!confirm('¿Eliminar esta convocatoria?')) return;
+        if (!confirm(t('confirm_delete_call'))) return;
 
         let targetMod = null;
         (sub.modules || []).forEach(m => {
@@ -6886,7 +7370,7 @@
         }
 
         persistSchedule(schedule);
-        alert('Datos de titulación actualizados con éxito.');
+        alert(t('toast_meta_saved'));
       }
 
       function switchModalTab(tabId) {
@@ -6947,6 +7431,30 @@
         document.getElementById('tab-btn-meta')?.addEventListener('click', () => switchModalTab('meta'));
 
         // Subject actions
+        const formHasModulesCheckbox = document.getElementById('sub-has-modules-checkbox');
+        const formSubModulesWrapper = document.getElementById('sub-modules-wrapper');
+        const formSubSingleEvalWrapper = document.getElementById('sub-single-eval-wrapper');
+        const formSubEvalModeSelect = document.getElementById('sub-eval-mode-select');
+        const formSubOralBindingWrapper = document.getElementById('sub-oral-binding-wrapper');
+
+        formHasModulesCheckbox?.addEventListener('change', () => {
+          if (formHasModulesCheckbox.checked) {
+            formSubModulesWrapper?.classList.remove('hidden');
+            formSubSingleEvalWrapper?.classList.add('hidden');
+          } else {
+            formSubModulesWrapper?.classList.add('hidden');
+            formSubSingleEvalWrapper?.classList.remove('hidden');
+          }
+        });
+
+        formSubEvalModeSelect?.addEventListener('change', () => {
+          if (formSubEvalModeSelect.value === 'standard') {
+            formSubOralBindingWrapper?.classList.add('opacity-40', 'pointer-events-none');
+          } else {
+            formSubOralBindingWrapper?.classList.remove('opacity-40', 'pointer-events-none');
+          }
+        });
+
         document.getElementById('btn-show-add-subject')?.addEventListener('click', () => showSubjectForm());
         document.getElementById('sub-cancel-btn')?.addEventListener('click', hideSubjectForm);
         document.getElementById('sub-save-btn')?.addEventListener('click', saveSubject);
@@ -7165,7 +7673,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
 
         function copyPromptToClipboard() {
           navigator.clipboard.writeText(AI_PROMPT_TEMPLATE).then(() => {
-            showToast('✓ ¡Plantilla y prompt para IA copiado al portapapeles! Pégalo a una IA junto con tus capturas.', 'success');
+            showToast(t('toast_prompt_copied'), 'success');
           }).catch(() => {
             const textarea = document.createElement('textarea');
             textarea.value = AI_PROMPT_TEMPLATE;
@@ -7173,9 +7681,9 @@ REGLAS ESTRICTAS DE RESPUESTA:
             textarea.select();
             try {
               document.execCommand('copy');
-              showToast('✓ ¡Plantilla y prompt para IA copiado al portapapeles!', 'success');
+              showToast(t('toast_prompt_copied_simple'), 'success');
             } catch (e) {
-              alert('No se pudo copiar automáticamente al portapapeles.');
+              alert(t('alert_copy_failed'));
             }
             document.body.removeChild(textarea);
           });
@@ -7228,7 +7736,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
               saveSessionsToStorage();
               switchSession(newSession.id);
 
-              showToast(`¡Nueva sesión "${detectedIcon} ${detectedName}" creada! (${parsed.subjects.length} asignaturas, ${totalCalls} llamamientos).`, 'success');
+              showToast(t('toast_new_session_imported', detectedIcon, detectedName, parsed.subjects.length, totalCalls), 'success');
 
               if (alertBox) {
                 alertBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
@@ -7241,7 +7749,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
               state.selectedCallIds.clear();
               extractedIds.forEach(id => state.selectedCallIds.add(id));
               persistSchedule(norm);
-              showToast(`¡Plan cargado en sesión activa! (${parsed.subjects.length} asignaturas, ${totalCalls} convocatorias).`, 'success');
+              showToast(t('toast_session_imported_active', parsed.subjects.length, totalCalls), 'success');
 
               if (alertBox) {
                 alertBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
@@ -7273,7 +7781,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
           const fileName = file.name || '';
           const isImageOrPdf = file.type?.startsWith('image/') || /\.(png|jpe?g|webp|gif|bmp|tiff|pdf)$/i.test(fileName);
           if (isImageOrPdf) {
-            showToast('ℹ️ Has subido una imagen o PDF. Copia la plantilla con el botón "Prompt IA", envíasela a ChatGPT/Gemini junto con tus capturas, y arrastra aquí el JSON o Markdown resultante.', 'info', 7000);
+            showToast(t('toast_image_pdf_uploaded'), 'info', 7000);
             return;
           }
 
@@ -7287,7 +7795,7 @@ REGLAS ESTRICTAS DE RESPUESTA:
             }
           };
           reader.onerror = () => {
-            showToast(`Error al leer el archivo ${file.name}.`, 'error');
+            showToast(t('toast_file_read_error', file.name), 'error');
           };
           reader.readAsText(file);
         }
@@ -7414,13 +7922,13 @@ REGLAS ESTRICTAS DE RESPUESTA:
           navigator.clipboard.writeText(JSON.stringify(exportData, null, 2)).then(() => {
             showToast(t('toast_json_copied'), 'success');
           }).catch(() => {
-            alert('No se pudo copiar al portapapeles.');
+            alert(t('alert_copy_failed'));
           });
         });
 
         // Reset to Factory Defaults
         document.getElementById('btn-reset-storage')?.addEventListener('click', () => {
-          if (confirm('¿Restablecer el planificador a la configuración inicial? Se perderán todas las sesiones y asignaturas añadidas en el navegador.')) {
+          if (confirm(t('confirm_reset_storage'))) {
             localStorage.removeItem(SESSIONS_STORAGE_KEY);
             localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
             localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -7663,11 +8171,17 @@ REGLAS ESTRICTAS DE RESPUESTA:
             state.prioritizeSafety = Boolean(val);
             updateApp();
           },
-          setSubjectWeight: (subId, weight) => {
+          setSubjectWeight: (subId, weight, type = null) => {
+            if (type) {
+              state.subjectWeights[`${subId}__${type}`] = Number(weight);
+            }
             state.subjectWeights[subId] = Number(weight);
             updateApp();
           },
-          setModuleWeight: (modId, weight) => {
+          setModuleWeight: (modId, weight, type = null) => {
+            if (type) {
+              state.subjectWeights[`${modId}__${type}`] = Number(weight);
+            }
             state.subjectWeights[modId] = Number(weight);
             updateApp();
           },

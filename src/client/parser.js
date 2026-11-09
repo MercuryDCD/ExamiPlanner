@@ -14,6 +14,17 @@
         }
         if (!Array.isArray(sched.subjects) || (!allowEmptySubjects && sched.subjects.length === 0)) {
           errors.push('Debe existir al menos una asignatura en "subjects".');
+        } else {
+          sched.subjects.forEach((sub, sIdx) => {
+            const subName = sub?.name || `Asignatura #${sIdx + 1}`;
+            if (!sub.id) errors.push(`${subName}: Falta el "id".`);
+            if (!sub.name) errors.push(`${subName}: Falta el "name".`);
+            const hasValidModules = Array.isArray(sub.modules) && sub.modules.length > 0;
+            const hasValidDirectCalls = Array.isArray(sub.calls) && sub.calls.length > 0;
+            if (!hasValidModules && !hasValidDirectCalls) {
+              errors.push(`${subName}: Debe contener convocatorias directas en "calls" o al menos un módulo en "modules".`);
+            }
+          });
         }
         return { valid: errors.length === 0, errors };
       }
@@ -52,9 +63,28 @@
             ? sub.shortName.trim()
             : generateSubjectAcronym(sub.name);
 
-          const rawModules = Array.isArray(sub.modules) && sub.modules.length > 0
-            ? sub.modules
-            : [{ id: `${subId}_mod`, name: sub.name, credits: subCredits, calls: sub.calls || [] }];
+          const hasExplicitModules = Array.isArray(sub.modules) && sub.modules.length > 0 && sub.hasModules !== false;
+          let rawModules = Array.isArray(sub.modules) && sub.modules.length > 0 ? sub.modules : [];
+
+          if (rawModules.length === 0 && Array.isArray(sub.calls) && sub.calls.length > 0) {
+            rawModules = [{
+              id: `${subId}_mod`,
+              name: sub.name,
+              shortName: '',
+              credits: subCredits,
+              difficulty: diff,
+              defaultWeight,
+              alreadyPassed: Boolean(sub.alreadyPassed),
+              evaluationMode: sub.evaluationMode || 'standard',
+              oralBinding: sub.oralBinding || 'same_appello',
+              calls: sub.calls,
+              isImplicit: true
+            }];
+          }
+
+          const hasModules = sub.hasModules !== undefined
+            ? Boolean(sub.hasModules)
+            : (hasExplicitModules && (rawModules.length > 1 || (rawModules.length === 1 && rawModules[0].name !== sub.name && !rawModules[0].isImplicit)));
 
           const modules = rawModules.map((mod, mIdx) => {
             const modId = mod.id || `${subId}_mod_${mIdx + 1}`;
@@ -145,6 +175,7 @@
             };
           });
 
+          const primaryMod = modules[0] || {};
           return {
             id: String(subId),
             name: sub.name || `Asignatura ${sIdx + 1}`,
@@ -154,6 +185,10 @@
             color,
             difficulty: diff,
             defaultWeight,
+            hasModules,
+            evaluationMode: normalizeEvaluationMode(sub.evaluationMode || primaryMod.evaluationMode || 'standard'),
+            oralBinding: normalizeOralBinding(sub.oralBinding || primaryMod.oralBinding || 'same_appello'),
+            calls: hasModules ? [] : (primaryMod.calls || []),
             modules
           };
         });
@@ -181,28 +216,20 @@
         (sched.subjects || []).forEach(sub => {
           (sub.modules || []).forEach(mod => {
             (mod.calls || []).forEach(call => {
-              const isCallActive = (
-                call.status === 'active' ||
-                call.status === 'activo' ||
-                call.active === true ||
-                call.selected === true
-              );
-              const isCallInactive = (
-                call.status === 'inactive' ||
-                call.status === 'desactivado' ||
-                call.status === 'inactivo' ||
-                call.active === false ||
-                call.selected === false
-              );
-
-              if (isCallActive) {
-                explicitActiveIds.push(String(call.id));
-                hasExplicitCallStatus = true;
-              } else if (isCallInactive) {
-                hasExplicitCallStatus = true;
-              }
+              const isCallActive = (call.status === 'active' || call.status === 'activo' || call.active === true || call.selected === true);
+              const isCallInactive = (call.status === 'inactive' || call.status === 'desactivado' || call.status === 'inactivo' || call.active === false || call.selected === false);
+              if (isCallActive) { explicitActiveIds.push(String(call.id)); hasExplicitCallStatus = true; }
+              else if (isCallInactive) { hasExplicitCallStatus = true; }
             });
           });
+          if (Array.isArray(sub.calls)) {
+            sub.calls.forEach(call => {
+              const isCallActive = (call.status === 'active' || call.status === 'activo' || call.active === true || call.selected === true);
+              const isCallInactive = (call.status === 'inactive' || call.status === 'desactivado' || call.status === 'inactivo' || call.active === false || call.selected === false);
+              if (isCallActive) { if (!explicitActiveIds.includes(String(call.id))) explicitActiveIds.push(String(call.id)); hasExplicitCallStatus = true; }
+              else if (isCallInactive) { hasExplicitCallStatus = true; }
+            });
+          }
         });
 
         if (hasExplicitCallStatus) {
@@ -261,6 +288,13 @@
               call.active = isSelected;
             });
           });
+          if (Array.isArray(sub.calls)) {
+            sub.calls.forEach(call => {
+              const isSelected = selSet.has(String(call.id));
+              call.status = isSelected ? 'active' : 'inactive';
+              call.active = isSelected;
+            });
+          }
         });
 
         const selectedList = Array.from(selSet);

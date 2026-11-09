@@ -199,33 +199,46 @@ function validateSchedule(schedule, options = {}) {
         errors.push(`${subName}: "credits" debe ser un número positivo.`);
       }
 
-      if (!Array.isArray(sub.modules) || sub.modules.length === 0) {
-        errors.push(`${subName}: Debe contener al menos un módulo en "modules".`);
-      } else {
-        sub.modules.forEach((mod, mIdx) => {
-          const modName = mod?.name || `Módulo #${mIdx + 1} de ${subName}`;
-          if (!mod.id) errors.push(`${modName}: Falta el "id".`);
-          if (!mod.name) errors.push(`${modName}: Falta el "name".`);
+      const hasValidModules = Array.isArray(sub.modules) && sub.modules.length > 0;
+      const hasValidDirectCalls = Array.isArray(sub.calls) && sub.calls.length > 0;
 
-          if (!Array.isArray(mod.calls) || mod.calls.length === 0) {
-            errors.push(`${modName}: Debe tener al menos una convocatoria en "calls".`);
-          } else {
-            mod.calls.forEach((call, cIdx) => {
-              const callId = call?.id || `Call #${cIdx + 1}`;
-              if (!call.id) errors.push(`${modName} -> ${callId}: Falta el "id".`);
-              if (!call.date || !/^\d{4}-\d{2}-\d{2}$/.test(call.date)) {
-                errors.push(`${modName} -> ${callId}: "date" debe tener formato YYYY-MM-DD.`);
-              }
-              if (call.time && !/^\d{1,2}:\d{2}(?::\d{2})?$/.test(call.time)) {
-                errors.push(`${modName} -> ${callId}: "time" debe tener formato HH:MM (24h).`);
-              }
-              const parsedDur = typeof call.durationHours === 'number' ? call.durationHours : parseFloat(call.durationHours);
-              if (call.durationHours !== undefined && (isNaN(parsedDur) || parsedDur <= 0)) {
-                errors.push(`${modName} -> ${callId}: "durationHours" debe ser un número mayor a 0.`);
-              }
-            });
+      if (!hasValidModules && !hasValidDirectCalls) {
+        errors.push(`${subName}: Debe contener convocatorias directas en "calls" o al menos un módulo en "modules".`);
+      } else {
+        const validateCall = (call, cIdx, parentName) => {
+          const callId = call?.id || `Call #${cIdx + 1}`;
+          if (!call.id) errors.push(`${parentName} -> ${callId}: Falta el "id".`);
+          if (!call.date || !/^\d{4}-\d{2}-\d{2}$/.test(call.date)) {
+            errors.push(`${parentName} -> ${callId}: "date" debe tener formato YYYY-MM-DD.`);
           }
-        });
+          if (call.time && !/^\d{1,2}:\d{2}(?::\d{2})?$/.test(call.time)) {
+            errors.push(`${parentName} -> ${callId}: "time" debe tener formato HH:MM (24h).`);
+          }
+          const parsedDur = typeof call.durationHours === 'number' ? call.durationHours : parseFloat(call.durationHours);
+          if (call.durationHours !== undefined && (isNaN(parsedDur) || parsedDur <= 0)) {
+            errors.push(`${parentName} -> ${callId}: "durationHours" debe ser un número mayor a 0.`);
+          }
+        };
+
+        if (hasValidModules) {
+          sub.modules.forEach((mod, mIdx) => {
+            const modName = mod?.name || `Módulo #${mIdx + 1} de ${subName}`;
+            if (!mod.id) errors.push(`${modName}: Falta el "id".`);
+            if (!mod.name) errors.push(`${modName}: Falta el "name".`);
+
+            if (!Array.isArray(mod.calls) || mod.calls.length === 0) {
+              errors.push(`${modName}: Debe tener al menos una convocatoria en "calls".`);
+            } else {
+              mod.calls.forEach((call, cIdx) => {
+                validateCall(call, cIdx, modName);
+              });
+            }
+          });
+        } else if (hasValidDirectCalls) {
+          sub.calls.forEach((call, cIdx) => {
+            validateCall(call, cIdx, subName);
+          });
+        }
       }
     });
   }
@@ -274,7 +287,28 @@ function normalizeSchedule(schedule) {
 
     const color = sub.color || COLOR_PALETTE[sIdx % COLOR_PALETTE.length];
     const subCredits = Number(sub.credits) || 6;
-    const rawModules = Array.isArray(sub.modules) ? sub.modules : [];
+    const hasExplicitModules = Array.isArray(sub.modules) && sub.modules.length > 0 && sub.hasModules !== false;
+    let rawModules = Array.isArray(sub.modules) && sub.modules.length > 0 ? sub.modules : [];
+
+    if (rawModules.length === 0 && Array.isArray(sub.calls) && sub.calls.length > 0) {
+      rawModules = [{
+        id: `${subId}_mod`,
+        name: sub.name,
+        shortName: '',
+        credits: subCredits,
+        difficulty: diff,
+        defaultWeight,
+        alreadyPassed: Boolean(sub.alreadyPassed),
+        evaluationMode: sub.evaluationMode || 'standard',
+        oralBinding: sub.oralBinding || 'same_appello',
+        calls: sub.calls,
+        isImplicit: true
+      }];
+    }
+
+    const hasModules = sub.hasModules !== undefined
+      ? Boolean(sub.hasModules)
+      : (hasExplicitModules && (rawModules.length > 1 || (rawModules.length === 1 && rawModules[0].name !== sub.name && !rawModules[0].isImplicit)));
 
     const modules = rawModules.map((mod, mIdx) => {
       const modId = mod.id || `${subId}_mod_${mIdx + 1}`;
@@ -376,6 +410,7 @@ function normalizeSchedule(schedule) {
       };
     });
 
+    const primaryMod = modules[0] || {};
     return {
       id: String(subId),
       name: sub.name || `Asignatura ${sIdx + 1}`,
@@ -385,6 +420,10 @@ function normalizeSchedule(schedule) {
       color,
       difficulty: diff,
       defaultWeight,
+      hasModules,
+      evaluationMode: normalizeEvaluationMode(sub.evaluationMode || primaryMod.evaluationMode || 'standard'),
+      oralBinding: normalizeOralBinding(sub.oralBinding || primaryMod.oralBinding || 'same_appello'),
+      calls: hasModules ? [] : (primaryMod.calls || []),
       modules
     };
   });
@@ -450,6 +489,30 @@ function extractSelectedCallIds(sched) {
         }
       });
     });
+    if (Array.isArray(sub.calls)) {
+      sub.calls.forEach(call => {
+        const isCallActive = (
+          call.status === 'active' ||
+          call.status === 'activo' ||
+          call.active === true ||
+          call.selected === true
+        );
+        const isCallInactive = (
+          call.status === 'inactive' ||
+          call.status === 'desactivado' ||
+          call.status === 'inactivo' ||
+          call.active === false ||
+          call.selected === false
+        );
+
+        if (isCallActive) {
+          if (!explicitActiveIds.includes(String(call.id))) explicitActiveIds.push(String(call.id));
+          hasExplicitCallStatus = true;
+        } else if (isCallInactive) {
+          hasExplicitCallStatus = true;
+        }
+      });
+    }
   });
 
   if (hasExplicitCallStatus) {
@@ -516,6 +579,13 @@ function getExportableSchedule(sched, selectedCallIds = []) {
         call.active = isSelected;
       });
     });
+    if (Array.isArray(sub.calls)) {
+      sub.calls.forEach(call => {
+        const isSelected = selSet.has(String(call.id));
+        call.status = isSelected ? 'active' : 'inactive';
+        call.active = isSelected;
+      });
+    }
   });
 
   const selectedList = Array.from(selSet);

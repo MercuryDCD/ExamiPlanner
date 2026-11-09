@@ -43,7 +43,7 @@ function buildCallIndex(schedule) {
 
   for (const subject of schedule.subjects) {
     const subShort = subject.shortName || (subject.code && subject.code.length <= 6 && !subject.code.includes(' ') ? subject.code : 'ASIG');
-    const hasMultipleModules = (subject.modules || []).length > 1;
+    const hasMultipleModules = subject.hasModules !== false && (subject.modules || []).length > 1;
     for (const module of subject.modules || []) {
       const modShort = module.shortName || '';
       for (const call of module.calls || []) {
@@ -537,6 +537,7 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
             subjectId: sub.id,
             subjectName: sub.name,
             subjectShortName: sub.shortName || '',
+            hasMultipleModules: sub.hasModules !== false && (sub.modules || []).length > 1,
             credits: Number(mod.credits) || Number(sub.credits) || 6,
             callsCount: (mod.calls || []).length
           });
@@ -592,7 +593,7 @@ function analyzeSchedule(schedule, selectedCallIds = [], options = {}) {
 
   // Warning alert if there are uncovered required exam modules
   if (uncoveredModules.length > 0 && activeCalls.length > 0) {
-    const missingNames = uncoveredModules.map(m => `${m.subjectName} (${m.moduleName})`).join(', ');
+    const missingNames = uncoveredModules.map(m => (m.moduleName && m.moduleName !== m.subjectName) ? `${m.subjectName} (${m.moduleName})` : m.subjectName).join(', ');
     conflicts.push({
       id: 'uncovered_modules_alert',
       type: 'uncovered_modules',

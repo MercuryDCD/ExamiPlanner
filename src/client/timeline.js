@@ -177,7 +177,7 @@
       function exportToICS() {
         const analysis = state.currentAnalysis;
         if (!analysis || analysis.selectedCalls.length === 0) {
-          alert('No hay exámenes seleccionados para exportar.');
+          alert(t('alert_no_exams_export_ics'));
           return;
         }
 
@@ -231,7 +231,7 @@
       function copyMarkdownSummary() {
         const analysis = state.currentAnalysis;
         if (!analysis || analysis.selectedCalls.length === 0) {
-          alert('No hay exámenes seleccionados.');
+          alert(t('alert_no_exams_export_ics'));
           return;
         }
 
@@ -252,9 +252,9 @@
         });
 
         navigator.clipboard.writeText(md).then(() => {
-          alert('¡Resumen en Markdown copiado al portapapeles!');
+          alert(t('toast_markdown_copied'));
         }).catch(() => {
-          alert('No se pudo copiar automáticamente. Revisa los permisos.');
+          alert(t('alert_copy_failed'));
         });
       }
 

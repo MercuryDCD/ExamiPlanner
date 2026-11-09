@@ -402,4 +402,54 @@ describe('Optimizer Test Suite — Combinatorial Branch-and-Bound Engine', () =>
     assert.equal(res.selectedCallIds.length, 2);
     assert.ok(res.selectedCallIds.includes('th_late') || res.selectedCallIds.includes('th_early'));
   });
+
+  it('debe optimizar asignaturas sin módulos con escrito y oral asignando pesos independientes a cada tipo de examen', () => {
+    const directSubjectSched = normalizeSchedule({
+      meta: {
+        title: 'Cálculo sin módulos',
+        academicYear: '2026/2027',
+        session: 'Invierno',
+        targetCredits: 6
+      },
+      subjects: [
+        {
+          id: 'calc',
+          name: 'Cálculo',
+          shortName: 'CALC',
+          credits: 6,
+          evaluationMode: 'written_and_oral',
+          oralBinding: 'any_subsequent',
+          calls: [
+            { id: 'calc_w1', date: '2027-01-15', time: '09:00', durationHours: 3, type: 'written', appelloIndex: 1 },
+            { id: 'calc_w2', date: '2027-01-25', time: '09:00', durationHours: 3, type: 'written', appelloIndex: 2 },
+            { id: 'calc_o1', date: '2027-01-20', time: '09:00', durationHours: 1, type: 'oral', appelloIndex: 1 },
+            { id: 'calc_o2', date: '2027-02-05', time: '09:00', durationHours: 1, type: 'oral', appelloIndex: 2 }
+          ]
+        }
+      ]
+    });
+
+    assert.equal(directSubjectSched.subjects[0].hasModules, false, 'La asignatura no debe tener módulos');
+    assert.equal(directSubjectSched.subjects[0].modules.length, 1, 'Debe normalizarse con 1 módulo implícito');
+
+    // Optimizamos con peso 5 para el escrito y peso 1 para el oral
+    const res = optimizeSchedule(directSubjectSched, {
+      mode: 'weighted-difficulty',
+      weights: {
+        calc__written: 5,
+        calc__oral: 1
+      }
+    });
+
+    assert.equal(res.selectedCallIds.length, 2, 'Debe seleccionar exactamente 1 escrito y 1 oral');
+    // Precedencia: el oral seleccionado debe ser posterior al escrito seleccionado
+    const callIndex = new Map();
+    directSubjectSched.subjects[0].modules[0].calls.forEach(c => callIndex.set(c.id, c));
+    const selCalls = res.selectedCallIds.map(id => callIndex.get(id));
+    const wCall = selCalls.find(c => c.type === 'written');
+    const oCall = selCalls.find(c => c.type === 'oral');
+    assert.ok(wCall, 'Debe haber un examen escrito seleccionado');
+    assert.ok(oCall, 'Debe haber un examen oral seleccionado');
+    assert.ok(new Date(oCall.date) > new Date(wCall.date), 'El oral debe ser posterior al escrito');
+  });
 });

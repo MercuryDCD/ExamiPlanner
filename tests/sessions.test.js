@@ -816,6 +816,51 @@ describe('Multi-Session & Multi-Calendar Test Suite', () => {
     assert.ok(indexHtml.includes('xl:col-span-3'), 'Panel de optimización y sliders debe tener 3 columnas en xl (25% ancho)');
   });
 
+  it('runtime real: panel Cargar Plan y toda la UI disponen de cobertura i18n completa en ES, EN e IT', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const indexHtml = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+
+    // Comprobar atributos i18n en el panel de carga de plan
+    assert.ok(indexHtml.includes('data-i18n="import_guide_title"'), 'Debe tener data-i18n en título de guía');
+    assert.ok(indexHtml.includes('data-i18n="step_1_badge"'), 'Debe tener data-i18n en badge de paso 1');
+    assert.ok(indexHtml.includes('data-i18n="step_2_badge"'), 'Debe tener data-i18n en badge de paso 2');
+    assert.ok(indexHtml.includes('data-i18n="step_3_badge"'), 'Debe tener data-i18n en badge de paso 3');
+    assert.ok(indexHtml.includes('data-i18n="dropzone_prompt"'), 'Debe tener data-i18n en dropzone');
+    assert.ok(indexHtml.includes('data-i18n="dropzone_hint"'), 'Debe tener data-i18n en hint de dropzone');
+    assert.ok(indexHtml.includes('data-i18n="import_dest_overwrite"'), 'Debe tener data-i18n en opción sobrescribir');
+    assert.ok(indexHtml.includes('data-i18n-placeholder="import_textarea_placeholder"'), 'Debe tener data-i18n-placeholder en textarea de importación');
+    assert.ok(indexHtml.includes('data-i18n="export_sec_desc"'), 'Debe tener data-i18n en descripción de exportación');
+    assert.ok(indexHtml.includes('data-i18n="btn_download_json"'), 'Debe tener data-i18n en botón descargar JSON');
+    assert.ok(indexHtml.includes('data-i18n="btn_copy_json"'), 'Debe tener data-i18n en botón copiar JSON');
+    assert.ok(indexHtml.includes('data-i18n="reset_sec_desc"'), 'Debe tener data-i18n en descripción de reset');
+    assert.ok(indexHtml.includes('data-i18n="btn_reset_storage"'), 'Debe tener data-i18n en botón reset a fábrica');
+
+    // Comprobar paridad de claves entre los 3 diccionarios
+    const i18nCode = fs.readFileSync(path.resolve(__dirname, '../src/client/i18n.js'), 'utf8');
+    const esMatch = i18nCode.match(/es:\s*\{([\s\S]*?)\n\s*\},/);
+    const enMatch = i18nCode.match(/en:\s*\{([\s\S]*?)\n\s*\},/);
+    const itMatch = i18nCode.match(/it:\s*\{([\s\S]*?)\n\s*\}\s*\n\s*\};/);
+
+    function extractKeys(str) {
+      const keys = [];
+      const regex = /^\s*([a-zA-Z0-9_]+)\s*:/gm;
+      let m;
+      while ((m = regex.exec(str)) !== null) keys.push(m[1]);
+      return keys;
+    }
+
+    const esKeys = extractKeys(esMatch[1]);
+    const enKeys = extractKeys(enMatch[1]);
+    const itKeys = extractKeys(itMatch[1]);
+
+    const missingInEn = esKeys.filter(k => !enKeys.includes(k));
+    const missingInIt = esKeys.filter(k => !itKeys.includes(k));
+
+    assert.deepEqual(missingInEn, [], 'EN no debe tener claves faltantes respecto a ES');
+    assert.deepEqual(missingInIt, [], 'IT no debe tener claves faltantes respecto a ES');
+  });
+
 });
 
 

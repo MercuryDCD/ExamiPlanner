@@ -1,6 +1,6 @@
         function copyPromptToClipboard() {
           navigator.clipboard.writeText(AI_PROMPT_TEMPLATE).then(() => {
-            showToast('✓ ¡Plantilla y prompt para IA copiado al portapapeles! Pégalo a una IA junto con tus capturas.', 'success');
+            showToast(t('toast_prompt_copied'), 'success');
           }).catch(() => {
             const textarea = document.createElement('textarea');
             textarea.value = AI_PROMPT_TEMPLATE;
@@ -8,9 +8,9 @@
             textarea.select();
             try {
               document.execCommand('copy');
-              showToast('✓ ¡Plantilla y prompt para IA copiado al portapapeles!', 'success');
+              showToast(t('toast_prompt_copied_simple'), 'success');
             } catch (e) {
-              alert('No se pudo copiar automáticamente al portapapeles.');
+              alert(t('alert_copy_failed'));
             }
             document.body.removeChild(textarea);
           });
@@ -63,7 +63,7 @@
               saveSessionsToStorage();
               switchSession(newSession.id);
 
-              showToast(`¡Nueva sesión "${detectedIcon} ${detectedName}" creada! (${parsed.subjects.length} asignaturas, ${totalCalls} llamamientos).`, 'success');
+              showToast(t('toast_new_session_imported', detectedIcon, detectedName, parsed.subjects.length, totalCalls), 'success');
 
               if (alertBox) {
                 alertBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
@@ -76,7 +76,7 @@
               state.selectedCallIds.clear();
               extractedIds.forEach(id => state.selectedCallIds.add(id));
               persistSchedule(norm);
-              showToast(`¡Plan cargado en sesión activa! (${parsed.subjects.length} asignaturas, ${totalCalls} convocatorias).`, 'success');
+              showToast(t('toast_session_imported_active', parsed.subjects.length, totalCalls), 'success');
 
               if (alertBox) {
                 alertBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
@@ -108,7 +108,7 @@
           const fileName = file.name || '';
           const isImageOrPdf = file.type?.startsWith('image/') || /\.(png|jpe?g|webp|gif|bmp|tiff|pdf)$/i.test(fileName);
           if (isImageOrPdf) {
-            showToast('ℹ️ Has subido una imagen o PDF. Copia la plantilla con el botón "Prompt IA", envíasela a ChatGPT/Gemini junto con tus capturas, y arrastra aquí el JSON o Markdown resultante.', 'info', 7000);
+            showToast(t('toast_image_pdf_uploaded'), 'info', 7000);
             return;
           }
 
@@ -122,7 +122,7 @@
             }
           };
           reader.onerror = () => {
-            showToast(`Error al leer el archivo ${file.name}.`, 'error');
+            showToast(t('toast_file_read_error', file.name), 'error');
           };
           reader.readAsText(file);
         }
@@ -249,13 +249,13 @@
           navigator.clipboard.writeText(JSON.stringify(exportData, null, 2)).then(() => {
             showToast(t('toast_json_copied'), 'success');
           }).catch(() => {
-            alert('No se pudo copiar al portapapeles.');
+            alert(t('alert_copy_failed'));
           });
         });
 
         // Reset to Factory Defaults
         document.getElementById('btn-reset-storage')?.addEventListener('click', () => {
-          if (confirm('¿Restablecer el planificador a la configuración inicial? Se perderán todas las sesiones y asignaturas añadidas en el navegador.')) {
+          if (confirm(t('confirm_reset_storage'))) {
             localStorage.removeItem(SESSIONS_STORAGE_KEY);
             localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
             localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -498,11 +498,17 @@
             state.prioritizeSafety = Boolean(val);
             updateApp();
           },
-          setSubjectWeight: (subId, weight) => {
+          setSubjectWeight: (subId, weight, type = null) => {
+            if (type) {
+              state.subjectWeights[`${subId}__${type}`] = Number(weight);
+            }
             state.subjectWeights[subId] = Number(weight);
             updateApp();
           },
-          setModuleWeight: (modId, weight) => {
+          setModuleWeight: (modId, weight, type = null) => {
+            if (type) {
+              state.subjectWeights[`${modId}__${type}`] = Number(weight);
+            }
             state.subjectWeights[modId] = Number(weight);
             updateApp();
           },

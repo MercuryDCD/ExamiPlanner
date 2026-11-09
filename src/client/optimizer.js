@@ -154,11 +154,22 @@
             const sessionMap = new Map();
             for (const c of sorted) {
               const sessKey = `${c.subjectId}__${c.date}__${c.time || '09:00'}`;
-              const cWeight = typeof customWeights[c.moduleId] === 'number'
-                ? Math.max(1, Math.min(5, Number(customWeights[c.moduleId])))
-                : (typeof customWeights[c.subjectId] === 'number'
-                  ? Math.max(1, Math.min(5, Number(customWeights[c.subjectId])))
-                  : (c.moduleWeight || c.subjectWeight || 3));
+              const typeKeyMod = (c.type && c.type !== 'standard') ? `${c.moduleId}__${c.type}` : null;
+                const typeKeySub = (c.type && c.type !== 'standard') ? `${c.subjectId}__${c.type}` : null;
+
+                let rawW;
+                if (typeKeyMod && typeof customWeights[typeKeyMod] === 'number') {
+                  rawW = customWeights[typeKeyMod];
+                } else if (typeKeySub && typeof customWeights[typeKeySub] === 'number') {
+                  rawW = customWeights[typeKeySub];
+                } else if (typeof customWeights[c.moduleId] === 'number') {
+                  rawW = customWeights[c.moduleId];
+                } else if (typeof customWeights[c.subjectId] === 'number') {
+                  rawW = customWeights[c.subjectId];
+                } else {
+                  rawW = c.moduleWeight || c.subjectWeight || 3;
+                }
+                const cWeight = Math.max(1, Math.min(5, Number(rawW)));
 
               if (!sessionMap.has(sessKey)) {
                 sessionMap.set(sessKey, {
@@ -219,11 +230,21 @@
               const item = sorted[i];
               const allModCalls = moduleAllCallsMap.get(item.moduleId) || [];
               const rem = allModCalls.filter(other => other.startTimestamp > item.startTimestamp).length;
-              const weight = typeof customWeights[item.moduleId] === 'number'
-                ? Math.max(1, Math.min(5, Number(customWeights[item.moduleId])))
-                : (typeof customWeights[item.subjectId] === 'number'
-                  ? Math.max(1, Math.min(5, Number(customWeights[item.subjectId])))
-                  : (item.moduleWeight || item.subjectWeight || 3));
+              const typeKeyMod = (item.type && item.type !== 'standard') ? `${item.moduleId}__${item.type}` : null;
+                const typeKeySub = (item.type && item.type !== 'standard') ? `${item.subjectId}__${item.type}` : null;
+                let rawW;
+                if (typeKeyMod && typeof customWeights[typeKeyMod] === 'number') {
+                  rawW = customWeights[typeKeyMod];
+                } else if (typeKeySub && typeof customWeights[typeKeySub] === 'number') {
+                  rawW = customWeights[typeKeySub];
+                } else if (typeof customWeights[item.moduleId] === 'number') {
+                  rawW = customWeights[item.moduleId];
+                } else if (typeof customWeights[item.subjectId] === 'number') {
+                  rawW = customWeights[item.subjectId];
+                } else {
+                  rawW = item.moduleWeight || item.subjectWeight || 3;
+                }
+                const weight = Math.max(1, Math.min(5, Number(rawW)));
               safetyBonus += weight * rem;
             }
 

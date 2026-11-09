@@ -23,18 +23,67 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "modules"],
+        "required": ["id", "name"],
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
-          "shortName": { "type": "string", "description": "Abreviatura o acrónimo conciso de la asignatura (ej. FAI, ML, SD)" },
+          "shortName": { "type": "string", "description": "Abreviatura o acrónimo conciso de la asignatura (ej. FAI, ML, SD, CALC)" },
           "code": { "type": "string" },
           "credits": { "type": "number", "minimum": 0 },
           "color": { "type": "string" },
           "difficulty": { "type": "string", "enum": ["high", "medium", "low"] },
           "defaultWeight": { "type": "number", "minimum": 1, "maximum": 5 },
+          "hasModules": { "type": "boolean", "description": "Indica si la asignatura se divide en módulos o es unitaria sin módulos" },
+          "alreadyPassed": { "type": "boolean", "default": false },
+          "evaluationMode": {
+            "type": "string",
+            "enum": ["standard", "written_and_oral", "written_and_lab"],
+            "default": "standard",
+            "description": "Modalidad de evaluación requerida (a nivel de asignatura unitaria o módulo)"
+          },
+          "oralBinding": {
+            "type": "string",
+            "enum": ["same_appello", "any_subsequent"],
+            "default": "same_appello",
+            "description": "Vinculación del examen oral con respecto al escrito"
+          },
+          "calls": {
+            "type": "array",
+            "description": "Llamamientos o convocatorias directas si la asignatura no tiene módulos",
+            "items": {
+              "type": "object",
+              "required": ["id", "date"],
+              "properties": {
+                "id": { "type": "string" },
+                "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                "time": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+                "durationHours": { "type": "number", "minimum": 0.5 },
+                "deadline": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                "location": { "type": "string" },
+                "notes": { "type": "string" },
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "inactive", "activo", "desactivado", "inactivo"]
+                },
+                "active": { "type": "boolean" },
+                "selected": { "type": "boolean" },
+                "type": {
+                  "type": "string",
+                  "enum": ["standard", "written", "oral", "lab", "escrito", "orale", "scritto", "laboratorio"],
+                  "default": "standard"
+                },
+                "appelloIndex": { "type": "integer", "minimum": 1 },
+                "moduleIds": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
           "modules": {
             "type": "array",
+            "description": "Lista de módulos si la asignatura está dividida en subpartes",
             "items": {
               "type": "object",
               "required": ["id", "name", "calls"],

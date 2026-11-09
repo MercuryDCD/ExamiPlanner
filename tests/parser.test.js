@@ -761,6 +761,39 @@ Listo para cargar en ExamPlanner.`;
         assert.ok(parsed.meta.session);
       }
     });
+
+    it('debe admitir y normalizar asignaturas sin módulos con escrito y oral en calls directas', () => {
+      const directSample = {
+        meta: {
+          title: 'Grado en Matemáticas',
+          academicYear: '2026/2027',
+          session: 'Convocatoria Oficial'
+        },
+        subjects: [
+          {
+            id: 'calculo',
+            name: 'Cálculo',
+            shortName: 'CALC',
+            credits: 6,
+            evaluationMode: 'written_and_oral',
+            calls: [
+              { id: 'c_w1', date: '2027-01-14', time: '09:00', durationHours: 3, type: 'written' },
+              { id: 'c_o1', date: '2027-01-20', time: '10:00', durationHours: 1, type: 'oral' }
+            ]
+          }
+        ]
+      };
+
+      const val = validateSchedule(directSample);
+      assert.equal(val.valid, true, 'Debe ser válido sin declarar módulos');
+
+      const norm = normalizeSchedule(directSample);
+      assert.equal(norm.subjects[0].hasModules, false);
+      assert.equal(norm.subjects[0].modules.length, 1);
+      assert.equal(norm.subjects[0].modules[0].calls.length, 2);
+      assert.equal(norm.subjects[0].calls.length, 2);
+      assert.equal(norm.subjects[0].evaluationMode, 'written_and_oral');
+    });
   });
 });
 

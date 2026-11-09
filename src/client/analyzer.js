@@ -51,7 +51,7 @@
                 oralBinding: mod.oralBinding || 'any_subsequent',
                 type: c.type || 'standard',
                 appelloIndex: c.appelloIndex != null ? c.appelloIndex : null,
-                hasMultipleModules: (sub.modules || []).length > 1,
+                hasMultipleModules: sub.hasModules !== false && (sub.modules || []).length > 1,
                 moduleIds
               };
               allCallsList.push(item);
@@ -446,7 +446,8 @@
                 subjectId: sub.id,
                 subjectName: sub.name,
                 subjectShortName: sub.shortName || '',
-                credits: Number(mod.credits) || Number(sub.credits) || 6,
+            hasMultipleModules: sub.hasModules !== false && (sub.modules || []).length > 1,
+            credits: Number(mod.credits) || Number(sub.credits) || 6,
                 callsCount: (mod.calls || []).length
               });
             }
@@ -483,7 +484,7 @@
         const isAllModulesCovered = uncoveredModules.length === 0;
 
         if (uncoveredModules.length > 0 && active.length > 0) {
-          const missingNames = uncoveredModules.map(m => `${m.subjectName} (${m.moduleName})`).join(', ');
+          const missingNames = uncoveredModules.map(m => (m.moduleName && m.moduleName !== m.subjectName) ? `${m.subjectName} (${m.moduleName})` : m.subjectName).join(', ');
           conflicts.push({
             id: 'uncovered_modules_alert',
             type: 'uncovered_modules',

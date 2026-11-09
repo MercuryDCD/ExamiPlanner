@@ -96,11 +96,11 @@
           if (sessions.length <= 1) {
             deleteActiveBtn.setAttribute('disabled', 'true');
             deleteActiveBtn.classList.add('opacity-40', 'cursor-not-allowed');
-            deleteActiveBtn.title = 'No se puede eliminar la única sesión disponible';
+            deleteActiveBtn.title = t('delete_single_session_disabled_title');
           } else {
             deleteActiveBtn.removeAttribute('disabled');
             deleteActiveBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-            deleteActiveBtn.title = 'Eliminar sesión actual';
+            deleteActiveBtn.title = t('title_delete');
           }
         }
       }
@@ -172,12 +172,12 @@
         const activeName = active ? active.name : '';
         const copyHint = document.getElementById('session-init-copy-hint');
         if (copyHint && activeName) {
-          copyHint.textContent = `Copia las asignaturas y llamamientos de "${activeName}".`;
+          copyHint.textContent = t('session_init_copy_named', activeName);
         }
 
         const nameInput = document.getElementById('session-modal-name');
         nameInput.value = '';
-        nameInput.placeholder = 'Ej: ☀️ Sesión de Verano, 🍂 Extraordinaria...';
+        nameInput.placeholder = t('placeholder_session_name');
 
         const defaultEmoji = '☀️';
         document.getElementById('session-modal-icon-input').value = defaultEmoji;
@@ -253,7 +253,7 @@
           const iconVal = document.getElementById('session-modal-icon-input').value.trim() || '🎓';
 
           if (!nameVal) {
-            alert('Por favor, indica un nombre para la sesión.');
+            alert(t('alert_session_name_required'));
             return;
           }
 
@@ -275,7 +275,7 @@
               renderSessionSwitcher();
               populateMetaForm();
               updateApp();
-              showToast('Sesión actualizada con éxito.', 'success');
+              showToast(t('toast_session_saved'), 'success');
             }
             closeSessionModal();
           } else {
@@ -288,7 +288,7 @@
 
       function renderPresets() {
         const select = document.getElementById('preset-select');
-        select.innerHTML = '<option value="">⚙️ Presets de Estrategia...</option>';
+        select.innerHTML = `<option value="">${t('presets_default_opt')}</option>`;
         (schedule.presets || []).forEach((p, idx) => {
           const opt = document.createElement('option');
           opt.value = idx;
@@ -298,6 +298,44 @@
         if (schedule.presets && schedule.presets.length > 0) {
           select.value = '0';
         }
+      }
+
+      function getExamTypesForModule(mod, sub) {
+        const evalMode = mod.evaluationMode || sub?.evaluationMode || 'standard';
+        const typesSet = new Set();
+        if (evalMode === 'written_and_oral') {
+          typesSet.add('written');
+          typesSet.add('oral');
+        } else if (evalMode === 'written_and_lab') {
+          typesSet.add('written');
+          typesSet.add('lab');
+        }
+        (mod.calls || []).forEach(c => {
+          if (c.type && c.type !== 'standard') {
+            typesSet.add(c.type);
+          }
+        });
+        if (typesSet.size === 0) {
+          return [{ type: 'standard', label: '', icon: '' }];
+        }
+        return Array.from(typesSet).map(type => {
+          let label = '';
+          let icon = '';
+          if (type === 'written') {
+            label = t('badge_written') || 'Escrito';
+            icon = '✍️';
+          } else if (type === 'oral') {
+            label = t('badge_oral') || 'Oral';
+            icon = '🗣️';
+          } else if (type === 'lab') {
+            label = t('badge_lab') || 'Lab';
+            icon = '💻';
+          } else {
+            label = type;
+            icon = '📝';
+          }
+          return { type, label, icon };
+        });
       }
 
       function renderSliders() {
@@ -312,50 +350,71 @@
           const subAcronym = escapeHtml(sub.shortName || generateSubjectAcronym(sub.name));
           const modulesList = (sub.modules || []).filter(m => !m.alreadyPassed);
           const totalMods = (sub.modules || []).length;
+          const isMultiModuleSub = sub.hasModules !== false && totalMods > 1;
 
           modulesList.forEach(mod => {
             const safeModName = escapeHtml(mod.name);
             const modAcronym = escapeHtml(mod.shortName || generateModuleShortName(mod.name));
-            const currentWeight = (state.subjectWeights && state.subjectWeights[mod.id]) || (state.subjectWeights && state.subjectWeights[sub.id]) || mod.defaultWeight || sub.defaultWeight || 3;
             const modCredits = mod.credits || sub.credits || 6;
+            const examTypes = getExamTypesForModule(mod, sub);
 
-            const acronymBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${token.bg} text-white shrink-0 tracking-wide">[${subAcronym}]</span>`;
-            const labelText = totalMods > 1 && safeModName !== safeSubName
-              ? `<div class="flex items-center gap-1.5 min-w-0"><span class="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">[${modAcronym}]</span><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeModName}</span></div>`
-              : `<div class="flex items-center gap-1.5 min-w-0"><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeSubName}</span></div>`;
+            examTypes.forEach(typeItem => {
+              const isTypeSpecific = examTypes.length > 1;
+              const sliderKey = isTypeSpecific ? `${mod.id}__${typeItem.type}` : mod.id;
+              const subTypeKey = isTypeSpecific ? `${sub.id}__${typeItem.type}` : sub.id;
 
-            const card = document.createElement('div');
-            card.className = 'space-y-1.5 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50';
+              const currentWeight = (state.subjectWeights && state.subjectWeights[sliderKey])
+                || (state.subjectWeights && state.subjectWeights[subTypeKey])
+                || (state.subjectWeights && state.subjectWeights[mod.id])
+                || (state.subjectWeights && state.subjectWeights[sub.id])
+                || mod.defaultWeight
+                || sub.defaultWeight
+                || 3;
 
-            card.innerHTML = `
-              <div class="flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 min-w-0">
-                  ${acronymBadge}
-                  <div class="font-semibold text-slate-800 dark:text-slate-200 truncate" title="${safeSubName} › ${safeModName}">
-                    ${labelText}
+              const acronymBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${token.bg} text-white shrink-0 tracking-wide">[${subAcronym}]</span>`;
+              const typeBadge = isTypeSpecific && typeItem.label
+                ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300 border border-violet-200 dark:border-violet-800 shrink-0 inline-flex items-center gap-1">${typeItem.icon} ${typeItem.label}</span>`
+                : '';
+
+              const labelText = isMultiModuleSub && safeModName !== safeSubName
+                ? `<div class="flex items-center gap-1.5 min-w-0 flex-wrap"><span class="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shrink-0">[${modAcronym}]</span><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeModName}</span>${typeBadge}</div>`
+                : `<div class="flex items-center gap-1.5 min-w-0 flex-wrap"><span class="font-bold text-slate-800 dark:text-slate-100 truncate">${safeSubName}</span>${typeBadge}</div>`;
+
+              const card = document.createElement('div');
+              card.className = 'space-y-1.5 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50';
+
+              card.innerHTML = `
+                <div class="flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2 min-w-0">
+                    ${acronymBadge}
+                    <div class="font-semibold text-slate-800 dark:text-slate-200 truncate" title="${safeSubName}${isMultiModuleSub ? ' › ' + safeModName : ''}${typeItem.label ? ' (' + typeItem.label + ')' : ''}">
+                      ${labelText}
+                    </div>
+                    <span class="text-[10px] text-slate-400 flex-shrink-0 font-mono">(${modCredits} ${creditUnit})</span>
                   </div>
-                  <span class="text-[10px] text-slate-400 flex-shrink-0 font-mono">(${modCredits} ${creditUnit})</span>
+                  <span id="slider-val-${sliderKey}" class="font-mono text-xs font-bold flex-shrink-0 ml-2 ${token.text}">
+                    ${currentWeight}/5
+                  </span>
                 </div>
-                <span id="slider-val-${mod.id}" class="font-mono text-xs font-bold flex-shrink-0 ml-2 ${token.text}">
-                  ${currentWeight}/5
-                </span>
-              </div>
-              <div class="flex items-center gap-3">
-                <input 
-                  type="range" 
-                  min="1" 
-                  max="5" 
-                  step="1" 
-                  value="${currentWeight}" 
-                  data-module-id="${mod.id}"
-                  data-subject-id="${sub.id}"
-                  aria-label="Dificultad de ${safeModName}"
-                  class="module-slider w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none"
-                >
-              </div>
-            `;
+                <div class="flex items-center gap-3">
+                  <input 
+                    type="range" 
+                    min="1" 
+                    max="5" 
+                    step="1" 
+                    value="${currentWeight}" 
+                    data-module-id="${mod.id}"
+                    data-subject-id="${sub.id}"
+                    data-exam-type="${typeItem.type}"
+                    data-slider-key="${sliderKey}"
+                    aria-label="Dificultad de ${safeModName} ${typeItem.label || ''}"
+                    class="module-slider w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none"
+                  >
+                </div>
+              `;
 
-            container.appendChild(card);
+              container.appendChild(card);
+            });
           });
         });
 
@@ -365,14 +424,20 @@
           input.addEventListener('input', (e) => {
             const modId = e.target.getAttribute('data-module-id');
             const subId = e.target.getAttribute('data-subject-id');
+            const examType = e.target.getAttribute('data-exam-type');
+            const sliderKey = e.target.getAttribute('data-slider-key') || modId;
             const val = parseInt(e.target.value, 10);
             
-            state.subjectWeights[modId] = val;
-            if (subId) {
-              state.subjectWeights[subId] = val;
+            state.subjectWeights[sliderKey] = val;
+            if (examType && examType !== 'standard') {
+              state.subjectWeights[`${modId}__${examType}`] = val;
+              if (subId) state.subjectWeights[`${subId}__${examType}`] = val;
+            } else {
+              state.subjectWeights[modId] = val;
+              if (subId) state.subjectWeights[subId] = val;
             }
             
-            const label = document.getElementById(`slider-val-${modId}`);
+            const label = document.getElementById(`slider-val-${sliderKey}`);
             if (label) label.textContent = `${val}/5`;
 
             sliderAnimFrame = requestAnimationFrame(() => {
